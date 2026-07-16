@@ -29,13 +29,16 @@ export function ScriptCycle({ className }: { className?: string }) {
   }, []);
 
   return (
-    <span aria-hidden className={cn("grid place-items-center", className)}>
+    <span
+      aria-hidden
+      className={cn("grid items-baseline justify-items-center", className)}
+    >
       {FRAMES.map((frame, i) => (
         <span
           key={frame.text}
           lang={frame.lang}
           className={cn(
-            "col-start-1 row-start-1 leading-tight transition-opacity duration-700",
+            "col-start-1 row-start-1 leading-none transition-opacity duration-700",
             frame.className,
             i === active ? "opacity-100" : "opacity-0",
           )}
