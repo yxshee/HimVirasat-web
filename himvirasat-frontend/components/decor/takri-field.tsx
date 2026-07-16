@@ -43,7 +43,7 @@ export function TakriField({ className }: { className?: string }) {
             "font-takri absolute leading-none text-foreground",
             g.size,
             g.opacity,
-            g.outlined && "text-stroke-2",
+            g.outlined && "glyph-stroke",
             g.hideOnMobile && "hidden md:block",
           )}
           style={{

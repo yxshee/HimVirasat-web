@@ -17,7 +17,7 @@ export function GlyphWatermark({
     <span
       aria-hidden
       className={cn(
-        "text-stroke-2 pointer-events-none absolute leading-none select-none",
+        "glyph-stroke pointer-events-none absolute leading-none select-none",
         "text-[18rem] text-foreground opacity-20 sm:text-[24rem]",
         script === "deva" ? "font-deva" : "font-takri",
         className,

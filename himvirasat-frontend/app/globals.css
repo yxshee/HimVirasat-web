@@ -349,9 +349,14 @@ html.js [data-reveal][data-revealed="true"] {
   text-shadow: 0.05em 0.05em 0 var(--brut-color, var(--section-accent));
 }
 
-@utility text-stroke-2 {
-  -webkit-text-stroke: 2px currentColor;
-  color: transparent;
+/* Outlined display glyphs. Plain layered class (not @utility) because
+   Lightning CSS drops vendor-prefixed declarations from @utility blocks;
+   named outside Tailwind's text- group so tailwind-merge keeps it. */
+@layer utilities {
+  .glyph-stroke {
+    -webkit-text-stroke: 2px var(--foreground);
+    color: transparent;
+  }
 }
 
 @utility link-ink {
