@@ -15,6 +15,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { site } from "@/lib/site";
 
 function initials(name: string) {
   return name
@@ -40,10 +41,9 @@ function SocialRow({ socials }: { socials?: SocialLink[] }) {
             target="_blank"
             rel="noopener noreferrer"
             aria-label={`${social.platform} profile`}
-            className="inline-flex h-9 w-9 items-center justify-center rounded-full border 
-            border-emerald-500/15 bg-emerald-500/5 text-slate-600 
-            transition-colors hover:bg-emerald-500/10 hover:text-emerald-700 
-            dark:text-zinc-300 dark:hover:text-emerald-400"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full border
+            border-primary/15 bg-primary/5 text-muted-foreground
+            transition-colors hover:bg-primary/10 hover:text-primary"
           >
             <Icon className="h-4 w-4" />
           </a>
@@ -68,29 +68,22 @@ function PersonCard({
   const roleSize = size === "lg" ? "text-md" : "text-[12px]";
 
   return (
-    <Card className="h-full border-white/20 bg-white/45 dark:bg-white/5">
+    <Card className="h-full border-border bg-card">
       <CardContent
         className={cn(cardPadding, "flex flex-col items-center text-center")}
       >
-        <Avatar className={cn(avatarSize, "ring-2 ring-emerald-500/25")}>
+        <Avatar className={cn(avatarSize, "ring-2 ring-saffron/40")}>
           <AvatarImage src={member.avatar} alt={member.name} />
-          <AvatarFallback className="bg-emerald-600/10 text-emerald-700 dark:text-emerald-400">
+          <AvatarFallback className="bg-primary/10 text-primary">
             {initials(member.name)}
           </AvatarFallback>
         </Avatar>
 
-        <h3
-          className={cn(
-            "mt-3 font-semibold text-slate-900 dark:text-white",
-            nameSize
-          )}
-        >
-          {member.name}
-        </h3>
+        <h3 className={cn("mt-3 font-semibold", nameSize)}>{member.name}</h3>
 
         <p
           className={cn(
-            "mt-1 uppercase tracking-wide text-emerald-700 dark:text-emerald-400 font-semibold",
+            "mt-1 uppercase tracking-wide text-saffron-deep font-semibold",
             roleSize
           )}
         >
@@ -103,7 +96,7 @@ function PersonCard({
               <Badge
                 key={language}
                 variant="secondary"
-                className="bg-emerald-500/10 text-emerald-700 dark:text-emerald-300"
+                className="bg-primary/10 text-primary"
               >
                 {language}
               </Badge>
@@ -121,10 +114,28 @@ function PersonCard({
   );
 }
 
+function OpenSlotCard() {
+  return (
+    <div className="mt-6 rounded-xl border border-dashed border-border p-8 text-center">
+      <p className="font-display text-lg">Your name here</p>
+      <p className="mt-1 text-sm text-muted-foreground">
+        <a
+          href={site.links.discordHimvirasat}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="link-ink"
+        >
+          Join the Discord and start contributing.
+        </a>
+      </p>
+    </div>
+  );
+}
+
 function ConnectorLine() {
   return (
     <div className="flex justify-center" aria-hidden="true">
-      <div className="my-8 h-20 w-px bg-linear-to-b from-emerald-500/80 to-emerald-500/80" />
+      <div className="my-8 h-20 w-px bg-linear-to-b from-saffron/70 to-primary/70" />
     </div>
   );
 }
@@ -141,16 +152,14 @@ function SectionShell({
   children: React.ReactNode;
 }) {
   return (
-    <Card className="border-white/20 bg-white/40 backdrop-blur-none dark:bg-white/5">
+    <Card className="border-border bg-card">
       <CardContent className="p-6 sm:p-8">
         <div className="mb-10 flex flex-col items-center text-center">
           <div className="flex items-center gap-2">
-            <Icon className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
-            <h3 className="text-2xl font-bold text-slate-900 dark:text-white">
-              {title}
-            </h3>
+            <Icon className="h-5 w-5 text-primary" aria-hidden="true" />
+            <h3 className="text-2xl font-bold">{title}</h3>
           </div>
-          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-slate-700 dark:text-zinc-400">
+          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">
             {subtitle}
           </p>
         </div>
@@ -165,16 +174,16 @@ export function TeamSection() {
   return (
     <section className="mt-32 scroll-mt-24">
       <div className="mb-16 text-center">
-        <span className="flex items-center justify-center gap-2 text-xs font-bold uppercase tracking-widest text-emerald-600 dark:text-emerald-400">
-          <Crown className="h-3.5 w-3.5" />
+        <span className="flex items-center justify-center gap-2 text-xs font-bold uppercase tracking-widest text-saffron-deep">
+          <Crown className="h-3.5 w-3.5" aria-hidden="true" />
           Our Team
         </span>
 
-        <h2 className="mt-4 text-3xl font-bold tracking-tight text-slate-900 dark:text-white md:text-4xl">
+        <h2 className="mt-4 text-3xl font-bold tracking-tight md:text-4xl">
           The People Behind HimVirasat
         </h2>
 
-        <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-slate-700 dark:text-zinc-400">
+        <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-muted-foreground">
           A growing community of developers, researchers, language experts, and
           contributors working together to preserve Himachal&apos;s linguistic
           heritage.
@@ -185,7 +194,7 @@ export function TeamSection() {
         <SectionShell
           icon={Code2}
           title="Technical Team"
-          subtitle="The technical branch is responsible for developing HimVirasat's platform, infrastructure, 
+          subtitle="The technical branch is responsible for developing HimVirasat's platform, infrastructure,
           and the systems that power dataset generation, validation, and public releases."
         >
           <div className="mx-auto grid max-w-2xl gap-6 md:grid-cols-2">
@@ -196,20 +205,22 @@ export function TeamSection() {
 
           <ConnectorLine />
           <div className="text-center">
-            <h4 className="text-lg font-semibold text-slate-900 dark:text-white">
-              Developers
-            </h4>
-            <p className="mt-1 text-sm text-slate-600 dark:text-zinc-400">
+            <h4 className="text-lg font-semibold">Developers</h4>
+            <p className="mt-1 text-sm text-muted-foreground">
               Developers and researchers building the technical foundation of
               HimVirasat.
             </p>
           </div>
 
-          <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {DEVELOPERS.map((member) => (
-              <PersonCard key={member.name} member={member} size="md" />
-            ))}
-          </div>
+          {DEVELOPERS.length > 0 ? (
+            <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {DEVELOPERS.map((member) => (
+                <PersonCard key={member.name} member={member} size="md" />
+              ))}
+            </div>
+          ) : (
+            <OpenSlotCard />
+          )}
         </SectionShell>
 
         <SectionShell
@@ -226,19 +237,21 @@ export function TeamSection() {
           <ConnectorLine />
 
           <div className="text-center">
-            <h4 className="text-lg font-semibold text-slate-900 dark:text-white">
-              Contributors
-            </h4>
-            <p className="mt-1 text-sm text-slate-600 dark:text-zinc-400">
+            <h4 className="text-lg font-semibold">Contributors</h4>
+            <p className="mt-1 text-sm text-muted-foreground">
               Contributors helping preserve and document Himachali languages.
             </p>
           </div>
 
-          <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {CONTRIBUTORS.map((member) => (
-              <PersonCard key={member.name} member={member} size="md" />
-            ))}
-          </div>
+          {CONTRIBUTORS.length > 0 ? (
+            <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {CONTRIBUTORS.map((member) => (
+                <PersonCard key={member.name} member={member} size="md" />
+              ))}
+            </div>
+          ) : (
+            <OpenSlotCard />
+          )}
         </SectionShell>
       </div>
     </section>

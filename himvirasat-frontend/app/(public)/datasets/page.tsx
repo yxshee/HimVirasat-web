@@ -1,108 +1,95 @@
-import Image from "next/image";
+import type { Metadata } from "next";
 import Link from "next/link";
-import { SiGithub } from "@icons-pack/react-simple-icons";
+import { Download } from "lucide-react";
 
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
-} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { ContourField } from "@/components/decor/contour-field";
+import { SectionHeading } from "@/components/decor/section-heading";
 import { datasets } from "@/lib/datasets/dataset-utils";
+
+export const metadata: Metadata = {
+  title: "Datasets",
+  description: "Download open, versioned Himachali translation datasets.",
+};
 
 export default function DatasetsPage() {
   return (
-    <div className="relative min-h-screen overflow-hidden text-foreground">
-      {/* Background Image */}
-      <div className="absolute inset-0">
-        <Image
-          src="/mountains1.png"
-          alt="Mountain background"
-          fill
-          className="object-cover"
-          priority
-          sizes="100vw"
-        />
-      </div>
+    <div>
+      {/* Header — cartography backdrop */}
+      <section className="relative overflow-hidden">
+        <ContourField className="text-primary" />
+        <div className="relative mx-auto max-w-6xl px-6 pt-24 pb-12 sm:pt-32">
+          <SectionHeading
+            as="h1"
+            eyebrow="Datasets"
+            nativeEcho="आंकड़े"
+            title="Open Himachali language datasets"
+            description="Download curated linguistic datasets preserving Himachali dialects for research, NLP, and cultural documentation."
+          />
+        </div>
+      </section>
 
-      {/* Overlay */}
-      <div className="absolute inset-0 bg-white/60 dark:bg-black/85" />
-
-      <main className="relative z-10 min-h-screen flex items-center">
-        <div className="max-w-6xl px-6 sm:px-10 w-full">
-          <span className="uppercase tracking-widest text-xs opacity-70 font-semibold">
-            Language & Culture
-          </span>
-
-          <h1 className="mt-2 text-4xl md:text-5xl font-semibold">Datasets</h1>
-
-          <p className="mt-4 text-lg max-w-xl opacity-80 leading-relaxed">
-            Download curated linguistic datasets preserving Himachali dialects
-            for research, NLP, and cultural documentation.
-          </p>
-
-          <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {datasets.map((dataset) => (
-              <Card
-                key={dataset.id}
-                className="bg-background/80 backdrop-blur-md shadow-xl border border-border/50"
-              >
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="text-lg">{dataset.name}</CardTitle>
-                    <Badge variant="secondary">{dataset.version}</Badge>
-                  </div>
-                  <CardDescription>{dataset.language}</CardDescription>
-                </CardHeader>
-
-                <CardContent>
-                  <p className="text-sm text-muted-foreground">
-                    Open-source structured vocabulary dataset suitable for
-                    linguistic research, NLP training, and documentation.
-                  </p>
-                </CardContent>
-
-                <CardFooter className="flex flex-col gap-3">
-                  {/* Download ZIP */}
-                  <Button
-                    asChild
-                    className="w-full bg-green-500 hover:bg-green-600 text-white"
+      <section className="mx-auto max-w-6xl px-6 pb-24 sm:pb-32">
+        <div className="grid gap-6 lg:grid-cols-2">
+          {datasets.map((dataset) => (
+            <article
+              key={dataset.id}
+              className="rounded-2xl border border-border bg-card p-8 shadow-card"
+            >
+              <div className="flex flex-wrap items-baseline justify-between gap-3">
+                <h2 className="font-display text-2xl">{dataset.name}</h2>
+                <span className="rounded-full border border-saffron/40 px-2.5 py-0.5 text-xs whitespace-nowrap text-saffron-deep">
+                  {dataset.version}
+                </span>
+              </div>
+              <p className="mt-1 text-sm text-muted-foreground">
+                {dataset.language}
+              </p>
+              <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+                Open-source structured vocabulary dataset suitable for
+                linguistic research, NLP training, and documentation.
+              </p>
+              <div className="mt-8 flex flex-wrap gap-3">
+                <Button asChild>
+                  <a
+                    href={dataset.datasetLink}
+                    target="_blank"
+                    rel="noreferrer"
                   >
-                    <Link href={dataset.datasetLink} target="_blank">
-                      Download Dataset (ZIP)
-                    </Link>
-                  </Button>
+                    <Download aria-hidden />
+                    Download ZIP
+                  </a>
+                </Button>
+                <Button asChild variant="outline">
+                  <a href={dataset.kaggleLink} target="_blank" rel="noreferrer">
+                    Kaggle
+                  </a>
+                </Button>
+                <Button asChild variant="ghost">
+                  <a href={dataset.githubLink} target="_blank" rel="noreferrer">
+                    GitHub
+                  </a>
+                </Button>
+              </div>
+            </article>
+          ))}
 
-                  {/* Kaggle */}
-                  <Button asChild variant="outline" className="w-full">
-                    <Link href={dataset.kaggleLink} target="_blank">
-                      View on Kaggle
-                    </Link>
-                  </Button>
-
-                  <Button
-                    asChild
-                    variant="outline"
-                    className="w-full flex items-center justify-center gap-2 
-                               bg-white dark:bg-zinc-900 
-                               hover:bg-zinc-100 dark:hover:bg-zinc-800
-                               border border-border"
-                  >
-                    <Link href={dataset.githubLink} target="_blank">
-                      <SiGithub size={16} />
-                      View on GitHub
-                    </Link>
-                  </Button>
-                </CardFooter>
-              </Card>
-            ))}
+          {/* More coming */}
+          <div className="flex flex-col justify-center rounded-2xl border border-dashed border-border p-8">
+            <h2 className="font-display text-xl">More datasets in progress</h2>
+            <p className="mt-2 text-muted-foreground">
+              Contribute sentences in your dialect to help publish the next
+              one.
+            </p>
+            <Link
+              href="/contribute"
+              className="link-ink mt-6 self-start text-sm font-medium text-saffron-deep"
+            >
+              Contribute &rarr;
+            </Link>
           </div>
         </div>
-      </main>
+      </section>
     </div>
   );
 }

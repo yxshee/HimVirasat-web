@@ -1,82 +1,172 @@
 "use client";
 
 import { useState } from "react";
+import { ArrowLeftRight, Copy, Eraser } from "lucide-react";
+import { toast } from "sonner";
+
 import { devToTankri } from "@/lib/transliteration/devToTankri";
 import { tankriToDev } from "@/lib/transliteration/tankriToDev";
+import { Button } from "@/components/ui/button";
+import { PahariBand } from "@/components/decor/pahari-band";
+import { cn } from "@/lib/utils";
+
+const EXAMPLES = ["नमस्ते", "हिमाचल", "पहाड़", "मंडी"];
+
+const textareaBase =
+  "w-full flex-1 resize-y rounded-lg border border-input bg-background px-3 py-2.5 placeholder:text-muted-foreground outline-none transition-[box-shadow,border-color] focus-visible:border-saffron/50 focus-visible:ring-2 focus-visible:ring-saffron/50 min-h-40 md:min-h-52";
 
 export default function Transliterator() {
   const [devText, setDevText] = useState("");
   const [tankriText, setTankriText] = useState("");
-  const [lastEdited, setLastEdited] = useState<"dev" | "tankri" | null>(null);
+  const [swapped, setSwapped] = useState(false);
 
   const handleDevChange = (value: string) => {
-    setLastEdited("dev");
     setDevText(value);
     setTankriText(devToTankri(value));
   };
 
   const handleTankriChange = (value: string) => {
-    setLastEdited("tankri");
     setTankriText(value);
     setDevText(tankriToDev(value));
   };
 
-  const copyToClipboard = async (text: string) => {
+  const copyText = async (text: string, script: "Devanagari" | "Takri") => {
     try {
       await navigator.clipboard.writeText(text);
+      toast(`Copied ${script} text`);
     } catch (err) {
       console.error("Copy failed", err);
     }
   };
 
+  const clearAll = () => {
+    setDevText("");
+    setTankriText("");
+  };
+
+  const bothEmpty = devText === "" && tankriText === "";
+
   return (
-    <div className="w-full max-w-5xl mx-auto glass rounded-2xl p-6 md:p-8 shadow">
-      <h2 className="text-2xl font-semibold">Transliteration Tool</h2>
+    <div className="mx-auto w-full max-w-5xl overflow-hidden rounded-2xl border border-border bg-card shadow-card">
+      <PahariBand className="text-saffron/60" />
 
-      <p className="mt-2 text-sm opacity-70 max-w-xl">
-        Type in either box. The other will update automatically.
-      </p>
-
-      <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* Devanagari */}
-        <div className="flex flex-col">
-          <label className="text-sm font-medium mb-1">Devanagari</label>
-          <textarea
-            value={devText}
-            onChange={(e) => handleDevChange(e.target.value)}
-            placeholder="Type Devanagari here..."
-            className="h-40 rounded-lg border p-3 bg-white/70 dark:bg-zinc-900/70 resize-none focus:outline-none"
-          />
-          <button
-            onClick={() => copyToClipboard(devText)}
-            className="mt-2 text-sm px-3 py-1 rounded bg-emerald-600 text-white hover:bg-emerald-700 self-start"
+      <div className="p-6 md:p-8">
+        <div className="grid items-stretch gap-4 md:grid-cols-[1fr_auto_1fr]">
+          {/* Devanagari pane */}
+          <div
+            className={cn("flex flex-col gap-2", swapped ? "order-3" : "order-1")}
           >
-            Copy
-          </button>
+            <div className="flex items-center gap-2">
+              <span className="text-xs tracking-wider text-saffron-deep uppercase">
+                <span aria-hidden className="font-deva">
+                  देवनागरी
+                </span>{" "}
+                Devanagari
+              </span>
+              <span className="ml-auto text-xs text-muted-foreground tabular-nums">
+                {devText.length}
+              </span>
+              <Button
+                variant="ghost"
+                size="icon"
+                aria-label="Copy Devanagari text"
+                disabled={devText === ""}
+                onClick={() => copyText(devText, "Devanagari")}
+              >
+                <Copy className="size-4" />
+              </Button>
+            </div>
+            <textarea
+              value={devText}
+              onChange={(e) => handleDevChange(e.target.value)}
+              placeholder="यहाँ लिखें…"
+              aria-label="Devanagari text"
+              className={cn(textareaBase, "font-deva text-lg")}
+            />
+          </div>
+
+          {/* Controls */}
+          <div className="order-2 flex items-center justify-center gap-3 md:flex-col">
+            <Button
+              variant="outline"
+              size="icon"
+              className="rounded-full"
+              aria-label="Swap pane order"
+              onClick={() => setSwapped((s) => !s)}
+            >
+              <ArrowLeftRight
+                className={cn(
+                  "size-4 transition-transform",
+                  swapped && "rotate-180"
+                )}
+              />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              aria-label="Clear both panes"
+              disabled={bothEmpty}
+              onClick={clearAll}
+            >
+              <Eraser className="size-4" />
+            </Button>
+          </div>
+
+          {/* Takri pane */}
+          <div
+            className={cn("flex flex-col gap-2", swapped ? "order-1" : "order-3")}
+          >
+            <div className="flex items-center gap-2">
+              <span className="text-xs tracking-wider text-saffron-deep uppercase">
+                <span aria-hidden className="font-takri">
+                  𑚔𑚭𑚊𑚤𑚯
+                </span>{" "}
+                Takri
+              </span>
+              <span className="ml-auto text-xs text-muted-foreground tabular-nums">
+                {tankriText.length}
+              </span>
+              <Button
+                variant="ghost"
+                size="icon"
+                aria-label="Copy Takri text"
+                disabled={tankriText === ""}
+                onClick={() => copyText(tankriText, "Takri")}
+              >
+                <Copy className="size-4" />
+              </Button>
+            </div>
+            <textarea
+              value={tankriText}
+              onChange={(e) => handleTankriChange(e.target.value)}
+              placeholder="Takri output…"
+              aria-label="Takri text"
+              className={cn(textareaBase, "font-takri text-xl leading-relaxed")}
+            />
+          </div>
         </div>
 
-        {/* Tankri */}
-        <div className="flex flex-col">
-          <label className="text-sm font-medium mb-1">Tankri</label>
-          <textarea
-            value={tankriText}
-            onChange={(e) => handleTankriChange(e.target.value)}
-            placeholder="Type Tankri here..."
-            className="h-40 rounded-lg border p-3 bg-white/70 dark:bg-zinc-900/70 resize-none focus:outline-none"
-          />
-          <button
-            onClick={() => copyToClipboard(tankriText)}
-            className="mt-2 text-sm px-3 py-1 rounded bg-emerald-600 text-white hover:bg-emerald-700 self-start"
-          >
-            Copy
-          </button>
+        {/* Example chips */}
+        <div className="mt-6 flex flex-wrap items-center gap-2">
+          <span className="text-xs text-muted-foreground">Try:</span>
+          {EXAMPLES.map((word) => (
+            <button
+              key={word}
+              type="button"
+              lang="hi"
+              onClick={() => handleDevChange(word)}
+              className="rounded-full border border-border bg-secondary/60 px-3 py-1 font-deva text-sm transition-colors hover:border-saffron/50"
+            >
+              {word}
+            </button>
+          ))}
         </div>
+
+        <p className="mt-6 text-xs text-muted-foreground">
+          This is a basic transliteration tool. Please verify outputs before
+          using.
+        </p>
       </div>
-
-      <p className="mt-6 text-xs opacity-60">
-        This is a basic transliteration tool. Please verify outputs before
-        using.
-      </p>
     </div>
   );
 }

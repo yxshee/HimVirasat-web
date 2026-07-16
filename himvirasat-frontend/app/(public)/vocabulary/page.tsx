@@ -1,51 +1,71 @@
+import type { Metadata } from "next";
 import Link from "next/link";
-import Image from "next/image";
-import DialectLink from "@/components/vocabulary/DialectLink";
-import { dialectsConfig } from "@/lib/dialects/dialect-config"; // Import the config
+
+import { PahariBand } from "@/components/decor/pahari-band";
+import { SectionHeading } from "@/components/decor/section-heading";
+import { dialectsConfig } from "@/lib/dialects/dialect-config";
+
+export const metadata: Metadata = {
+  title: "Himachali Vocabulary",
+  description: "Search living dictionaries of Himachali dialects.",
+};
 
 export default function VocabularyPage() {
   return (
-    <div className="relative min-h-screen overflow-hidden text-slate-900 dark:text-slate-100">
-      <div className="absolute inset-0">
-        <Image
-          src="/mountains1.png"
-          alt="Mountain background"
-          fill
-          className="object-cover"
-          priority
-          sizes="100vw"
-        />
-      </div>
+    <main className="mx-auto max-w-5xl px-6 py-16 sm:px-10">
+      <SectionHeading
+        as="h1"
+        eyebrow="Vocabulary"
+        nativeEcho="शब्दकोश"
+        title="Living dictionaries"
+        description="Explore Himachali dialects, their vocabulary, expressions, and cultural meanings preserved from the hills."
+      />
 
-      <div className="absolute inset-0 bg-white/60 dark:bg-black/85" />
+      <div className="mt-12 grid gap-6 lg:grid-cols-[2fr_1fr]">
+        {dialectsConfig.map((dialect) => (
+          <Link
+            key={dialect.id}
+            href={`/vocabulary/${dialect.id}`}
+            className="block rounded-2xl"
+          >
+            <article className="relative h-full overflow-hidden rounded-2xl border border-border bg-card p-8 shadow-card transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lift">
+              <PahariBand className="absolute inset-x-0 top-0 text-saffron/60" />
+              <div className="flex flex-wrap items-baseline gap-x-3">
+                <h2 className="font-display text-2xl tracking-tight">
+                  {dialect.title}
+                </h2>
+                {dialect.nativeName && (
+                  <span
+                    aria-hidden
+                    className="font-deva text-lg text-saffron-deep"
+                  >
+                    {dialect.nativeName}
+                  </span>
+                )}
+              </div>
+              <p className="mt-2 text-muted-foreground">{dialect.subtitle}</p>
+              <span className="link-ink mt-8 inline-block text-sm font-medium text-saffron-deep">
+                Search {dialect.title} <span aria-hidden>→</span>
+              </span>
+            </article>
+          </Link>
+        ))}
 
-      <main className="relative z-10 min-h-screen flex items-center">
-        <div className="max-w-5xl px-6 sm:px-10">
-          <span className="uppercase tracking-widest text-xs opacity-70 font-semibold">
-            Language & Culture
-          </span>
-
-          <h1 className="mt-2 text-4xl md:text-5xl font-semibold">
-            Vocabulary
-          </h1>
-
-          <p className="mt-4 text-lg max-w-xl opacity-80 leading-relaxed">
-            Explore Himachali dialects, their vocabulary, expressions, and
-            cultural meanings preserved from the hills.
+        <div className="rounded-2xl border border-dashed border-border p-8">
+          <h2 className="font-display text-2xl tracking-tight">
+            Your dialect next
+          </h2>
+          <p className="mt-2 text-muted-foreground">
+            Contribute sentences to bring your dialect online.
           </p>
-
-          <div className="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-xl">
-            {dialectsConfig.map((dialect) => (
-              <DialectLink
-                key={dialect.id}
-                href={`/vocabulary/${dialect.id}`}
-                title={dialect.title}
-                subtitle={dialect.subtitle}
-              />
-            ))}
-          </div>
+          <Link
+            href="/contribute"
+            className="link-ink mt-8 inline-block text-sm font-medium text-saffron-deep"
+          >
+            Contribute <span aria-hidden>→</span>
+          </Link>
         </div>
-      </main>
-    </div>
+      </div>
+    </main>
   );
 }

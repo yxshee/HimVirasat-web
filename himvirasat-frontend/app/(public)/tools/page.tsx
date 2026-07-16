@@ -1,48 +1,49 @@
-import Image from "next/image";
-import DialectLink from "@/components/vocabulary/DialectLink";
+import type { Metadata } from "next";
+
+import { SectionHeading } from "@/components/decor/section-heading";
+import { ToolCard } from "@/components/tools/tool-card";
+import { site } from "@/lib/site";
+
+export const metadata: Metadata = {
+  title: "Language Tools",
+};
 
 export default function ToolsPage() {
   return (
-    <div className="relative min-h-screen overflow-hidden text-slate-900 dark:text-slate-100">
-      {/* Background */}
-      <div className="absolute inset-0">
-        <Image
-          src="/mountains1.png"
-          alt="Mountain background"
-          fill
-          className="object-cover"
-          priority
-          sizes="100vw"
+    <div className="mx-auto max-w-6xl px-6 py-24 sm:py-32">
+      <SectionHeading
+        as="h1"
+        eyebrow="Tools"
+        nativeEcho="उपकरण"
+        title="Language tools"
+        description="Utility tools to assist contributors in working with scripts, datasets, and language preservation tasks."
+      />
+
+      <div className="mt-12 grid gap-6 sm:grid-cols-2">
+        <ToolCard
+          href="/tools/transliterator"
+          title="Transliterator"
+          description="Convert between Devanagari and Takri — the script once used across Himachal."
+          glyphA="अ"
+          glyphB="𑚀"
         />
-      </div>
 
-      {/* Overlay */}
-      <div className="absolute inset-0 bg-white/60 dark:bg-black/85" />
-
-      {/* Content */}
-      <main className="relative z-10 min-h-screen flex items-center">
-        <div className="max-w-5xl px-6 sm:px-10">
-          <span className="uppercase tracking-widest text-xs opacity-70 font-semibold">
-            Tools
-          </span>
-
-          <h1 className="mt-2 text-4xl md:text-5xl font-semibold">Tools</h1>
-
-          <p className="mt-4 text-lg max-w-xl opacity-80 leading-relaxed">
-            Utility tools to assist contributors in working with scripts,
-            datasets, and language preservation tasks.
+        {/* Propose a tool */}
+        <div className="flex flex-col justify-center rounded-2xl border border-dashed border-border p-8">
+          <h2 className="font-display text-xl">Propose a tool</h2>
+          <p className="mt-2 text-muted-foreground">
+            Open an issue on GitHub with your idea.
           </p>
-
-          {/* Tools Grid */}
-          <div className="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-xl">
-            <DialectLink
-              href="/tools/transliterator"
-              title="Transliterator"
-              subtitle="Convert between Devanagari and Tankri scripts."
-            />
-          </div>
+          <a
+            href={`${site.links.repo}/issues`}
+            target="_blank"
+            rel="noreferrer"
+            className="link-ink mt-6 self-start text-sm font-medium text-saffron-deep"
+          >
+            Open an issue &rarr;
+          </a>
         </div>
-      </main>
+      </div>
     </div>
   );
 }

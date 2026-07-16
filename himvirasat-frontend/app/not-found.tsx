@@ -1,36 +1,38 @@
 import Link from "next/link";
+
 import { Button } from "@/components/ui/button";
+import { ContourField } from "@/components/decor/contour-field";
 
 export default function NotFound() {
   return (
-    <div className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      <div
-        className="absolute inset-0 bg-cover bg-center"
-        style={{ backgroundImage: "url('/mountains1.png')" }}
-      />
-      <div className="absolute inset-0 bg-white/40 dark:bg-black/70 backdrop-blur-[2px]" />
+    <section className="relative flex min-h-svh items-center justify-center overflow-hidden bg-background">
+      <div aria-hidden className="texture-grain absolute inset-0 opacity-[0.05]" />
+      <ContourField className="text-primary" />
 
-      <main className="relative z-10 text-center px-6">
-        <span className="text-emerald-600 dark:text-emerald-400 font-bold tracking-widest uppercase text-sm">
-          Error 404
-        </span>
-        <h1 className="mt-4 text-6xl md:text-8xl font-bold text-slate-900 dark:text-white tracking-tighter">
-          Lost in the <br /> Clouds?
+      <main className="relative z-10 mx-auto max-w-xl px-6 py-16 text-center">
+        <p
+          aria-hidden
+          className="font-deva text-[8rem] leading-none text-brand md:text-[12rem]"
+        >
+          ४०४
+        </p>
+        <h1 className="mt-6 font-display text-2xl md:text-3xl">
+          Error 404 — Lost in the clouds?
         </h1>
-        <p className="mt-6 text-lg text-slate-700 dark:text-slate-300 max-w-md mx-auto leading-relaxed">
-          {`The trail you're looking for doesn't exist.`} It might have been
-          moved or renamed in our heritage archives.
+        <p className="mx-auto mt-4 max-w-md leading-relaxed text-muted-foreground">
+          The trail you&apos;re looking for doesn&apos;t exist. It might have
+          been moved or renamed in our heritage archives.
         </p>
 
-        <div className="mt-10">
-          <Button
-            asChild
-            className="h-14 px-8 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white border-none shadow-xl transition-all hover:scale-105"
-          >
-            <Link href="/">Return to Basecamp</Link>
+        <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
+          <Button asChild>
+            <Link href="/">Return to basecamp</Link>
+          </Button>
+          <Button asChild variant="outline">
+            <Link href="/vocabulary">Search the vocabulary</Link>
           </Button>
         </div>
       </main>
-    </div>
+    </section>
   );
 }

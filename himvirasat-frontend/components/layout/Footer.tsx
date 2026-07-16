@@ -1,60 +1,131 @@
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
+
+import { GlyphWatermark } from "@/components/decor/glyph-watermark";
+import { PahariBand } from "@/components/decor/pahari-band";
+import { Ridgeline } from "@/components/decor/ridgeline";
+import { site } from "@/lib/site";
+
+const columns = [
+  {
+    heading: "Explore",
+    links: [
+      { label: "Vocabulary", href: "/vocabulary" },
+      { label: "Datasets", href: "/datasets" },
+      { label: "Tools", href: "/tools" },
+      { label: "Transliterator", href: "/tools/transliterator" },
+    ],
+  },
+  {
+    heading: "Participate",
+    links: [
+      { label: "Contribute", href: "/contribute" },
+      { label: "HimVirasat Discord", href: site.links.discordHimvirasat },
+      { label: "HP Community Discord", href: site.links.discordHpCommunity },
+      { label: "GitHub", href: site.links.github },
+    ],
+  },
+  {
+    heading: "Project",
+    links: [
+      { label: "About", href: "/about" },
+      { label: "Team", href: "/about#team" },
+      { label: "Source code", href: site.links.repo },
+    ],
+  },
+];
+
+const linkClasses =
+  "link-ink text-sm text-muted-foreground transition-colors hover:text-foreground";
 
 export default function Footer() {
   return (
-    <footer className=" border-t border-border/40 bg-background/90 backdrop-blur-md">
-      <div className="mx-auto max-w-7xl px-6 py-12 md:flex md:items-center md:justify-between lg:px-8">
-        <div className="flex flex-col items-start gap-4 md:max-w-sm">
-          <Link href="/" className="flex items-center gap-2">
-            <Image
-              src="/virasat.png"
-              alt="Logo"
-              width={28}
-              height={28}
-              className="rounded-md"
+    <footer className="relative overflow-hidden">
+      {/* Card-colored ridge rising out of the page background into the footer body. */}
+      <Ridgeline className="text-card" />
+
+      <div className="bg-card">
+        <PahariBand className="text-saffron/50" />
+
+        <div className="mx-auto max-w-7xl px-6 py-14 lg:px-8">
+          <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="flex flex-col items-start gap-4">
+              <Link href="/" className="flex items-center gap-2.5">
+                <Image
+                  src="/virasat.png"
+                  alt="HimVirasat logo"
+                  width={32}
+                  height={32}
+                  className="rounded-lg"
+                />
+                <span className="flex flex-col">
+                  <span className="font-display font-semibold leading-tight">
+                    HimVirasat
+                  </span>
+                  <span
+                    aria-hidden
+                    className="font-deva text-[10px] leading-tight tracking-wide text-saffron-deep"
+                  >
+                    हिमविरासत
+                  </span>
+                </span>
+              </Link>
+              <p className="text-sm leading-6 text-muted-foreground">
+                An open-source initiative dedicated to the digital preservation
+                of Himachal&apos;s linguistic heritage and cultural memory.
+              </p>
+              <p aria-hidden className="font-takri text-sm text-muted-foreground/60">
+                𑚩𑚮𑚢𑚦𑚮𑚤𑚭𑚨𑚙
+              </p>
+            </div>
+
+            {columns.map((column) => (
+              <nav
+                key={column.heading}
+                aria-label={column.heading}
+                className="flex flex-col gap-4"
+              >
+                <h3 className="text-xs uppercase tracking-[0.2em] text-saffron-deep">
+                  {column.heading}
+                </h3>
+                <ul className="flex flex-col gap-2.5">
+                  {column.links.map((link) => (
+                    <li key={link.label}>
+                      {link.href.startsWith("http") ? (
+                        <a
+                          href={link.href}
+                          target="_blank"
+                          rel="noreferrer"
+                          className={linkClasses}
+                        >
+                          {link.label}
+                        </a>
+                      ) : (
+                        <Link href={link.href} className={linkClasses}>
+                          {link.label}
+                        </Link>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+            ))}
+          </div>
+        </div>
+
+        <div className="border-t border-border">
+          <div className="relative mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-x-8 gap-y-2 px-6 py-6 lg:px-8">
+            <p className="text-xs text-muted-foreground">
+              &copy; {new Date().getFullYear()} HimVirasat
+            </p>
+            <p className="text-xs text-muted-foreground">
+              Open source, community-built.
+            </p>
+            <GlyphWatermark
+              glyph="हि"
+              className="-right-10 -bottom-24 text-[10rem]"
             />
-            <span className="text-lg font-bold tracking-tighter text-brand">
-              HimVirasat
-            </span>
-          </Link>
-          <p className="text-sm leading-6 text-muted-foreground">
-            {`An open-source initiative dedicated to the digital preservation of Himachal's linguistic heritage and cultural memory.`}
-          </p>
-        </div>
-
-        <div className="mt-8 flex flex-wrap gap-x-8 gap-y-4 md:mt-0">
-          <Link
-            href="/vocabulary"
-            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-          >
-            Vocabulary
-          </Link>
-          <Link
-            href="/vocabulary"
-            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-          >
-            Dialects
-          </Link>
-          <Link
-            href="https://github.com/HimVirasat"
-            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-          >
-            GitHub
-          </Link>
-          <Link
-            href="/about"
-            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-          >
-            About
-          </Link>
-        </div>
-
-        <div className="mt-8 md:mt-0">
-          <p className="text-xs leading-5 text-muted-foreground">
-            &copy; {new Date().getFullYear()} HimVirasat. Built by the
-            community.
-          </p>
+          </div>
         </div>
       </div>
     </footer>

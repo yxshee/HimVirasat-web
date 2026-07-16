@@ -1,140 +1,237 @@
 import Image from "next/image";
 import Link from "next/link";
-import {
-  HeartIcon,
-  PencilSquareIcon,
-  ArrowDownTrayIcon,
-} from "@heroicons/react/24/outline";
+
 import { Button } from "@/components/ui/button";
-import { SiGithub } from "@icons-pack/react-simple-icons";
-const actionButtonClass =
-  "h-14 w-60 gap-3 rounded-full px-6 text-sm font-medium " +
-  "bg-white/95 text-gray-900 " +
-  "dark:bg-zinc-900 dark:text-zinc-100 " +
-  "shadow-sm ring-1 ring-black/10 dark:ring-white/10 " +
-  "backdrop-blur-sm transition " +
-  "hover:bg-white dark:hover:bg-zinc-800 hover:shadow-md";
+import { ContourField } from "@/components/decor/contour-field";
+import { GlyphWatermark } from "@/components/decor/glyph-watermark";
+import { PahariBand } from "@/components/decor/pahari-band";
+import { Ridgeline } from "@/components/decor/ridgeline";
+import { SectionHeading } from "@/components/decor/section-heading";
+import { Reveal } from "@/components/motion/reveal";
+import { site } from "@/lib/site";
+
+const FACTS = [
+  { value: "6", label: "dialects collecting" },
+  { value: "1", label: "open dataset published" },
+  { value: "2", label: "scripts — Devanagari ⇄ Takri" },
+  { value: "100%", label: "open source" },
+];
+
+const COMMUNITY_LINKS = [
+  {
+    label: "HimVirasat Discord",
+    href: site.links.discordHimvirasat,
+    icon: "/virasat.png",
+    rounded: true,
+  },
+  {
+    label: "HP Community Discord",
+    href: site.links.discordHpCommunity,
+    icon: "/hpdiscord.png",
+    rounded: true,
+  },
+  {
+    label: "GitHub",
+    href: site.links.github,
+    icon: "/hp-github.png",
+    rounded: false,
+  },
+];
 
 export default function Home() {
   return (
-    <div className="relative min-h-screen overflow-hidden">
-      <div
-        className="absolute inset-0 bg-cover bg-center"
-        style={{ backgroundImage: "url('/mountains1.png')" }}
-      />
-      <div className="absolute inset-0 bg-white/60 dark:bg-black/85" />
+    <>
+      {/* ── Hero ─────────────────────────────────────────────────────── */}
+      <section className="relative flex min-h-[88svh] items-center justify-center overflow-hidden py-28">
+        <ContourField className="inset-0 text-primary" />
+        <GlyphWatermark glyph="𑚩" script="takri" className="-top-16 -right-8" />
 
-      <main className="relative mx-auto min-h-screen max-w-4xl px-6 py-24 sm:px-12">
-        <div className="flex flex-col items-center text-center">
-          <Image
-            src="/virasat.png"
-            alt="HimVirasat logo"
-            width={84}
-            height={84}
-            priority
-            className="rounded-2xl"
+        <div className="relative mx-auto flex max-w-3xl flex-col items-center px-6 text-center">
+          <Reveal delay={0}>
+            <p className="text-xs tracking-[0.25em] text-saffron-deep uppercase">
+              <span aria-hidden className="font-deva tracking-normal normal-case">
+                हिमाचल की विरासत
+              </span>{" "}
+              · Open Language Preservation
+            </p>
+          </Reveal>
+
+          <Reveal delay={80}>
+            <h1
+              lang="hi"
+              className="text-brand mt-6 font-deva text-7xl leading-tight md:text-9xl"
+            >
+              हिमविरासत
+            </h1>
+            <p className="mt-4 font-display text-2xl tracking-[0.15em] text-muted-foreground uppercase">
+              HimVirasat
+            </p>
+          </Reveal>
+
+          <Reveal delay={160}>
+            <p className="mt-8 max-w-2xl text-lg leading-8 text-muted-foreground">
+              A community-driven initiative to preserve Himachal Pradesh’s
+              languages, dialects, traditions, and cultural memory — and bring
+              them into the digital age.
+            </p>
+          </Reveal>
+
+          <Reveal delay={240}>
+            <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
+              <Button asChild>
+                <Link href="/contribute">Start contributing</Link>
+              </Button>
+              <Button asChild variant="outline">
+                <Link href="/vocabulary">Explore the vocabulary</Link>
+              </Button>
+            </div>
+          </Reveal>
+        </div>
+
+        <Ridgeline className="absolute right-0 bottom-0 left-0 text-card" />
+      </section>
+
+      {/* ── Fact strip ───────────────────────────────────────────────── */}
+      <section className="bg-card">
+        <PahariBand />
+        <div className="mx-auto grid max-w-5xl grid-cols-2 gap-y-10 px-6 py-14 sm:grid-cols-4">
+          {FACTS.map((fact, i) => (
+            <div
+              key={fact.label}
+              className={
+                i > 0
+                  ? "sm:border-l sm:border-border sm:pl-8"
+                  : undefined
+              }
+            >
+              <p className="font-display text-4xl text-saffron-deep md:text-5xl">
+                {fact.value}
+              </p>
+              <p className="mt-2 text-sm text-muted-foreground">{fact.label}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ── Mission ──────────────────────────────────────────────────── */}
+      <section className="mx-auto max-w-6xl px-6 py-24">
+        <div className="grid gap-12 md:grid-cols-2">
+          <SectionHeading
+            eyebrow="The Mission"
+            title="Open translation datasets for Himachali dialects"
+            nativeEcho="ध्येय"
           />
-
-          <h1 className="mt-6 bg-linear-to-r from-emerald-700 via-green-700 to-amber-600 bg-clip-text text-5xl font-semibold tracking-tight text-transparent">
-            HimVirasat
-          </h1>
-
-          <p className="mt-4 max-w-2xl text-lg leading-8 text-zinc-800 dark:text-zinc-200">
-            A community-driven initiative to preserve Himachal Pradesh’s
-            languages, dialects, traditions, and cultural memory — and bring
-            them into the digital age.
-          </p>
+          <div className="space-y-5 border-l-2 border-saffron pl-6">
+            <p className="leading-7 text-foreground">
+              We are building open, structured Hindi ↔ Himachali dialect
+              translation datasets by collecting parallel sentences written by
+              native speakers. Contributors simply write everyday sentences in
+              their dialect along with Hindi translations. No technical
+              knowledge required.
+            </p>
+            <p className="leading-7 text-muted-foreground">
+              These datasets will be freely available for research and used to
+              fine-tune multilingual AI models, ensuring Himachali languages
+              are not left behind in the digital age.
+            </p>
+          </div>
         </div>
+      </section>
 
-        <section className="mt-16 rounded-2xl bg-white/80 p-8 shadow-lg backdrop-blur dark:bg-zinc-900/70">
-          <h2 className="text-2xl font-semibold text-emerald-800 dark:text-emerald-400">
-            Open Translation Datasets for Himachali Dialects
-          </h2>
-
-          <p className="mt-4 text-base leading-7 text-zinc-700 dark:text-zinc-300">
-            We are building open, structured Hindi ↔ Himachali dialect
-            translation datasets by collecting parallel sentences written by
-            native speakers. Contributors simply write everyday sentences in
-            their dialect along with Hindi translations. No technical knowledge
-            required.
-          </p>
-
-          <p className="mt-4 text-base leading-7 text-zinc-700 dark:text-zinc-300">
-            These datasets will be freely available for research and used to
-            fine-tune multilingual AI models, ensuring Himachali languages are
-            not left behind in the digital age.
-          </p>
-        </section>
-
-        <div className="mt-12 flex flex-col items-center gap-4 sm:flex-row sm:flex-wrap sm:justify-center">
-          <Button asChild className={actionButtonClass}>
-            <Link
-              href="https://discord.gg/PgJWcFXRTB"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Image
-                src="/virasat.png"
-                alt="HimVirasat Discord"
-                width={36}
-                height={36}
-                className="rounded-full"
-              />
-              HimVirasat Discord
+      {/* ── Three doors ──────────────────────────────────────────────── */}
+      <section className="mx-auto max-w-6xl px-6 py-24">
+        <SectionHeading eyebrow="Explore" title="Three ways in" />
+        <div className="mt-12 grid gap-6 sm:grid-cols-3">
+          <Reveal delay={0}>
+            <Link href="/vocabulary" className="block h-full">
+              <article className="flex h-full flex-col rounded-2xl border border-border bg-card p-8 transition hover:-translate-y-1 hover:border-saffron/40 hover:shadow-lift">
+                <span aria-hidden className="font-deva text-lg text-saffron-deep">
+                  शब्द
+                </span>
+                <h3 className="mt-3 font-display text-xl">Vocabulary</h3>
+                <p className="mt-2 flex-1 text-sm leading-6 text-muted-foreground">
+                  Search living dictionaries of Himachali dialects.
+                </p>
+                <span className="link-ink mt-6 self-start text-sm text-saffron-deep">
+                  Enter →
+                </span>
+              </article>
             </Link>
-          </Button>
+          </Reveal>
 
-          <Button asChild className={actionButtonClass}>
-            <Link
-              href="https://discord.gg/wHjT3vMAVx"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Image
-                src="/hpdiscord.png"
-                alt="Himachal Pradesh Discord"
-                width={36}
-                height={36}
-                className="rounded-full"
-              />
-              HP Discord Community
+          <Reveal delay={80}>
+            <Link href="/datasets" className="block h-full">
+              <article className="flex h-full flex-col rounded-2xl border border-border bg-card p-8 transition hover:-translate-y-1 hover:border-saffron/40 hover:shadow-lift">
+                <h3 className="font-display text-xl">Datasets</h3>
+                <p className="mt-2 flex-1 text-sm leading-6 text-muted-foreground">
+                  Download open, versioned translation datasets.
+                </p>
+                <span className="link-ink mt-6 self-start text-sm text-saffron-deep">
+                  Enter →
+                </span>
+              </article>
             </Link>
-          </Button>
+          </Reveal>
 
-          <Button asChild className={actionButtonClass}>
-            <Link
-              href="https://github.com/HimVirasat"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <SiGithub className="h-16 w-16 scale-150" />
-              HimVirasat GitHub
+          <Reveal delay={160}>
+            <Link href="/tools" className="block h-full">
+              <article className="flex h-full flex-col rounded-2xl border border-border bg-card p-8 transition hover:-translate-y-1 hover:border-saffron/40 hover:shadow-lift">
+                <span aria-hidden className="font-takri text-lg text-saffron-deep">
+                  𑚀
+                </span>
+                <h3 className="mt-3 font-display text-xl">Tools</h3>
+                <p className="mt-2 flex-1 text-sm leading-6 text-muted-foreground">
+                  Script tools, starting with a Devanagari ⇄ Takri
+                  transliterator.
+                </p>
+                <span className="link-ink mt-6 self-start text-sm text-saffron-deep">
+                  Enter →
+                </span>
+              </article>
             </Link>
-          </Button>
-
-          <Button asChild className={`${actionButtonClass}`}>
-            <Link href="/datasets">
-              <ArrowDownTrayIcon className="h-16 w-16 scale-150" /> Datasets
-            </Link>
-          </Button>
-          <Button asChild className={`${actionButtonClass}`}>
-            <Link href="/contribute">
-              <HeartIcon className="h-16 w-16 scale-150 text-red-500 fill-red-500" />
-              <span>Contribute</span>
-            </Link>
-          </Button>
-          <Button asChild className={`${actionButtonClass}`}>
-            <Link href="/vocabulary">
-              <PencilSquareIcon className="h-16 w-16 scale-150" />
-              Vocabulary
-            </Link>
-          </Button>
+          </Reveal>
         </div>
-        <footer className="mt-20 text-center text-md text-black dark:text-zinc-400">
+      </section>
+
+      {/* ── Community ────────────────────────────────────────────────── */}
+      <section className="bg-secondary/50 py-20">
+        <div className="mx-auto max-w-6xl px-6">
+          <SectionHeading
+            eyebrow="Community"
+            title="Built in the open"
+            align="center"
+          />
+          <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
+            {COMMUNITY_LINKS.map((link) => (
+              <a
+                key={link.label}
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex h-12 items-center gap-2.5 rounded-full border border-border bg-card px-5 text-sm font-medium transition hover:border-saffron/40"
+              >
+                <Image
+                  src={link.icon}
+                  alt=""
+                  width={24}
+                  height={24}
+                  className={link.rounded ? "rounded-full" : undefined}
+                />
+                {link.label}
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Closing ──────────────────────────────────────────────────── */}
+      <section className="px-6 py-20">
+        <PahariBand className="mx-auto w-24 text-saffron/60" />
+        <p className="mx-auto mt-8 max-w-3xl text-center font-display text-2xl text-balance md:text-3xl">
           HimVirasat is an open, community-driven effort to preserve Himachal’s
           heritage for future generations.
-        </footer>
-      </main>
-    </div>
+        </p>
+      </section>
+    </>
   );
 }
