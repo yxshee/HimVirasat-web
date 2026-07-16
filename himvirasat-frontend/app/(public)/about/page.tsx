@@ -9,7 +9,7 @@ import { devToTankri } from "@/lib/transliteration/devToTankri";
 export const metadata = {
   title: "About & Team",
   description:
-    "From maintaining a digital archive to developing open-source Pahadi learning tools, HimVirasat is building the infrastructure for Himachal's digital future.",
+    "From maintaining a digital archive to developing open source Pahadi learning tools, HimVirasat is building the infrastructure for Himachal's digital future.",
 };
 
 export default function AboutPage() {
@@ -36,14 +36,14 @@ export default function AboutPage() {
             From maintaining this digital archive to developing
             <strong className="font-semibold text-foreground">
               {" "}
-              open-source Pahadi learning tools
+              open source Pahadi learning tools
             </strong>
             , we are building the infrastructure for Himachal’s digital future.
             Our vision scales from{" "}
             <strong className="font-semibold text-foreground">
               specialized LLMs (Large Language Models)
             </strong>{" "}
-            to real-time{" "}
+            to live{" "}
             <strong className="font-semibold text-foreground">
               dialect translators
             </strong>

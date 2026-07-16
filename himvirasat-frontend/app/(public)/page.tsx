@@ -97,7 +97,7 @@ export default function Home() {
 
           <Reveal delay={160}>
             <p className="mt-8 max-w-2xl text-lg leading-8 text-muted-foreground">
-              A community-driven initiative to preserve Himachal Pradesh’s
+              An initiative driven by the community to preserve Himachal Pradesh’s
               languages, dialects, traditions, and cultural memory, and bring
               them into the digital age.
             </p>
@@ -171,7 +171,7 @@ export default function Home() {
             </p>
             <p className="leading-7 text-muted-foreground">
               These datasets will be freely available for research and used to
-              fine-tune multilingual AI models, ensuring Himachali languages
+              train multilingual AI models, ensuring Himachali languages
               are not left behind in the digital age.
             </p>
           </div>
@@ -300,7 +300,7 @@ export default function Home() {
           ]}
         />
         <p className="mx-auto mt-16 max-w-3xl px-6 text-center font-display text-3xl text-balance md:text-4xl">
-          HimVirasat is an open, community-driven effort to preserve Himachal’s
+          HimVirasat is an open effort driven by the community to preserve Himachal’s
           heritage for future generations.
         </p>
       </section>

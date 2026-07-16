@@ -278,7 +278,7 @@ export default function WorkspaceContent({
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-muted/30 dark:bg-muted/10 p-4 rounded-xl border border-border/40">
                 <FieldValue
-                  label="Hindi Cross-Mapping Index"
+                  label="Hindi Mapping Index"
                   value={currentItem.meaning_hindi}
                   editing={isEditMode}
                   editValue={editForm.meaning_hindi}

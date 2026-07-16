@@ -56,7 +56,7 @@ export default function DatasetsPage() {
                   {dataset.language}
                 </p>
                 <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-                  Open-source structured vocabulary dataset suitable for
+                  Open, structured vocabulary dataset suitable for
                   linguistic research, NLP training, and documentation.
                 </p>
                 <div className="mt-8 flex flex-wrap gap-3">

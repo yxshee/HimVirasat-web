@@ -327,7 +327,7 @@ export default function ReviewQueueDashboardPage() {
                 variant="outline"
                 className="text-[10px] py-0 px-1.5 font-normal border-border text-muted-foreground"
               >
-                PR-style review
+                Review workflow
               </Badge>
             </h1>
             <p className="text-[11px] text-muted-foreground">

@@ -60,7 +60,7 @@ export default function Footer() {
               </span>
             </Link>
             <p className="text-sm leading-6 text-muted-foreground">
-              An open-source initiative dedicated to the digital preservation
+              An open source initiative dedicated to the digital preservation
               of Himachal&apos;s linguistic heritage and cultural memory.
             </p>
             <p aria-hidden className="font-takri text-sm text-muted-foreground/60">
@@ -108,7 +108,7 @@ export default function Footer() {
             &copy; {new Date().getFullYear()} HimVirasat
           </p>
           <p className="text-xs text-muted-foreground">
-            Open source, community-built.
+            Open source, community built.
           </p>
         </div>
       </div>

@@ -178,7 +178,7 @@ export const sharedMockDataset: Contribution[] = [
         type: "comment_resolved",
         actor_id: "usr_contrib_14",
         actor_name: "Rohit Negi",
-        message: "Resolved crop-name clarification.",
+        message: "Resolved crop name clarification.",
         created_at: "2026-07-01T15:14:00.000Z",
       },
       {
@@ -1309,7 +1309,7 @@ export const sharedMockDataset: Contribution[] = [
         actor_id: "usr_expert_77",
         actor_name: "Jasper Dahl",
         message:
-          "Question raised regarding sub-dialect lateral representations.",
+          "Question raised regarding subdialect lateral representations.",
         created_at: "2026-07-07T21:00:00.000Z",
       },
     ],

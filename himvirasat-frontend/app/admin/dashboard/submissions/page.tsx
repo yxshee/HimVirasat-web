@@ -160,7 +160,7 @@ export default function ContributionSubmissionPage() {
           Couldn&apos;t load form data
         </p>
         <p className="mt-1 text-muted-foreground">
-          The dialect, category, and part-of-speech lists didn&apos;t come
+          The dialect, category, and part of speech lists didn&apos;t come
           through. Check your connection and try again.
         </p>
         <Button
