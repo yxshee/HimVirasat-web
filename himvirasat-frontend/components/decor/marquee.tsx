@@ -21,11 +21,11 @@ export function Marquee({
   const row = (hidden: boolean) => (
     <div
       aria-hidden={hidden || undefined}
-      className="flex shrink-0 items-center"
+      className="flex shrink-0 items-baseline"
     >
       {items.map((item, i) => (
         <Fragment key={i}>
-          <span className="px-5 whitespace-nowrap">{item}</span>
+          <span className="px-5 leading-none whitespace-nowrap">{item}</span>
           <span aria-hidden className="px-1 text-sm">
             {separator}
           </span>

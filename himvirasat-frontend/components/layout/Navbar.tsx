@@ -1,12 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 
+import { LogoMark } from "@/components/decor/logo-mark";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
+import { site } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
 const navLinks = [
@@ -31,22 +32,16 @@ export default function Navbar() {
           href="/"
           className="flex h-full items-center gap-2.5 border-r border-border pl-0 pr-4"
         >
-          <Image
-            src="/virasat.png"
-            alt="HimVirasat logo"
-            width={32}
-            height={32}
-            className="rounded-md"
-          />
+          <LogoMark size={32} />
           <span className="flex flex-col">
             <span className="font-display font-medium leading-tight tracking-tight">
               HimVirasat
             </span>
             <span
               aria-hidden
-              className="font-deva text-[10px] leading-tight tracking-wide text-marigold-deep"
+              className="font-takri mt-0.5 text-[10px] leading-none tracking-wide text-marigold-deep"
             >
-              हिमविरासत
+              {site.takriName}
             </span>
           </span>
         </Link>
@@ -63,7 +58,7 @@ export default function Navbar() {
                     "text-sm font-medium",
                     isActive
                       ? "rounded-full border border-border bg-foreground px-4 py-1.5 text-background"
-                      : "text-foreground decoration-2 underline-offset-4 hover:underline",
+                      : "rounded-full px-4 py-1.5 text-foreground transition-colors hover:bg-secondary",
                   )}
                 >
                   {link.name}

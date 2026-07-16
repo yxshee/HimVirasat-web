@@ -4,15 +4,18 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Coin } from "@/components/decor/coin";
 import { GlyphWatermark } from "@/components/decor/glyph-watermark";
+import { LogoMark } from "@/components/decor/logo-mark";
 import { Marquee } from "@/components/decor/marquee";
+import { ScriptCycle } from "@/components/decor/script-cycle";
 import { SectionHeading } from "@/components/decor/section-heading";
 import { Reveal } from "@/components/motion/reveal";
 import { site } from "@/lib/site";
+import { devToTankri } from "@/lib/transliteration/devToTankri";
 
 const FACTS = [
   { value: "6", label: "dialects collecting" },
   { value: "1", label: "open dataset published" },
-  { value: "2", label: "scripts — Devanagari ⇄ Takri" },
+  { value: "2", label: "scripts · Devanagari ⇄ Takri" },
   { value: "100%", label: "open source" },
 ];
 
@@ -27,7 +30,7 @@ const COMMUNITY_LINKS = [
   {
     label: "HimVirasat Discord",
     href: site.links.discordHimvirasat,
-    icon: "/virasat.png",
+    icon: null,
     rounded: true,
   },
   {
@@ -51,7 +54,8 @@ export default function Home() {
       <section className="surface-ink accent-marigold relative flex min-h-[88svh] items-center justify-center overflow-hidden border-b border-border">
         <GlyphWatermark glyph="𑚩" script="takri" className="-top-16 -right-8" />
         <Coin
-          glyph="हि"
+          glyph="𑚦"
+          script="takri"
           fill="var(--marigold)"
           tilt={-12}
           size={150}
@@ -69,29 +73,31 @@ export default function Home() {
         <div className="relative mx-auto flex max-w-3xl flex-col items-center px-6 py-24 text-center">
           <Reveal delay={0}>
             <p className="inline-flex items-center gap-2 rounded-full border border-border bg-marigold px-3 py-1 text-xs tracking-[0.15em] text-black uppercase">
-              <span aria-hidden className="font-deva tracking-normal normal-case">
-                हिमाचल की विरासत
+              <span
+                aria-hidden
+                className="font-takri leading-none tracking-normal normal-case"
+              >
+                {devToTankri("हिमाचल की विरासत")}
               </span>{" "}
-              · Open Language Preservation
+              <span className="leading-none">
+                · Open Language Preservation
+              </span>
             </p>
           </Reveal>
 
           <Reveal delay={80}>
             <h1
-              lang="hi"
-              className="text-brut mt-6 font-deva text-7xl leading-tight text-foreground md:text-9xl"
+              aria-label="HimVirasat"
+              className="text-brut mt-6 text-7xl font-medium text-foreground md:text-9xl"
             >
-              हिमविरासत
+              <ScriptCycle />
             </h1>
-            <p className="mt-4 font-display text-2xl tracking-[0.15em] text-muted-foreground uppercase">
-              HimVirasat
-            </p>
           </Reveal>
 
           <Reveal delay={160}>
             <p className="mt-8 max-w-2xl text-lg leading-8 text-muted-foreground">
               A community-driven initiative to preserve Himachal Pradesh’s
-              languages, dialects, traditions, and cultural memory — and bring
+              languages, dialects, traditions, and cultural memory, and bring
               them into the digital age.
             </p>
           </Reveal>
@@ -113,16 +119,16 @@ export default function Home() {
       <Marquee
         className="border-b border-border bg-marigold py-3 font-display text-xl text-black"
         items={[
-          <span key="native-name" lang="hi" className="font-deva">
-            हिमविरासत
+          <span key="native-name" aria-hidden className="font-takri">
+            {devToTankri("हिमविरासत")}
           </span>,
           "HimVirasat",
           <span key="takri-name" aria-hidden className="font-takri">
             𑚩𑚮𑚢𑚦𑚮𑚤𑚭𑚨𑚙
           </span>,
           "Open Language Preservation",
-          <span key="hp-heritage" lang="hi" className="font-deva">
-            हिमाचल की विरासत
+          <span key="hp-heritage" aria-hidden className="font-takri">
+            {devToTankri("हिमाचल की विरासत")}
           </span>,
         ]}
       />
@@ -151,7 +157,7 @@ export default function Home() {
           <SectionHeading
             eyebrow="The Mission"
             title="Open translation datasets for Himachali dialects"
-            nativeEcho="ध्येय"
+            nativeEcho={devToTankri("ध्येय")}
           />
           <div className="space-y-5 border-l-4 border-marigold pl-6">
             <p className="leading-7 text-foreground">
@@ -181,7 +187,7 @@ export default function Home() {
                   aria-hidden
                   className="grid size-12 place-items-center border border-border bg-section-accent text-black"
                 >
-                  <span className="font-deva">शब्द</span>
+                  <span className="font-takri">𑚧</span>
                 </div>
                 <h3 className="mt-3 font-display text-xl">Vocabulary</h3>
                 <p className="mt-2 flex-1 text-sm leading-6 text-muted-foreground">
@@ -254,13 +260,17 @@ export default function Home() {
                 rel="noopener noreferrer"
                 className="inline-flex h-12 items-center gap-2 rounded-full border border-border px-5 text-sm font-medium transition-colors hover:bg-pink hover:text-black"
               >
-                <Image
-                  src={link.icon}
-                  alt=""
-                  width={24}
-                  height={24}
-                  className={link.rounded ? "rounded-full" : undefined}
-                />
+                {link.icon ? (
+                  <Image
+                    src={link.icon}
+                    alt=""
+                    width={24}
+                    height={24}
+                    className={link.rounded ? "rounded-full" : undefined}
+                  />
+                ) : (
+                  <LogoMark size={24} />
+                )}
                 {link.label}
               </a>
             ))}
@@ -275,8 +285,8 @@ export default function Home() {
           speed={40}
           separator="·"
           items={[
-            <span key="native-name" lang="hi" className="font-deva">
-              हिमविरासत
+            <span key="native-name" aria-hidden className="font-takri">
+              {devToTankri("हिमविरासत")}
             </span>,
             <span key="orn-1" aria-hidden>
               ◇

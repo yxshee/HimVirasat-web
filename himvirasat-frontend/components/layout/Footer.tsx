@@ -1,7 +1,6 @@
-import Image from "next/image";
 import Link from "next/link";
 
-import { GlyphWatermark } from "@/components/decor/glyph-watermark";
+import { LogoMark } from "@/components/decor/logo-mark";
 import { PahariBand } from "@/components/decor/pahari-band";
 import { site } from "@/lib/site";
 
@@ -47,22 +46,16 @@ export default function Footer() {
         <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4">
           <div className="flex flex-col items-start gap-4 border-border lg:border-l-0 lg:pl-0">
             <Link href="/" className="flex items-center gap-2.5">
-              <Image
-                src="/virasat.png"
-                alt="HimVirasat logo"
-                width={32}
-                height={32}
-                className="rounded-md"
-              />
+              <LogoMark size={32} />
               <span className="flex flex-col">
                 <span className="font-display font-medium leading-tight tracking-tight">
                   HimVirasat
                 </span>
                 <span
                   aria-hidden
-                  className="font-deva text-[10px] leading-tight tracking-wide text-section-accent-deep"
+                  className="font-takri mt-0.5 text-[10px] leading-none tracking-wide text-section-accent-deep"
                 >
-                  हिमविरासत
+                  {site.takriName}
                 </span>
               </span>
             </Link>
@@ -71,7 +64,7 @@ export default function Footer() {
               of Himachal&apos;s linguistic heritage and cultural memory.
             </p>
             <p aria-hidden className="font-takri text-sm text-muted-foreground/60">
-              𑚩𑚮𑚢𑚦𑚮𑚤𑚭𑚨𑚙
+              {site.takriName}
             </p>
           </div>
 
@@ -117,10 +110,6 @@ export default function Footer() {
           <p className="text-xs text-muted-foreground">
             Open source, community-built.
           </p>
-          <GlyphWatermark
-            glyph="हि"
-            className="-right-10 -bottom-24 text-[10rem]"
-          />
         </div>
       </div>
     </footer>

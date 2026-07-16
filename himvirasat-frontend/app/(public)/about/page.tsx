@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { TeamSection } from "@/components/about/team-section";
 import { SectionHeading } from "@/components/decor/section-heading";
 import { GlyphWatermark } from "@/components/decor/glyph-watermark";
+import { devToTankri } from "@/lib/transliteration/devToTankri";
 
 export const metadata = {
   title: "About & Team",
@@ -17,13 +18,13 @@ export default function AboutPage() {
         <SectionHeading
           as="h1"
           eyebrow="Our Vision"
-          nativeEcho="दृष्टि"
+          nativeEcho={devToTankri("दृष्टि")}
           title="Bridging the gap between Heritage and Innovation."
         />
       </header>
 
       <section className="surface-ink relative mt-16 overflow-hidden border-y border-border py-20">
-        <GlyphWatermark glyph="वि" className="-left-10 -top-20" />
+        <GlyphWatermark glyph="𑚦" script="takri" className="-left-10 -top-20" />
         <div className="relative mx-auto max-w-5xl px-6">
           <h2 className="font-display text-2xl tracking-tight">
             Beyond Just Words
@@ -80,7 +81,7 @@ export default function AboutPage() {
             Become Part of the Movement
           </h2>
           <p className="mx-auto mt-2 max-w-2xl text-black/70">
-            Whether you are a native speaker, a linguist, or a developer—your
+            Whether you are a native speaker, a linguist, or a developer, your
             contribution matters.
           </p>
           <div className="mt-8 flex flex-col justify-center gap-4 sm:flex-row">

@@ -341,11 +341,12 @@ html.js [data-reveal][data-revealed="true"] {
 }
 
 @utility link-ink {
-  text-decoration-line: underline;
-  text-decoration-thickness: 2px;
-  text-underline-offset: 3px;
-  transition: text-decoration-color 0.15s ease;
+  text-decoration-line: none;
+  transition:
+    color 0.15s ease,
+    opacity 0.15s ease;
   &:hover {
-    text-decoration-color: var(--section-accent);
+    color: var(--section-accent-deep);
+    opacity: 0.85;
   }
 }

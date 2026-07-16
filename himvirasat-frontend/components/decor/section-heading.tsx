@@ -31,11 +31,11 @@ export function SectionHeading({
             "bg-section-accent inline-flex items-center gap-2 rounded-full border border-border px-3 py-1 text-xs font-medium tracking-[0.15em] text-black uppercase",
           )}
         >
-          {eyebrow}
+          {eyebrow && <span className="leading-none">{eyebrow}</span>}
           {nativeEcho && (
             <span
               aria-hidden
-              className="font-deva text-sm font-normal tracking-normal normal-case"
+              className="font-takri text-xs leading-none font-normal tracking-normal normal-case"
             >
               {nativeEcho}
             </span>

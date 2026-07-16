@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { SectionHeading } from "@/components/decor/section-heading";
 import { dialectsConfig } from "@/lib/dialects/dialect-config";
+import { devToTankri } from "@/lib/transliteration/devToTankri";
 
 export const metadata: Metadata = {
   title: "Himachali Vocabulary",
@@ -15,7 +16,7 @@ export default function VocabularyPage() {
       <SectionHeading
         as="h1"
         eyebrow="Vocabulary"
-        nativeEcho="शब्दकोश"
+        nativeEcho={devToTankri("शब्दकोश")}
         title="Living dictionaries"
         description="Explore Himachali dialects, their vocabulary, expressions, and cultural meanings preserved from the hills."
       />

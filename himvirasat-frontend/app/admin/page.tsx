@@ -1,8 +1,8 @@
-import Image from "next/image";
 import Link from "next/link";
 
 import { AdminLoginForm } from "@/components/admin/admin-login-form";
 import { Coin } from "@/components/decor/coin";
+import { LogoMark } from "@/components/decor/logo-mark";
 import { PahariBand } from "@/components/decor/pahari-band";
 import { Ridgeline } from "@/components/decor/ridgeline";
 import { site } from "@/lib/site";
@@ -20,17 +20,13 @@ export default function AdminPage() {
         </Link>
 
         <div className="relative z-10">
-          <Image
-            src="/virasat.png"
-            alt=""
-            width={56}
-            height={56}
-            className="rounded-lg"
-            priority
-          />
+          <LogoMark size={56} />
           <p className="mt-4 font-display text-4xl">HimVirasat</p>
-          <p aria-hidden className="mt-1 font-deva text-lg text-marigold-deep">
-            हिमविरासत
+          <p
+            aria-hidden
+            className="mt-0.5 font-takri text-lg leading-none text-marigold-deep"
+          >
+            {site.takriName}
           </p>
           <p className="mt-6 max-w-md text-sm leading-relaxed text-muted-foreground">
             {site.description}
@@ -40,7 +36,8 @@ export default function AdminPage() {
         {/* Spacer keeps the stack clear of the ridgeline. */}
         <div aria-hidden className="h-16 sm:h-24" />
         <Coin
-          glyph="हि"
+          glyph="𑚩"
+          script="takri"
           fill="var(--marigold)"
           tilt={-8}
           size={120}
@@ -57,20 +54,16 @@ export default function AdminPage() {
         <div className="w-full max-w-sm">
           <div className="mb-8 lg:hidden">
             <div className="inline-flex items-center gap-3 rounded-md border border-border bg-card px-3 py-2 shadow-brut-sm">
-              <Image
-                src="/virasat.png"
-                alt=""
-                width={36}
-                height={36}
-                className="rounded-md"
-                priority
-              />
+              <LogoMark size={36} />
               <div>
                 <p className="font-display text-lg leading-tight">
                   HimVirasat
                 </p>
-                <p aria-hidden className="font-deva text-xs text-marigold-deep">
-                  हिमविरासत
+                <p
+                  aria-hidden
+                  className="mt-0.5 font-takri text-xs leading-none text-marigold-deep"
+                >
+                  {site.takriName}
                 </p>
               </div>
             </div>

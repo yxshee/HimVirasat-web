@@ -9,6 +9,7 @@ import {
   availableDialectsArray,
   dialectsConfig,
 } from "@/lib/dialects/dialect-config";
+import { devToTankri } from "@/lib/transliteration/devToTankri";
 
 function capitalize(s: string) {
   return s.charAt(0).toUpperCase() + s.slice(1);
@@ -54,12 +55,14 @@ export default async function DialectPage({
   return (
     <main className="mx-auto max-w-5xl px-6 py-16 sm:px-10">
       <header className="relative overflow-hidden">
-        <GlyphWatermark glyph="श" className="-right-8 -top-16" />
+        <GlyphWatermark glyph="𑚧" script="takri" className="-right-8 -top-16" />
         <SectionHeading
           as="h1"
           eyebrow="Vocabulary"
           title={config?.title ?? capitalize(dialect)}
-          nativeEcho={config?.nativeName}
+          nativeEcho={
+            config?.nativeName ? devToTankri(config.nativeName) : undefined
+          }
           description={`Explore the vocabulary and cultural expressions of ${config?.title ?? capitalize(dialect)}.`}
         />
       </header>

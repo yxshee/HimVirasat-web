@@ -7,7 +7,8 @@ export default function NotFound() {
   return (
     <section className="surface-ink accent-pink relative flex min-h-svh items-center justify-center overflow-hidden">
       <Coin
-        glyph="हि"
+        glyph="𑚦"
+        script="takri"
         fill="var(--pink)"
         tilt={12}
         size={90}
@@ -17,12 +18,15 @@ export default function NotFound() {
       <main className="relative z-10 mx-auto max-w-xl px-6 py-16 text-center">
         <p
           aria-hidden
-          className="text-brut font-deva text-[8rem] leading-none text-foreground md:text-[12rem]"
+          className="text-brut font-takri text-[8rem] leading-none text-foreground md:text-[12rem]"
         >
-          ४०४
+          𑛄𑛀𑛄
         </p>
-        <h1 className="mt-6 font-display text-2xl md:text-3xl">
-          Error 404 — Lost in the clouds?
+        <p className="mt-6 inline-flex rounded-full border border-border bg-section-accent px-3 py-1 text-xs font-medium tracking-[0.15em] text-black uppercase">
+          Error 404
+        </p>
+        <h1 className="mt-3 font-display text-2xl md:text-3xl">
+          Lost in the clouds?
         </h1>
         <p className="mx-auto mt-4 max-w-md leading-relaxed text-muted-foreground">
           The trail you&apos;re looking for doesn&apos;t exist. It might have

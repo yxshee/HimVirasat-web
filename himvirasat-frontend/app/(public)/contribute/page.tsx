@@ -4,6 +4,7 @@ import DialectCard from "@/components/dialects/DialectCard";
 import { Coin } from "@/components/decor/coin";
 import { SectionHeading } from "@/components/decor/section-heading";
 import { Reveal } from "@/components/motion/reveal";
+import { devToTankri } from "@/lib/transliteration/devToTankri";
 
 export const metadata: Metadata = {
   title: "Contribute",
@@ -46,21 +47,21 @@ const dialects = [
 
 const steps = [
   {
-    numeral: "१",
+    numeral: "𑛁",
     title: "Pick your dialect",
     line: "Choose your dialect from the plaques below.",
     tilt: -6,
     fill: "var(--marigold)",
   },
   {
-    numeral: "२",
+    numeral: "𑛂",
     title: "Write everyday sentences",
     line: "Write the words you use every day, with their Hindi translations, in the Google Form.",
     tilt: 0,
     fill: "var(--pink)",
   },
   {
-    numeral: "३",
+    numeral: "𑛃",
     title: "Reviewed & credited",
     line: "Every contribution is tracked and verified, and contributors are recognized and credited.",
     tilt: 6,
@@ -83,7 +84,7 @@ export default function ContributePage() {
       <SectionHeading
         as="h1"
         eyebrow="Contribute"
-        nativeEcho="योगदान"
+        nativeEcho={devToTankri("योगदान")}
         title="Language & Translation Contributions"
       />
 
@@ -95,7 +96,7 @@ export default function ContributePage() {
         </p>
 
         <h2 className="pt-6 font-display text-2xl text-foreground">
-          🌱 Your Words Matter
+          Your Words Matter
         </h2>
 
         <p>
@@ -129,6 +130,7 @@ export default function ContributePage() {
             <li key={step.title}>
               <Coin
                 glyph={step.numeral}
+                script="takri"
                 size={64}
                 tilt={step.tilt}
                 fill={step.fill}

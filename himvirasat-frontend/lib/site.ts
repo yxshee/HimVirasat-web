@@ -1,6 +1,7 @@
 export const site = {
   name: "HimVirasat",
   nativeName: "हिमविरासत",
+  takriName: "𑚩𑚮𑚢𑚦𑚮𑚤𑚭𑚨𑚙",
   tagline: "Preserving Himachal's Linguistic Heritage",
   description:
     "HimVirasat is an open-source, community-driven initiative documenting and preserving the languages and dialects of Himachal Pradesh through open translation datasets, vocabulary archives, and script tools.",

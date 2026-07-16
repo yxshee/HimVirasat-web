@@ -96,7 +96,7 @@ export default function VocabularySearch({ dialect }: { dialect: string }) {
           ))
         ) : !loading ? (
           <div className="rounded-lg border-2 border-dashed border-border px-6 py-16 text-center">
-            <p>No matches — try a shorter fragment.</p>
+            <p>No matches. Try a shorter fragment.</p>
             <p className="mt-2 text-sm text-muted-foreground">
               Search is fuzzy: partial words and approximate spellings still
               match.

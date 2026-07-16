@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { SectionHeading } from "@/components/decor/section-heading";
 import { ToolCard } from "@/components/tools/tool-card";
 import { site } from "@/lib/site";
+import { devToTankri } from "@/lib/transliteration/devToTankri";
 
 export const metadata: Metadata = {
   title: "Language Tools",
@@ -14,7 +15,7 @@ export default function ToolsPage() {
       <SectionHeading
         as="h1"
         eyebrow="Tools"
-        nativeEcho="उपकरण"
+        nativeEcho={devToTankri("उपकरण")}
         title="Language tools"
         description="Utility tools to assist contributors in working with scripts, datasets, and language preservation tasks."
       />
@@ -24,9 +25,8 @@ export default function ToolsPage() {
           <ToolCard
             href="/tools/transliterator"
             title="Transliterator"
-            description="Convert between Devanagari and Takri — the script once used across Himachal."
-            glyphA="अ"
-            glyphB="𑚀"
+            description="Convert between Devanagari and Takri, the script once used across Himachal."
+            glyph="𑚀"
           />
         </div>
 

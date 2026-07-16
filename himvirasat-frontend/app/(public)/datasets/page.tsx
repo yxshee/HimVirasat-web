@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Marquee } from "@/components/decor/marquee";
 import { SectionHeading } from "@/components/decor/section-heading";
 import { datasets } from "@/lib/datasets/dataset-utils";
+import { devToTankri } from "@/lib/transliteration/devToTankri";
 
 export const metadata: Metadata = {
   title: "Datasets",
@@ -20,7 +21,7 @@ export default function DatasetsPage() {
         <SectionHeading
           as="h1"
           eyebrow="Datasets"
-          nativeEcho="आंकड़े"
+          nativeEcho={devToTankri("आंकड़े")}
           title="Open Himachali language datasets"
           description="Download curated linguistic datasets preserving Himachali dialects for research, NLP, and cultural documentation."
         />
@@ -31,8 +32,8 @@ export default function DatasetsPage() {
         className="border-y border-border py-2 text-sm text-foreground"
         speed={40}
         items={[
-          <span key="native" lang="hi" className="font-deva">
-            आंकड़े
+          <span key="native" aria-hidden className="font-takri">
+            {devToTankri("आंकड़े")}
           </span>,
           "Open datasets",
           "Mandeali Vocabulary Dataset v1.0",

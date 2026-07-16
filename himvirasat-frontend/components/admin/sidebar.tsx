@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { usePathname } from "next/navigation";
 
 import {
@@ -14,6 +13,7 @@ import {
 } from "lucide-react";
 
 import { RoleBadge } from "@/components/admin/role-badge";
+import { LogoMark } from "@/components/decor/logo-mark";
 
 import {
   Sidebar,
@@ -140,14 +140,7 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
       {/* Header */}
       <SidebarHeader className="border-b border-sidebar-border">
         <div className="flex items-center gap-2 px-1 py-1.5">
-          <div className="grid size-8 shrink-0 place-items-center overflow-hidden rounded-md border border-border bg-marigold">
-            <Image
-              src="/virasat.png"
-              alt="HimVirasat"
-              width={28}
-              height={28}
-            />
-          </div>
+          <LogoMark size={32} className="shrink-0" />
 
           <div className="grid flex-1 text-left leading-tight group-data-[collapsible=icon]:hidden">
             <span className="truncate font-display text-sm font-semibold">

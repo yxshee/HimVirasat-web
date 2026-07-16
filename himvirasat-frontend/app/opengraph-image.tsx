@@ -2,7 +2,7 @@ import { ImageResponse } from "next/og";
 
 import { site } from "@/lib/site";
 
-export const alt = "HimVirasat — Open language preservation for Himachal";
+export const alt = "HimVirasat · Open language preservation for Himachal";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -136,12 +136,12 @@ function composition(withDevanagari: boolean) {
             height: 168,
             borderRadius: 168,
             border: `2px solid ${INK}`,
-            fontFamily: withDevanagari ? "Noto Serif Devanagari" : "sans-serif",
+            fontFamily: withDevanagari ? "Noto Sans Takri" : "sans-serif",
             fontSize: 90,
             color: INK,
           }}
         >
-          {withDevanagari ? "हि" : null}
+          {withDevanagari ? "𑚩" : null}
         </div>
       </div>
 
@@ -170,9 +170,11 @@ function composition(withDevanagari: boolean) {
 
 export default async function OpengraphImage() {
   try {
-    const [deva, grotesk] = await Promise.all([
+    const [deva, grotesk, takri] = await Promise.all([
       loadGoogleFont("Noto+Serif+Devanagari:wght@600&subset=devanagari"),
       loadGoogleFont("Space+Grotesk:wght@500"),
+      // css2 subset param is unreliable for Takri; the default TTF covers it.
+      loadGoogleFont("Noto+Sans+Takri:wght@400"),
     ]);
     return new ImageResponse(composition(true), {
       ...size,
@@ -184,6 +186,7 @@ export default async function OpengraphImage() {
           weight: 600,
         },
         { name: "Space Grotesk", data: grotesk, style: "normal", weight: 500 },
+        { name: "Noto Sans Takri", data: takri, style: "normal", weight: 400 },
       ],
     });
   } catch {
