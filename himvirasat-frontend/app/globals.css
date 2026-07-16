@@ -247,6 +247,7 @@
   html,
   body {
     overflow-x: clip;
+    overscroll-behavior-y: none;
   }
   body {
     @apply bg-background text-foreground font-sans;
