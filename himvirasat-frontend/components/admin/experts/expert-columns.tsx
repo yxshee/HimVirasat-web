@@ -40,7 +40,7 @@ export function getExpertColumns(
       header: "Email",
 
       cell: ({ row }) =>
-        row.original.email ?? <span className="text-muted-foreground">—</span>,
+        row.original.email ?? <span className="text-muted-foreground">·</span>,
     },
 
     {
@@ -60,7 +60,7 @@ export function getExpertColumns(
             ))}
           </div>
         ) : (
-          <span className="text-muted-foreground">—</span>
+          <span className="text-muted-foreground">·</span>
         ),
     },
 
