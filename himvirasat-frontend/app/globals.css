@@ -235,6 +235,19 @@
   * {
     @apply border-border outline-ring/50;
   }
+  /* Hide the page scrollbar (scrolling still works) and prevent
+     decorative elements from creating sideways overflow. */
+  html {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  html::-webkit-scrollbar {
+    display: none;
+  }
+  html,
+  body {
+    overflow-x: clip;
+  }
   body {
     @apply bg-background text-foreground font-sans;
     letter-spacing: -0.011em;
