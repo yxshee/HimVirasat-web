@@ -292,7 +292,7 @@ function FormSection({
   return (
     <section className="space-y-5">
       <div className="border-b pb-3">
-        <h2 className="text-xs font-semibold uppercase tracking-[0.2em] text-saffron-deep">
+        <h2 className="text-xs font-semibold uppercase tracking-[0.2em] text-marigold-deep">
           {eyebrow}
         </h2>
         <p className="mt-2 max-w-2xl text-xs leading-relaxed text-muted-foreground">

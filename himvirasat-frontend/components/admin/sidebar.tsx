@@ -140,7 +140,7 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
       {/* Header */}
       <SidebarHeader className="border-b border-sidebar-border">
         <div className="flex items-center gap-2 px-1 py-1.5">
-          <div className="grid size-8 shrink-0 place-items-center overflow-hidden rounded-lg bg-primary">
+          <div className="grid size-8 shrink-0 place-items-center overflow-hidden rounded-md border border-border bg-marigold">
             <Image
               src="/virasat.png"
               alt="HimVirasat"
@@ -199,7 +199,7 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" tooltip={user.full_name}>
-              <div className="flex aspect-square size-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-semibold text-primary">
+              <div className="flex aspect-square size-8 shrink-0 items-center justify-center rounded-full border border-border bg-marigold text-xs font-semibold text-black">
                 {getInitials(user.full_name)}
               </div>
 

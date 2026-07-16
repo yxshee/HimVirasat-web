@@ -3,33 +3,33 @@ import { useId } from "react";
 import { cn } from "@/lib/utils";
 
 /**
- * Temple-carving border strip: a repeating lozenge chain inspired by
- * Pahari woodcarving. Colors via `currentColor` — set with a text-* class.
+ * Chunky lozenge-chain ornament strip — Pahari woodcarving flattened into
+ * a bold rule. Colors via `currentColor`; set with a text-* class.
  */
 export function PahariBand({ className }: { className?: string }) {
   const id = useId();
   return (
     <svg
       aria-hidden
-      className={cn("block h-2.5 w-full text-saffron/70", className)}
+      className={cn("block h-4 w-full text-foreground", className)}
       preserveAspectRatio="none"
     >
       <defs>
-        <pattern
-          id={id}
-          width="48"
-          height="10"
-          patternUnits="userSpaceOnUse"
-        >
+        <pattern id={id} width="56" height="16" patternUnits="userSpaceOnUse">
+          <path d="M28 2 L34 8 L28 14 L22 8 Z" fill="currentColor" />
           <path
-            d="M24 1 L29 5 L24 9 L19 5 Z"
+            d="M8 4 L12 8 L8 12 L4 8 Z"
             fill="none"
             stroke="currentColor"
-            strokeWidth="1"
+            strokeWidth="2"
           />
-          <circle cx="6" cy="5" r="1.4" fill="currentColor" />
-          <circle cx="42" cy="5" r="1.4" fill="currentColor" />
-          <path d="M10 5 h6 M32 5 h6" stroke="currentColor" strokeWidth="1" />
+          <path
+            d="M48 4 L52 8 L48 12 L44 8 Z"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+          />
+          <path d="M14 8 h6 M36 8 h6" stroke="currentColor" strokeWidth="2" />
         </pattern>
       </defs>
       <rect width="100%" height="100%" fill={`url(#${id})`} />

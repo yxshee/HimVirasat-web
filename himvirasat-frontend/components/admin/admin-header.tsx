@@ -31,7 +31,7 @@ export function AdminHeader() {
   const label = SEGMENT_LABELS[segment] ?? segment;
 
   return (
-    <header className="sticky top-0 z-30 flex h-14 items-center gap-3 border-b border-border bg-background/80 px-4 backdrop-blur">
+    <header className="sticky top-0 z-30 flex h-14 items-center gap-3 border-b border-border bg-background px-4">
       <SidebarTrigger />
       <Separator
         orientation="vertical"

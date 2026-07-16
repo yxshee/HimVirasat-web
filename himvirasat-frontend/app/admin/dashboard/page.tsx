@@ -96,7 +96,7 @@ export default function DashboardPage() {
             <Link
               key={action.href}
               href={action.href}
-              className="flex items-center justify-between rounded-xl border border-border p-4 text-sm font-medium transition hover:border-saffron/40 hover:bg-muted/40"
+              className="flex items-center justify-between rounded-md border border-border p-4 text-sm font-medium transition hover:bg-secondary"
             >
               {action.label}
               <ArrowRight aria-hidden className="size-4 text-muted-foreground" />

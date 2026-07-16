@@ -1,18 +1,12 @@
 import { cn } from "@/lib/utils";
 
 const VARIANTS = {
-  // Steep, jagged peaks — the high Dhauladhar range.
-  dhauladhar: [
-    "M0,90 L80,70 L160,84 L240,58 L340,78 L430,50 L520,72 L610,44 L700,66 L800,38 L900,64 L1000,48 L1100,70 L1200,52 L1300,74 L1380,60 L1440,72 L1440,140 L0,140 Z",
-    "M0,104 L90,86 L180,98 L280,72 L380,92 L470,64 L570,88 L670,58 L770,84 L880,54 L980,80 L1080,62 L1180,86 L1280,68 L1370,88 L1440,76 L1440,140 L0,140 Z",
-    "M0,120 L100,102 L200,114 L300,90 L400,108 L500,84 L600,104 L720,78 L840,102 L950,74 L1060,98 L1170,82 L1280,104 L1380,92 L1440,100 L1440,140 L0,140 Z",
-  ],
-  // Rolling foothills — the Shivalik range.
-  shivalik: [
-    "M0,86 Q120,58 260,76 Q400,94 520,66 Q640,40 780,72 Q920,102 1040,62 Q1160,26 1300,70 Q1370,90 1440,68 L1440,140 L0,140 Z",
-    "M0,100 Q140,76 280,92 Q420,108 560,82 Q700,58 840,88 Q980,116 1120,80 Q1260,48 1440,88 L1440,140 L0,140 Z",
-    "M0,116 Q160,96 320,108 Q480,120 640,98 Q800,78 960,104 Q1120,128 1280,100 Q1370,86 1440,104 L1440,140 L0,140 Z",
-  ],
+  // Hard sawtooth zigzag — the high Dhauladhar range, flattened.
+  dhauladhar:
+    "M0,140 L0,90 L60,20 L120,90 L180,20 L240,90 L300,20 L360,90 L420,20 L480,90 L540,20 L600,90 L660,20 L720,90 L780,20 L840,90 L900,20 L960,90 L1020,20 L1080,90 L1140,20 L1200,90 L1260,20 L1320,90 L1380,20 L1440,90 L1440,140 Z",
+  // Chunky scallops — rolling Shivalik foothills.
+  shivalik:
+    "M0,140 L0,80 A60,60 0 0 1 120,80 A60,60 0 0 1 240,80 A60,60 0 0 1 360,80 A60,60 0 0 1 480,80 A60,60 0 0 1 600,80 A60,60 0 0 1 720,80 A60,60 0 0 1 840,80 A60,60 0 0 1 960,80 A60,60 0 0 1 1080,80 A60,60 0 0 1 1200,80 A60,60 0 0 1 1320,80 A60,60 0 0 1 1440,80 L1440,140 Z",
 } as const;
 
 export function Ridgeline({
@@ -29,12 +23,10 @@ export function Ridgeline({
       aria-hidden
       viewBox="0 0 1440 140"
       preserveAspectRatio="none"
-      className={cn("block h-16 w-full sm:h-24", className)}
+      className={cn("block h-10 w-full sm:h-14", className)}
       style={flip ? { transform: "scaleY(-1)" } : undefined}
     >
-      <path d={VARIANTS[variant][0]} fill="currentColor" opacity={0.08} />
-      <path d={VARIANTS[variant][1]} fill="currentColor" opacity={0.16} />
-      <path d={VARIANTS[variant][2]} fill="currentColor" />
+      <path d={VARIANTS[variant]} fill="currentColor" />
     </svg>
   );
 }

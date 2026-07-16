@@ -1,13 +1,13 @@
 import {
-  Eczar,
   Mukta,
   Noto_Sans_Takri,
   Noto_Serif_Devanagari,
+  Space_Grotesk,
 } from "next/font/google";
 
-export const eczar = Eczar({
-  subsets: ["latin", "devanagari"],
-  variable: "--font-eczar",
+export const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  variable: "--font-grotesk",
   display: "swap",
 });
 
@@ -34,7 +34,7 @@ export const notoSansTakri = Noto_Sans_Takri({
 });
 
 export const fontVariables = [
-  eczar.variable,
+  spaceGrotesk.variable,
   mukta.variable,
   notoSerifDevanagari.variable,
   notoSansTakri.variable,

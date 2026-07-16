@@ -17,25 +17,29 @@ export function ToolCard({
   return (
     <Link
       href={href}
-      className="group block rounded-2xl focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+      className="block h-full rounded-lg focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
     >
-      <article className="h-full rounded-2xl border border-border bg-card p-8 shadow-card transition-all duration-300 group-hover:-translate-y-0.5 group-hover:shadow-lift">
+      <article className="hover-brut relative h-full rounded-lg border border-border bg-card p-8">
         {(glyphA || glyphB) && (
           <div className="mb-6 flex items-center gap-4">
-            <span aria-hidden className="font-deva text-5xl">
+            <span
+              aria-hidden
+              className="grid size-16 place-items-center border border-border bg-pink font-deva text-4xl text-black"
+            >
               {glyphA}
             </span>
-            <span aria-hidden className="text-saffron">
-              ⇄
-            </span>
-            <span aria-hidden className="font-takri text-5xl">
+            <span aria-hidden>⇄</span>
+            <span
+              aria-hidden
+              className="grid size-16 place-items-center border border-border bg-marigold font-takri text-4xl text-black"
+            >
               {glyphB}
             </span>
           </div>
         )}
         <h2 className="font-display text-xl">{title}</h2>
         <p className="mt-2 text-sm text-muted-foreground">{description}</p>
-        <span className="link-ink mt-4 inline-block text-sm font-medium text-saffron-deep">
+        <span className="link-ink text-section-accent-deep mt-4 inline-block text-sm font-medium">
           Open &rarr;
         </span>
       </article>

@@ -15,14 +15,14 @@ export function AdminSplash() {
           priority
         />
         <p className="mt-3 font-display text-xl">HimVirasat</p>
-        <p aria-hidden className="font-deva text-xs text-saffron-deep">
+        <p aria-hidden className="font-deva text-xs text-marigold-deep">
           हिमविरासत
         </p>
         <p className="mt-5 text-sm text-muted-foreground motion-safe:animate-pulse">
           Verifying session…
         </p>
       </div>
-      <Ridgeline className="absolute inset-x-0 bottom-0 text-primary/25" />
+      <Ridgeline className="absolute bottom-0 inset-x-0 text-foreground opacity-15" />
     </div>
   );
 }

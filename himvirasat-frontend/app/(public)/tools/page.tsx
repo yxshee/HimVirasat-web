@@ -20,28 +20,32 @@ export default function ToolsPage() {
       />
 
       <div className="mt-12 grid gap-6 sm:grid-cols-2">
-        <ToolCard
-          href="/tools/transliterator"
-          title="Transliterator"
-          description="Convert between Devanagari and Takri — the script once used across Himachal."
-          glyphA="अ"
-          glyphB="𑚀"
-        />
+        <div className="accent-pink">
+          <ToolCard
+            href="/tools/transliterator"
+            title="Transliterator"
+            description="Convert between Devanagari and Takri — the script once used across Himachal."
+            glyphA="अ"
+            glyphB="𑚀"
+          />
+        </div>
 
         {/* Propose a tool */}
-        <div className="flex flex-col justify-center rounded-2xl border border-dashed border-border p-8">
-          <h2 className="font-display text-xl">Propose a tool</h2>
-          <p className="mt-2 text-muted-foreground">
-            Open an issue on GitHub with your idea.
-          </p>
-          <a
-            href={`${site.links.repo}/issues`}
-            target="_blank"
-            rel="noreferrer"
-            className="link-ink mt-6 self-start text-sm font-medium text-saffron-deep"
-          >
-            Open an issue &rarr;
-          </a>
+        <div className="accent-teal">
+          <div className="flex h-full flex-col justify-center rounded-lg border-2 border-dashed border-border p-8">
+            <h2 className="font-display text-xl">Propose a tool</h2>
+            <p className="mt-2 text-muted-foreground">
+              Open an issue on GitHub with your idea.
+            </p>
+            <a
+              href={`${site.links.repo}/issues`}
+              target="_blank"
+              rel="noreferrer"
+              className="link-ink text-section-accent-deep mt-6 self-start text-sm font-medium"
+            >
+              Open an issue &rarr;
+            </a>
+          </div>
         </div>
       </div>
     </div>

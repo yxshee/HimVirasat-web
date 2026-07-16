@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import DialectCard from "@/components/dialects/DialectCard";
+import { Coin } from "@/components/decor/coin";
 import { SectionHeading } from "@/components/decor/section-heading";
 import { Reveal } from "@/components/motion/reveal";
 
@@ -48,17 +49,32 @@ const steps = [
     numeral: "१",
     title: "Pick your dialect",
     line: "Choose your dialect from the plaques below.",
+    tilt: -6,
+    fill: "var(--marigold)",
   },
   {
     numeral: "२",
     title: "Write everyday sentences",
     line: "Write the words you use every day, with their Hindi translations, in the Google Form.",
+    tilt: 0,
+    fill: "var(--pink)",
   },
   {
     numeral: "३",
     title: "Reviewed & credited",
     line: "Every contribution is tracked and verified, and contributors are recognized and credited.",
+    tilt: 6,
+    fill: "var(--teal)",
   },
+];
+
+const cardAccents = [
+  "accent-pink",
+  "accent-marigold",
+  "accent-teal",
+  "accent-madder",
+  "accent-lavender",
+  "accent-pink",
 ];
 
 export default function ContributePage() {
@@ -102,18 +118,22 @@ export default function ContributePage() {
           day that’s how a language truly lives on.
         </p>
 
-        <blockquote className="border-l-2 border-saffron pl-6 font-display text-xl text-foreground">
+        <blockquote className="border-l-4 border-foreground bg-secondary p-6 font-display text-xl text-foreground">
           One word today can preserve a language tomorrow.
         </blockquote>
       </div>
 
       <section aria-label="How contributing works" className="mt-16 md:mt-20">
-        <ol className="grid gap-8 sm:grid-cols-3">
+        <ol className="relative grid gap-8 sm:grid-cols-3 sm:before:absolute sm:before:top-8 sm:before:right-0 sm:before:left-0 sm:before:h-px sm:before:bg-border">
           {steps.map((step) => (
             <li key={step.title}>
-              <span aria-hidden className="font-deva text-4xl text-saffron">
-                {step.numeral}
-              </span>
+              <Coin
+                glyph={step.numeral}
+                size={64}
+                tilt={step.tilt}
+                fill={step.fill}
+                className="relative bg-background"
+              />
               <h3 className="mt-3 font-display text-lg">{step.title}</h3>
               <p className="mt-1.5 text-sm leading-6 text-muted-foreground">
                 {step.line}
@@ -130,7 +150,7 @@ export default function ContributePage() {
               as="li"
               key={dialect.id}
               delay={index * 80}
-              className="h-full"
+              className={`h-full ${cardAccents[index % cardAccents.length]}`}
             >
               <DialectCard name={dialect.name} formUrl={dialect.formUrl} />
             </Reveal>

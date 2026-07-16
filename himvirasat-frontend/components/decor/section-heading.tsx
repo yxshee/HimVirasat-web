@@ -1,8 +1,9 @@
 import { cn } from "@/lib/utils";
 
 /**
- * Shared page/section heading: saffron eyebrow, optional native-script echo,
- * editorial display title. The cohesion primitive used across every page.
+ * Shared page/section heading: bordered accent chip eyebrow (with optional
+ * native-script echo inside), giant grotesque title. Chip color follows the
+ * nearest .accent-* wrapper; black text on the chip is always safe.
  */
 export function SectionHeading({
   eyebrow,
@@ -27,22 +28,21 @@ export function SectionHeading({
       {(eyebrow || nativeEcho) && (
         <p
           className={cn(
-            "flex items-baseline gap-3 text-xs font-semibold tracking-[0.2em] text-saffron-deep uppercase",
-            centered && "justify-center",
+            "bg-section-accent inline-flex items-center gap-2 rounded-full border border-border px-3 py-1 text-xs font-medium tracking-[0.15em] text-black uppercase",
           )}
         >
           {eyebrow}
           {nativeEcho && (
             <span
               aria-hidden
-              className="font-deva text-sm font-normal tracking-normal normal-case opacity-80"
+              className="font-deva text-sm font-normal tracking-normal normal-case"
             >
               {nativeEcho}
             </span>
           )}
         </p>
       )}
-      <Tag className="mt-3 font-display text-3xl tracking-tight text-balance md:text-4xl">
+      <Tag className="mt-5 font-display text-4xl font-medium tracking-tight text-balance md:text-6xl">
         {title}
       </Tag>
       {description && (

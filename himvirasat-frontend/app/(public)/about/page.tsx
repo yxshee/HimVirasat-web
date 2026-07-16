@@ -22,9 +22,9 @@ export default function AboutPage() {
         />
       </header>
 
-      <section className="relative mt-16 overflow-hidden border-y border-border bg-card">
+      <section className="surface-ink relative mt-16 overflow-hidden border-y border-border py-20">
         <GlyphWatermark glyph="वि" className="-left-10 -top-20" />
-        <div className="relative mx-auto max-w-5xl px-6 py-16 sm:py-20">
+        <div className="relative mx-auto max-w-5xl px-6">
           <h2 className="font-display text-2xl tracking-tight">
             Beyond Just Words
           </h2>
@@ -50,7 +50,7 @@ export default function AboutPage() {
       </section>
 
       <section className="mx-auto mt-16 grid max-w-5xl gap-10 px-6 md:grid-cols-2 md:gap-12">
-        <div className="border-t-2 border-saffron pt-6">
+        <div className="border-t-4 border-pink pt-6">
           <h3 className="font-display text-xl tracking-tight">
             Collaborative Engineering
           </h3>
@@ -64,7 +64,7 @@ export default function AboutPage() {
             developed by our community, for our community.
           </p>
         </div>
-        <div className="border-t-2 border-saffron pt-6">
+        <div className="border-t-4 border-teal pt-6">
           <h3 className="font-display text-xl tracking-tight">Open Learning</h3>
           <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
             We are committed to creating free tools that help the next
@@ -75,19 +75,26 @@ export default function AboutPage() {
       </section>
 
       <section className="mx-auto mt-20 max-w-5xl px-6">
-        <div className="rounded-2xl border border-primary/15 bg-primary/5 p-8 text-center sm:p-10">
+        <div className="accent-marigold rounded-lg border border-border bg-marigold p-10 text-center text-black shadow-brut">
           <h2 className="font-display text-2xl tracking-tight">
             Become Part of the Movement
           </h2>
-          <p className="mx-auto mt-2 max-w-2xl text-muted-foreground">
+          <p className="mx-auto mt-2 max-w-2xl text-black/70">
             Whether you are a native speaker, a linguist, or a developer—your
             contribution matters.
           </p>
           <div className="mt-8 flex flex-col justify-center gap-4 sm:flex-row">
-            <Button asChild variant="outline">
+            <Button
+              asChild
+              variant="outline"
+              className="border-black bg-transparent text-black shadow-none hover:bg-black/10 hover:text-black dark:border-black dark:bg-transparent dark:hover:bg-black/10"
+            >
               <Link href="/contribute">Contribute Data</Link>
             </Button>
-            <Button asChild>
+            <Button
+              asChild
+              className="bg-foreground text-background hover:bg-foreground/90 border border-border"
+            >
               <Link
                 href="https://discord.gg/PgJWcFXRTB"
                 target="_blank"

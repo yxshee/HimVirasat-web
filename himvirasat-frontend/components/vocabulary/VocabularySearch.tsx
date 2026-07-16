@@ -14,7 +14,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 const VocabularyCard = dynamic(
   () => import("@/components/vocabulary/VocabularyCard"),
   {
-    loading: () => <Skeleton className="h-28 w-full rounded-xl" />,
+    loading: () => <Skeleton className="h-28 w-full rounded-md" />,
     ssr: false,
   }
 );
@@ -60,7 +60,7 @@ export default function VocabularySearch({ dialect }: { dialect: string }) {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder={`Search ${dialect} vocabulary…`}
-          className="h-14 rounded-xl border-border bg-card pl-12 pr-14 text-base focus-visible:ring-saffron/50"
+          className="h-14 rounded-md border-input bg-card pl-12 pr-14 text-base focus-visible:border-ring focus-visible:ring-ring/50"
         />
         {query && (
           <Button
@@ -95,7 +95,7 @@ export default function VocabularySearch({ dialect }: { dialect: string }) {
             />
           ))
         ) : !loading ? (
-          <div className="rounded-xl border border-dashed border-border px-6 py-16 text-center">
+          <div className="rounded-lg border-2 border-dashed border-border px-6 py-16 text-center">
             <p>No matches — try a shorter fragment.</p>
             <p className="mt-2 text-sm text-muted-foreground">
               Search is fuzzy: partial words and approximate spellings still
@@ -104,7 +104,7 @@ export default function VocabularySearch({ dialect }: { dialect: string }) {
           </div>
         ) : (
           Array.from({ length: 5 }).map((_, i) => (
-            <div key={i} className="h-28 animate-pulse rounded-xl bg-muted" />
+            <div key={i} className="h-28 animate-pulse rounded-md bg-muted" />
           ))
         )}
       </div>

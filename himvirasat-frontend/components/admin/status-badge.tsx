@@ -18,37 +18,37 @@ const STATUS_CONFIG: Record<
   under_review: {
     label: "Under Review",
     dot: true,
-    classes: "bg-info/10 text-info border-info/25",
+    classes: "bg-lavender text-black border-border",
   },
   approved: {
     label: "Approved",
-    classes: "bg-success/10 text-success border-success/25",
+    classes: "bg-teal text-black border-border",
   },
   flagged: {
     label: "Flagged",
-    classes: "bg-warning/10 text-warning border-warning/25",
+    classes: "bg-marigold text-black border-border",
   },
   rejected: {
     label: "Rejected",
-    classes: "bg-destructive/10 text-destructive border-destructive/25",
+    classes: "bg-madder text-white border-border",
   },
   open: {
     label: "Open",
     dot: true,
-    classes: "bg-warning/10 text-warning border-warning/25",
+    classes: "bg-marigold text-black border-border",
   },
   resolved: {
     label: "Resolved",
-    classes: "bg-success/10 text-success border-success/25",
+    classes: "bg-teal text-black border-border",
   },
   active: {
     label: "Active",
     dot: true,
-    classes: "bg-success/10 text-success border-success/25",
+    classes: "bg-teal text-black border-border",
   },
   inactive: {
     label: "Inactive",
-    classes: "bg-muted text-muted-foreground border-border",
+    classes: "bg-muted text-foreground border-border",
   },
 };
 
@@ -70,7 +70,13 @@ export function StatusBadge({
       )}
     >
       {config.dot ? (
-        <span aria-hidden className="size-1.5 rounded-full bg-current" />
+        <span
+          aria-hidden
+          className={cn(
+            "size-1.5 rounded-full",
+            status === "rejected" ? "bg-white/60" : "bg-black/40"
+          )}
+        />
       ) : null}
       {config.label}
     </span>

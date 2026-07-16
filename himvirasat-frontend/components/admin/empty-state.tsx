@@ -18,14 +18,14 @@ export function EmptyState({
   return (
     <div
       className={cn(
-        "rounded-2xl border border-dashed border-border p-10 text-center",
+        "rounded-lg border-2 border-dashed border-border p-10 text-center",
         className
       )}
     >
       {Icon ? (
         <div
           aria-hidden
-          className="mx-auto grid size-12 place-items-center rounded-full bg-muted text-muted-foreground"
+          className="mx-auto grid size-12 place-items-center rounded-md border border-border bg-secondary text-muted-foreground"
         >
           <Icon className="size-5" />
         </div>

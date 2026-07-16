@@ -155,7 +155,7 @@ export default function ContributionSubmissionPage() {
   }
   if (hasSyncFailure) {
     return (
-      <div className="mx-auto my-12 max-w-md rounded-xl border border-destructive/40 bg-destructive/5 p-8 text-center text-xs">
+      <div className="mx-auto my-12 max-w-md rounded-lg border border-destructive/40 bg-destructive/5 p-8 text-center text-xs">
         <p className="font-semibold text-foreground">
           Couldn&apos;t load form data
         </p>
@@ -269,7 +269,7 @@ export default function ContributionSubmissionPage() {
         onSubmit={handleSubmit}
         className="mx-auto flex min-h-screen w-full max-w-7xl flex-col"
       >
-        <header className="sticky top-0 z-20 border-b bg-background/95 backdrop-blur">
+        <header className="sticky top-0 z-20 border-b bg-background">
           <div className="flex flex-col gap-4 px-4 py-4 sm:px-6 lg:px-8">
             <div className="flex items-start justify-between gap-4">
               <div className="flex min-w-0 items-start gap-3">
@@ -329,10 +329,10 @@ export default function ContributionSubmissionPage() {
                 aria-valuemin={0}
                 aria-valuemax={100}
                 aria-label="Core fields completion"
-                className="h-1.5 flex-1 overflow-hidden rounded-full bg-muted"
+                className="h-1.5 flex-1 overflow-hidden rounded-full border border-border bg-muted"
               >
                 <div
-                  className="h-full rounded-full bg-saffron transition-all"
+                  className="h-full rounded-full bg-marigold transition-all"
                   style={{ width: `${completion}%` }}
                 />
               </div>
@@ -344,7 +344,7 @@ export default function ContributionSubmissionPage() {
         </header>
 
         <div className="flex-1 px-4 py-5 sm:px-6 sm:py-8 lg:px-8">
-          <Card className="rounded-lg py-0 shadow-xs">
+          <Card className="rounded-lg py-0">
             <CardContent className="p-0">
               <div className="grid grid-cols-1 lg:grid-cols-[280px_minmax(0,1fr)]">
                 <aside className="border-b bg-muted/20 p-5 lg:border-b-0 lg:border-r lg:p-6">
@@ -368,14 +368,14 @@ export default function ContributionSubmissionPage() {
 
                     <div className="space-y-3 text-xs text-muted-foreground">
                       <div className="flex items-start gap-2">
-                        <CheckCircle2 className="mt-0.5 size-3.5 text-saffron-deep" />
+                        <CheckCircle2 className="mt-0.5 size-3.5 text-marigold-deep" />
                         <p>
                           Core elements are parsed to construct direct
                           translations mapping.
                         </p>
                       </div>
                       <div className="flex items-start gap-2">
-                        <CheckCircle2 className="mt-0.5 size-3.5 text-saffron-deep" />
+                        <CheckCircle2 className="mt-0.5 size-3.5 text-marigold-deep" />
                         <p>
                           Advanced fields offer deep tracking of phonetics and
                           context.
@@ -399,7 +399,7 @@ export default function ContributionSubmissionPage() {
           </Card>
         </div>
 
-        <div className="sticky bottom-0 z-20 border-t bg-background/95 px-4 py-3 backdrop-blur sm:hidden">
+        <div className="sticky bottom-0 z-20 border-t bg-background px-4 py-3 sm:hidden">
           <div className="flex items-center justify-end gap-2">
             <Button
               type="button"

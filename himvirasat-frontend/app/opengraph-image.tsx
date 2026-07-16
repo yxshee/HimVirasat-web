@@ -6,17 +6,20 @@ export const alt = "HimVirasat — Open language preservation for Himachal";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-const PINE_BG = "#14231f";
-const RIDGE_FAR = "#1a2e28";
-const RIDGE_MID = "#1d332c";
-const RIDGE_NEAR = "#24413a";
-const PAPER = "#ece9df";
-const SAFFRON = "#e8a33d";
-const SAGE = "#9fb3a4";
+const CREAM = "#f4f4f0";
+const INK = "#000000";
+const MARIGOLD = "#ffc900";
+const MUTED = "#52524e";
 
-async function loadEczar(): Promise<ArrayBuffer> {
+/* Sawtooth zigzag: 19 teeth across a 1140-unit viewBox, stretched to fit. */
+const ZIGZAG = `M0,40 ${Array.from(
+  { length: 19 },
+  (_, i) => `L${i * 60 + 30},0 L${i * 60 + 60},40`
+).join(" ")} Z`;
+
+async function loadGoogleFont(family: string): Promise<ArrayBuffer> {
   const css = await fetch(
-    "https://fonts.googleapis.com/css2?family=Eczar:wght@600&subset=devanagari",
+    `https://fonts.googleapis.com/css2?family=${family}`,
     { headers: { "User-Agent": "Mozilla/5.0" } }
   ).then((res) => res.text());
   const match = css.match(/url\((https:[^)]+\.(?:ttf|woff))\)/);
@@ -33,90 +36,133 @@ function composition(withDevanagari: boolean) {
         width: "100%",
         height: "100%",
         display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
+        alignItems: "center",
+        justifyContent: "space-between",
         position: "relative",
         padding: "0 96px",
-        backgroundColor: PINE_BG,
-        fontFamily: withDevanagari ? "Eczar" : "serif",
+        backgroundColor: CREAM,
+        fontFamily: withDevanagari ? "Space Grotesk" : "sans-serif",
       }}
     >
-      <svg
-        width="1200"
-        height="240"
-        viewBox="0 0 1200 240"
-        style={{ position: "absolute", bottom: 0, left: 0 }}
-      >
-        <path
-          d="M0 120 L160 60 L330 130 L500 40 L680 140 L860 70 L1030 130 L1200 80 L1200 240 L0 240 Z"
-          fill={RIDGE_FAR}
-        />
-        <path
-          d="M0 170 L210 100 L380 165 L540 90 L720 180 L900 115 L1060 175 L1200 130 L1200 240 L0 240 Z"
-          fill={RIDGE_MID}
-        />
-        <path
-          d="M0 215 L180 155 L350 210 L560 140 L770 220 L950 165 L1200 210 L1200 240 L0 240 Z"
-          fill={RIDGE_NEAR}
-        />
-      </svg>
+      <div
+        style={{
+          position: "absolute",
+          top: 32,
+          left: 32,
+          right: 32,
+          bottom: 32,
+          border: `2px solid ${INK}`,
+        }}
+      />
 
       <div
         style={{
           display: "flex",
-          width: 112,
-          height: 8,
-          borderRadius: 4,
-          backgroundColor: SAFFRON,
-          marginBottom: 44,
+          flexDirection: "column",
+          alignItems: "flex-start",
         }}
-      />
+      >
+        <div
+          style={{
+            display: "flex",
+            backgroundColor: MARIGOLD,
+            border: `2px solid ${INK}`,
+            borderRadius: 999,
+            padding: "10px 24px",
+            fontSize: 22,
+            letterSpacing: 2,
+            color: INK,
+          }}
+        >
+          OPEN LANGUAGE PRESERVATION
+        </div>
 
-      {withDevanagari ? (
-        <div style={{ display: "flex", flexDirection: "column" }}>
+        {withDevanagari ? (
           <div
             style={{
               display: "flex",
-              fontSize: 116,
-              lineHeight: 1.15,
-              color: PAPER,
+              fontFamily: "Noto Serif Devanagari",
+              fontSize: 120,
+              lineHeight: 1.2,
+              marginTop: 20,
+              color: INK,
             }}
           >
             {site.nativeName}
           </div>
-          <div
-            style={{
-              display: "flex",
-              fontSize: 52,
-              marginTop: 8,
-              color: SAFFRON,
-            }}
-          >
-            {site.name}
-          </div>
-        </div>
-      ) : (
+        ) : null}
+
         <div
           style={{
             display: "flex",
-            fontSize: 108,
-            lineHeight: 1.1,
-            color: PAPER,
+            fontSize: 48,
+            marginTop: withDevanagari ? 4 : 36,
+            color: INK,
           }}
         >
           {site.name}
         </div>
-      )}
+
+        <div
+          style={{
+            display: "flex",
+            fontSize: 30,
+            marginTop: 20,
+            color: MUTED,
+          }}
+        >
+          Open language preservation for Himachal
+        </div>
+      </div>
 
       <div
         style={{
           display: "flex",
-          fontSize: 30,
-          marginTop: 28,
-          color: SAGE,
+          alignItems: "center",
+          justifyContent: "center",
+          width: 220,
+          height: 220,
+          borderRadius: 220,
+          backgroundColor: MARIGOLD,
+          border: `8px solid ${INK}`,
         }}
       >
-        Open language preservation for Himachal
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            width: 168,
+            height: 168,
+            borderRadius: 168,
+            border: `2px solid ${INK}`,
+            fontFamily: withDevanagari ? "Noto Serif Devanagari" : "sans-serif",
+            fontSize: 90,
+            color: INK,
+          }}
+        >
+          {withDevanagari ? "हि" : null}
+        </div>
+      </div>
+
+      <div
+        style={{
+          position: "absolute",
+          left: 34,
+          right: 34,
+          bottom: 34,
+          height: 40,
+          display: "flex",
+        }}
+      >
+        <svg
+          width="100%"
+          height="40"
+          viewBox="0 0 1140 40"
+          preserveAspectRatio="none"
+        >
+          <path d={ZIGZAG} fill={INK} />
+        </svg>
       </div>
     </div>
   );
@@ -124,14 +170,25 @@ function composition(withDevanagari: boolean) {
 
 export default async function OpengraphImage() {
   try {
-    const eczar = await loadEczar();
+    const [deva, grotesk] = await Promise.all([
+      loadGoogleFont("Noto+Serif+Devanagari:wght@600&subset=devanagari"),
+      loadGoogleFont("Space+Grotesk:wght@500"),
+    ]);
     return new ImageResponse(composition(true), {
       ...size,
-      fonts: [{ name: "Eczar", data: eczar, style: "normal", weight: 600 }],
+      fonts: [
+        {
+          name: "Noto Serif Devanagari",
+          data: deva,
+          style: "normal",
+          weight: 600,
+        },
+        { name: "Space Grotesk", data: grotesk, style: "normal", weight: 500 },
+      ],
     });
   } catch {
     // Font fetch failed — satori cannot shape Devanagari without a loaded
-    // font, so fall back to a Latin-only composition with system serif.
+    // font, so fall back to a Latin-only composition with system fonts.
     return new ImageResponse(composition(false), size);
   }
 }

@@ -5,15 +5,15 @@ import type { SystemRole } from "@/types/admin/FSM/contribution-rules";
 const ROLE_CONFIG: Record<SystemRole, { label: string; classes: string }> = {
   super_admin: {
     label: "Super Admin",
-    classes: "bg-saffron/15 text-saffron-deep border-saffron/30",
+    classes: "bg-marigold text-black border-border",
   },
   language_head: {
     label: "Language Head",
-    classes: "bg-primary/10 text-primary border-primary/25",
+    classes: "bg-teal text-black border-border",
   },
   language_expert: {
     label: "Language Expert",
-    classes: "bg-info/10 text-info border-info/25",
+    classes: "bg-lavender text-black border-border",
   },
 };
 

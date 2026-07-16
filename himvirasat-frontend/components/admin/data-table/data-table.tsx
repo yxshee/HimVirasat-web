@@ -56,7 +56,7 @@ export function DataTable<TData>({
     getSortedRowModel: getSortedRowModel(),
   });
   return (
-    <div className="overflow-hidden rounded-xl border bg-card shadow-sm">
+    <div className="overflow-hidden rounded-lg border border-border bg-card">
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (

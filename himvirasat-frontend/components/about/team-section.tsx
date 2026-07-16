@@ -41,9 +41,9 @@ function SocialRow({ socials }: { socials?: SocialLink[] }) {
             target="_blank"
             rel="noopener noreferrer"
             aria-label={`${social.platform} profile`}
-            className="inline-flex h-9 w-9 items-center justify-center rounded-full border
-            border-primary/15 bg-primary/5 text-muted-foreground
-            transition-colors hover:bg-primary/10 hover:text-primary"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-md border
+            border-border text-muted-foreground
+            transition-colors hover:bg-pink hover:text-black"
           >
             <Icon className="h-4 w-4" />
           </a>
@@ -68,13 +68,13 @@ function PersonCard({
   const roleSize = size === "lg" ? "text-md" : "text-[12px]";
 
   return (
-    <Card className="h-full border-border bg-card">
+    <Card className="h-full rounded-lg border border-border bg-card shadow-none">
       <CardContent
         className={cn(cardPadding, "flex flex-col items-center text-center")}
       >
-        <Avatar className={cn(avatarSize, "ring-2 ring-saffron/40")}>
+        <Avatar className={cn(avatarSize, "border-2 border-border")}>
           <AvatarImage src={member.avatar} alt={member.name} />
-          <AvatarFallback className="bg-primary/10 text-primary">
+          <AvatarFallback className="bg-marigold text-black">
             {initials(member.name)}
           </AvatarFallback>
         </Avatar>
@@ -83,7 +83,7 @@ function PersonCard({
 
         <p
           className={cn(
-            "mt-1 uppercase tracking-wide text-saffron-deep font-semibold",
+            "mt-1 uppercase tracking-wide text-marigold-deep font-semibold",
             roleSize
           )}
         >
@@ -96,7 +96,7 @@ function PersonCard({
               <Badge
                 key={language}
                 variant="secondary"
-                className="bg-primary/10 text-primary"
+                className="rounded-full border border-border bg-lavender px-2.5 py-0.5 text-xs text-black"
               >
                 {language}
               </Badge>
@@ -116,7 +116,7 @@ function PersonCard({
 
 function OpenSlotCard() {
   return (
-    <div className="mt-6 rounded-xl border border-dashed border-border p-8 text-center">
+    <div className="mt-6 rounded-lg border-2 border-dashed border-border p-8 text-center">
       <p className="font-display text-lg">Your name here</p>
       <p className="mt-1 text-sm text-muted-foreground">
         <a
@@ -135,7 +135,7 @@ function OpenSlotCard() {
 function ConnectorLine() {
   return (
     <div className="flex justify-center" aria-hidden="true">
-      <div className="my-8 h-20 w-px bg-linear-to-b from-saffron/70 to-primary/70" />
+      <div className="my-8 h-20 w-px bg-border" />
     </div>
   );
 }
@@ -152,11 +152,11 @@ function SectionShell({
   children: React.ReactNode;
 }) {
   return (
-    <Card className="border-border bg-card">
+    <Card className="rounded-lg border border-border bg-card shadow-none">
       <CardContent className="p-6 sm:p-8">
         <div className="mb-10 flex flex-col items-center text-center">
           <div className="flex items-center gap-2">
-            <Icon className="h-5 w-5 text-primary" aria-hidden="true" />
+            <Icon className="h-5 w-5 text-marigold-deep" aria-hidden="true" />
             <h3 className="text-2xl font-bold">{title}</h3>
           </div>
           <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">
@@ -174,7 +174,7 @@ export function TeamSection() {
   return (
     <section className="mt-32 scroll-mt-24">
       <div className="mb-16 text-center">
-        <span className="flex items-center justify-center gap-2 text-xs font-bold uppercase tracking-widest text-saffron-deep">
+        <span className="flex items-center justify-center gap-2 text-xs font-bold uppercase tracking-widest text-marigold-deep">
           <Crown className="h-3.5 w-3.5" aria-hidden="true" />
           Our Team
         </span>

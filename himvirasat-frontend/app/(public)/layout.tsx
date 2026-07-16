@@ -16,12 +16,6 @@ export default function PublicLayout({
         Skip to content
       </a>
 
-      {/* Fixed grain wash over the whole page. */}
-      <div
-        aria-hidden
-        className="texture-grain pointer-events-none fixed inset-0 -z-10 opacity-[0.05] mix-blend-multiply dark:opacity-[0.07] dark:mix-blend-overlay"
-      />
-
       <Navbar />
       <main id="content" className="min-h-screen pt-16">
         {children}

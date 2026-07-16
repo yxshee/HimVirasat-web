@@ -62,7 +62,7 @@ export default function SettingsPage() {
       />
 
       <div className="max-w-2xl space-y-6">
-        <section className="rounded-2xl border border-border bg-card p-6">
+        <section className="rounded-lg border border-border bg-card p-6">
           <h2 className="text-sm font-medium">Appearance</h2>
           <p className="mt-1 text-sm text-muted-foreground">
             Choose how the dashboard looks on this device.
@@ -85,7 +85,7 @@ export default function SettingsPage() {
                   className={cn(
                     "rounded-md",
                     theme === option.value &&
-                      "bg-background shadow-xs hover:bg-background"
+                      "bg-background border border-border hover:bg-background"
                   )}
                 >
                   {option.label}
@@ -97,7 +97,7 @@ export default function SettingsPage() {
           )}
         </section>
 
-        <section className="rounded-2xl border border-border bg-card p-6">
+        <section className="rounded-lg border border-border bg-card p-6">
           <h2 className="text-sm font-medium">Session</h2>
           <p className="mt-1 text-sm text-muted-foreground">
             You are signed in via a secure session cookie issued by the
@@ -105,7 +105,7 @@ export default function SettingsPage() {
           </p>
         </section>
 
-        <section className="rounded-2xl border border-destructive/40 bg-card p-6">
+        <section className="rounded-lg border border-destructive/40 bg-card p-6">
           <h2 className="text-sm font-medium text-destructive">Danger zone</h2>
           <p className="mt-1 text-sm text-muted-foreground">
             Actions that affect your current session.

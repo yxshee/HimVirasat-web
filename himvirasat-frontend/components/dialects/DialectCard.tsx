@@ -2,7 +2,6 @@ import Link from "next/link";
 import { ExternalLink } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { PahariBand } from "@/components/decor/pahari-band";
 
 type DialectCardProps = {
   name: string;
@@ -31,13 +30,13 @@ export default function DialectCard({ name, formUrl }: DialectCardProps) {
   const hasVocabulary = lowerName.includes("mandeali");
 
   return (
-    <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-card transition hover:-translate-y-1 hover:border-saffron/40 hover:shadow-lift">
-      <PahariBand className="text-saffron/60" />
+    <article className="hover-brut relative flex h-full flex-col overflow-hidden rounded-lg border border-border bg-card">
+      <div className="h-2 border-b border-border bg-section-accent" />
 
       <div className="flex flex-1 flex-col p-6">
         <h3 className="font-display text-xl">{name}</h3>
         {district && (
-          <p className="mt-1 text-xs tracking-wider text-saffron-deep uppercase">
+          <p className="mt-1 text-xs tracking-wider text-section-accent-deep uppercase">
             {district}
           </p>
         )}
@@ -51,7 +50,7 @@ export default function DialectCard({ name, formUrl }: DialectCardProps) {
           <p className="mt-3">
             <Link
               href="/vocabulary/mandeali"
-              className="inline-block rounded-full border border-success/25 bg-success/10 px-2.5 py-0.5 text-xs text-success"
+              className="inline-block rounded-full border border-border bg-teal px-2.5 py-0.5 text-xs text-black"
             >
               Vocabulary live →
             </Link>

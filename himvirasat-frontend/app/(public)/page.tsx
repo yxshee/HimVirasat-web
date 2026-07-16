@@ -2,10 +2,9 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
-import { ContourField } from "@/components/decor/contour-field";
+import { Coin } from "@/components/decor/coin";
 import { GlyphWatermark } from "@/components/decor/glyph-watermark";
-import { PahariBand } from "@/components/decor/pahari-band";
-import { Ridgeline } from "@/components/decor/ridgeline";
+import { Marquee } from "@/components/decor/marquee";
 import { SectionHeading } from "@/components/decor/section-heading";
 import { Reveal } from "@/components/motion/reveal";
 import { site } from "@/lib/site";
@@ -15,6 +14,13 @@ const FACTS = [
   { value: "1", label: "open dataset published" },
   { value: "2", label: "scripts — Devanagari ⇄ Takri" },
   { value: "100%", label: "open source" },
+];
+
+const FACT_ACCENTS = [
+  "accent-marigold",
+  "accent-pink",
+  "accent-teal",
+  "accent-lavender",
 ];
 
 const COMMUNITY_LINKS = [
@@ -42,13 +48,27 @@ export default function Home() {
   return (
     <>
       {/* ── Hero ─────────────────────────────────────────────────────── */}
-      <section className="relative flex min-h-[88svh] items-center justify-center overflow-hidden py-28">
-        <ContourField className="inset-0 text-primary" />
+      <section className="surface-ink accent-marigold relative flex min-h-[88svh] items-center justify-center overflow-hidden border-b border-border">
         <GlyphWatermark glyph="𑚩" script="takri" className="-top-16 -right-8" />
+        <Coin
+          glyph="हि"
+          fill="var(--marigold)"
+          tilt={-12}
+          size={150}
+          className="absolute top-[18%] left-[8%] hidden md:block"
+        />
+        <Coin
+          glyph="𑚩"
+          script="takri"
+          fill="var(--pink)"
+          tilt={10}
+          size={110}
+          className="absolute right-[10%] bottom-[20%] hidden md:block"
+        />
 
-        <div className="relative mx-auto flex max-w-3xl flex-col items-center px-6 text-center">
+        <div className="relative mx-auto flex max-w-3xl flex-col items-center px-6 py-24 text-center">
           <Reveal delay={0}>
-            <p className="text-xs tracking-[0.25em] text-saffron-deep uppercase">
+            <p className="inline-flex items-center gap-2 rounded-full border border-border bg-marigold px-3 py-1 text-xs tracking-[0.15em] text-black uppercase">
               <span aria-hidden className="font-deva tracking-normal normal-case">
                 हिमाचल की विरासत
               </span>{" "}
@@ -59,7 +79,7 @@ export default function Home() {
           <Reveal delay={80}>
             <h1
               lang="hi"
-              className="text-brand mt-6 font-deva text-7xl leading-tight md:text-9xl"
+              className="text-brut mt-6 font-deva text-7xl leading-tight text-foreground md:text-9xl"
             >
               हिमविरासत
             </h1>
@@ -78,7 +98,7 @@ export default function Home() {
 
           <Reveal delay={240}>
             <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
-              <Button asChild>
+              <Button asChild className="hover-brut">
                 <Link href="/contribute">Start contributing</Link>
               </Button>
               <Button asChild variant="outline">
@@ -87,30 +107,42 @@ export default function Home() {
             </div>
           </Reveal>
         </div>
-
-        <Ridgeline className="absolute right-0 bottom-0 left-0 text-card" />
       </section>
 
+      {/* ── Marquee seam ─────────────────────────────────────────────── */}
+      <Marquee
+        className="border-b border-border bg-marigold py-3 font-display text-xl text-black"
+        items={[
+          <span key="native-name" lang="hi" className="font-deva">
+            हिमविरासत
+          </span>,
+          "HimVirasat",
+          <span key="takri-name" aria-hidden className="font-takri">
+            𑚩𑚮𑚢𑚦𑚮𑚤𑚭𑚨𑚙
+          </span>,
+          "Open Language Preservation",
+          <span key="hp-heritage" lang="hi" className="font-deva">
+            हिमाचल की विरासत
+          </span>,
+        ]}
+      />
+
       {/* ── Fact strip ───────────────────────────────────────────────── */}
-      <section className="bg-card">
-        <PahariBand />
-        <div className="mx-auto grid max-w-5xl grid-cols-2 gap-y-10 px-6 py-14 sm:grid-cols-4">
-          {FACTS.map((fact, i) => (
-            <div
-              key={fact.label}
-              className={
-                i > 0
-                  ? "sm:border-l sm:border-border sm:pl-8"
-                  : undefined
-              }
-            >
-              <p className="font-display text-4xl text-saffron-deep md:text-5xl">
-                {fact.value}
-              </p>
-              <p className="mt-2 text-sm text-muted-foreground">{fact.label}</p>
-            </div>
-          ))}
-        </div>
+      <section className="grid grid-cols-2 border-b border-border sm:grid-cols-4">
+        {FACTS.map((fact, i) => (
+          <div
+            key={fact.label}
+            className={`${FACT_ACCENTS[i]} border-t border-border p-8 sm:border-t-0${
+              i > 0 ? " sm:border-l" : ""
+            }`}
+          >
+            <div className="mb-4 h-1.5 w-10 border border-border bg-section-accent" />
+            <p className="font-display text-5xl font-medium md:text-6xl">
+              {fact.value}
+            </p>
+            <p className="mt-2 text-sm text-muted-foreground">{fact.label}</p>
+          </div>
+        ))}
       </section>
 
       {/* ── Mission ──────────────────────────────────────────────────── */}
@@ -121,7 +153,7 @@ export default function Home() {
             title="Open translation datasets for Himachali dialects"
             nativeEcho="ध्येय"
           />
-          <div className="space-y-5 border-l-2 border-saffron pl-6">
+          <div className="space-y-5 border-l-4 border-marigold pl-6">
             <p className="leading-7 text-foreground">
               We are building open, structured Hindi ↔ Himachali dialect
               translation datasets by collecting parallel sentences written by
@@ -141,18 +173,21 @@ export default function Home() {
       {/* ── Three doors ──────────────────────────────────────────────── */}
       <section className="mx-auto max-w-6xl px-6 py-24">
         <SectionHeading eyebrow="Explore" title="Three ways in" />
-        <div className="mt-12 grid gap-6 sm:grid-cols-3">
+        <div className="mt-12 grid divide-y divide-border border border-border bg-card sm:grid-cols-3 sm:divide-x sm:divide-y-0">
           <Reveal delay={0}>
-            <Link href="/vocabulary" className="block h-full">
-              <article className="flex h-full flex-col rounded-2xl border border-border bg-card p-8 transition hover:-translate-y-1 hover:border-saffron/40 hover:shadow-lift">
-                <span aria-hidden className="font-deva text-lg text-saffron-deep">
-                  शब्द
-                </span>
+            <Link href="/vocabulary" className="accent-pink block h-full">
+              <article className="hover-brut relative flex h-full flex-col bg-card p-8 hover:z-10">
+                <div
+                  aria-hidden
+                  className="grid size-12 place-items-center border border-border bg-section-accent text-black"
+                >
+                  <span className="font-deva">शब्द</span>
+                </div>
                 <h3 className="mt-3 font-display text-xl">Vocabulary</h3>
                 <p className="mt-2 flex-1 text-sm leading-6 text-muted-foreground">
                   Search living dictionaries of Himachali dialects.
                 </p>
-                <span className="link-ink mt-6 self-start text-sm text-saffron-deep">
+                <span className="link-ink text-section-accent-deep mt-6 self-start text-sm">
                   Enter →
                 </span>
               </article>
@@ -160,13 +195,19 @@ export default function Home() {
           </Reveal>
 
           <Reveal delay={80}>
-            <Link href="/datasets" className="block h-full">
-              <article className="flex h-full flex-col rounded-2xl border border-border bg-card p-8 transition hover:-translate-y-1 hover:border-saffron/40 hover:shadow-lift">
-                <h3 className="font-display text-xl">Datasets</h3>
+            <Link href="/datasets" className="accent-teal block h-full">
+              <article className="hover-brut relative flex h-full flex-col bg-card p-8 hover:z-10">
+                <div
+                  aria-hidden
+                  className="grid size-12 place-items-center border border-border bg-section-accent text-black"
+                >
+                  <span>◆</span>
+                </div>
+                <h3 className="mt-3 font-display text-xl">Datasets</h3>
                 <p className="mt-2 flex-1 text-sm leading-6 text-muted-foreground">
                   Download open, versioned translation datasets.
                 </p>
-                <span className="link-ink mt-6 self-start text-sm text-saffron-deep">
+                <span className="link-ink text-section-accent-deep mt-6 self-start text-sm">
                   Enter →
                 </span>
               </article>
@@ -174,17 +215,20 @@ export default function Home() {
           </Reveal>
 
           <Reveal delay={160}>
-            <Link href="/tools" className="block h-full">
-              <article className="flex h-full flex-col rounded-2xl border border-border bg-card p-8 transition hover:-translate-y-1 hover:border-saffron/40 hover:shadow-lift">
-                <span aria-hidden className="font-takri text-lg text-saffron-deep">
-                  𑚀
-                </span>
+            <Link href="/tools" className="accent-lavender block h-full">
+              <article className="hover-brut relative flex h-full flex-col bg-card p-8 hover:z-10">
+                <div
+                  aria-hidden
+                  className="grid size-12 place-items-center border border-border bg-section-accent text-black"
+                >
+                  <span className="font-takri">𑚀</span>
+                </div>
                 <h3 className="mt-3 font-display text-xl">Tools</h3>
                 <p className="mt-2 flex-1 text-sm leading-6 text-muted-foreground">
                   Script tools, starting with a Devanagari ⇄ Takri
                   transliterator.
                 </p>
-                <span className="link-ink mt-6 self-start text-sm text-saffron-deep">
+                <span className="link-ink text-section-accent-deep mt-6 self-start text-sm">
                   Enter →
                 </span>
               </article>
@@ -194,7 +238,7 @@ export default function Home() {
       </section>
 
       {/* ── Community ────────────────────────────────────────────────── */}
-      <section className="bg-secondary/50 py-20">
+      <section className="surface-ink accent-pink border-y border-border py-20">
         <div className="mx-auto max-w-6xl px-6">
           <SectionHeading
             eyebrow="Community"
@@ -208,7 +252,7 @@ export default function Home() {
                 href={link.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex h-12 items-center gap-2.5 rounded-full border border-border bg-card px-5 text-sm font-medium transition hover:border-saffron/40"
+                className="inline-flex h-12 items-center gap-2 rounded-full border border-border px-5 text-sm font-medium transition-colors hover:bg-pink hover:text-black"
               >
                 <Image
                   src={link.icon}
@@ -225,9 +269,25 @@ export default function Home() {
       </section>
 
       {/* ── Closing ──────────────────────────────────────────────────── */}
-      <section className="px-6 py-20">
-        <PahariBand className="mx-auto w-24 text-saffron/60" />
-        <p className="mx-auto mt-8 max-w-3xl text-center font-display text-2xl text-balance md:text-3xl">
+      <section className="pb-24">
+        <Marquee
+          className="border-y border-border py-2.5 text-foreground"
+          speed={40}
+          separator="·"
+          items={[
+            <span key="native-name" lang="hi" className="font-deva">
+              हिमविरासत
+            </span>,
+            <span key="orn-1" aria-hidden>
+              ◇
+            </span>,
+            "HimVirasat",
+            <span key="orn-2" aria-hidden>
+              ◇
+            </span>,
+          ]}
+        />
+        <p className="mx-auto mt-16 max-w-3xl px-6 text-center font-display text-3xl text-balance md:text-4xl">
           HimVirasat is an open, community-driven effort to preserve Himachal’s
           heritage for future generations.
         </p>

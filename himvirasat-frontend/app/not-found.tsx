@@ -1,18 +1,23 @@
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
-import { ContourField } from "@/components/decor/contour-field";
+import { Coin } from "@/components/decor/coin";
 
 export default function NotFound() {
   return (
-    <section className="relative flex min-h-svh items-center justify-center overflow-hidden bg-background">
-      <div aria-hidden className="texture-grain absolute inset-0 opacity-[0.05]" />
-      <ContourField className="text-primary" />
+    <section className="surface-ink accent-pink relative flex min-h-svh items-center justify-center overflow-hidden">
+      <Coin
+        glyph="हि"
+        fill="var(--pink)"
+        tilt={12}
+        size={90}
+        className="absolute right-[12%] top-[15%] hidden md:block"
+      />
 
       <main className="relative z-10 mx-auto max-w-xl px-6 py-16 text-center">
         <p
           aria-hidden
-          className="font-deva text-[8rem] leading-none text-brand md:text-[12rem]"
+          className="text-brut font-deva text-[8rem] leading-none text-foreground md:text-[12rem]"
         >
           ४०४
         </p>
