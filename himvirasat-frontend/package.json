@@ -10,8 +10,7 @@
     "lint": "next lint",
     "format": "prettier --write .",
     "typecheck": "tsc --noEmit",
-    "test": "jest --passWithNoTests",
-    "prepare": "husky install"
+    "test": "jest --passWithNoTests"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
