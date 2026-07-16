@@ -2,8 +2,8 @@ import { cn } from "@/lib/utils";
 
 /**
  * Scattered field of distinct Takri syllables — hand-placed, non-repeating
- * background typography for hero surfaces. Mix of outlined and faint-filled
- * glyphs at varied sizes and tilts. Purely decorative.
+ * background typography for hero surfaces. Larger glyphs carry faint brand
+ * color fills, smaller ones stay foreground-tinted. Purely decorative.
  */
 const GLYPHS: Array<{
   glyph: string;
@@ -11,18 +11,18 @@ const GLYPHS: Array<{
   top: string;
   size: string;
   rotate: number;
-  outlined?: boolean;
+  color?: string;
   opacity: string;
   hideOnMobile?: boolean;
 }> = [
-  { glyph: "𑚩𑚮", left: "76%", top: "-4%", size: "text-[15rem]", rotate: 6, outlined: true, opacity: "opacity-20" },
+  { glyph: "𑚩𑚮", left: "76%", top: "-4%", size: "text-[15rem]", rotate: 6, color: "text-marigold", opacity: "opacity-[0.16]" },
   { glyph: "𑚊𑚭", left: "3%", top: "8%", size: "text-7xl", rotate: -10, opacity: "opacity-15", hideOnMobile: true },
   { glyph: "𑚝𑚯", left: "88%", top: "58%", size: "text-6xl", rotate: 8, opacity: "opacity-15", hideOnMobile: true },
-  { glyph: "𑚤𑚱", left: "12%", top: "68%", size: "text-8xl", rotate: -6, outlined: true, opacity: "opacity-25", hideOnMobile: true },
+  { glyph: "𑚤𑚱", left: "12%", top: "68%", size: "text-8xl", rotate: -6, color: "text-pink", opacity: "opacity-[0.18]", hideOnMobile: true },
   { glyph: "𑚧", left: "64%", top: "78%", size: "text-5xl", rotate: 12, opacity: "opacity-15" },
   { glyph: "𑚙𑚭", left: "38%", top: "2%", size: "text-4xl", rotate: -14, opacity: "opacity-15" },
-  { glyph: "𑚢𑚲", left: "55%", top: "12%", size: "text-6xl", rotate: 4, outlined: true, opacity: "opacity-20", hideOnMobile: true },
-  { glyph: "𑚦𑚴", left: "-2%", top: "38%", size: "text-9xl", rotate: 10, outlined: true, opacity: "opacity-20", hideOnMobile: true },
+  { glyph: "𑚢𑚲", left: "55%", top: "12%", size: "text-6xl", rotate: 4, color: "text-teal", opacity: "opacity-[0.22]", hideOnMobile: true },
+  { glyph: "𑚦𑚴", left: "-2%", top: "38%", size: "text-9xl", rotate: 10, color: "text-lavender", opacity: "opacity-[0.18]", hideOnMobile: true },
   { glyph: "𑚟𑚵", left: "30%", top: "84%", size: "text-5xl", rotate: -8, opacity: "opacity-15", hideOnMobile: true },
   { glyph: "𑚛𑚮", left: "93%", top: "26%", size: "text-4xl", rotate: -4, opacity: "opacity-15" },
 ];
@@ -40,10 +40,10 @@ export function TakriField({ className }: { className?: string }) {
         <span
           key={g.glyph}
           className={cn(
-            "font-takri absolute leading-none text-foreground",
+            "font-takri absolute leading-none",
+            g.color ?? "text-foreground",
             g.size,
             g.opacity,
-            g.outlined && "glyph-stroke",
             g.hideOnMobile && "hidden md:block",
           )}
           style={{

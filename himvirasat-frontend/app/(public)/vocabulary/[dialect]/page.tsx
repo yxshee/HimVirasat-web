@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
-import { GlyphWatermark } from "@/components/decor/glyph-watermark";
 import { SectionHeading } from "@/components/decor/section-heading";
 import VocabularySearch from "@/components/vocabulary/VocabularySearch";
 import {
@@ -55,7 +54,6 @@ export default async function DialectPage({
   return (
     <main className="mx-auto max-w-5xl px-6 py-16 sm:px-10">
       <header className="relative overflow-hidden">
-        <GlyphWatermark glyph="𑚧" script="takri" className="-right-8 -top-16" />
         <SectionHeading
           as="h1"
           eyebrow="Vocabulary"
