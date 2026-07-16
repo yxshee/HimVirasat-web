@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { devToTankri } from "@/lib/transliteration/devToTankri";
 import { tankriToDev } from "@/lib/transliteration/tankriToDev";
 import { Button } from "@/components/ui/button";
+import { KathKuniBand } from "@/components/decor/kath-kuni-band";
 import { cn } from "@/lib/utils";
 
 const EXAMPLES = ["नमस्ते", "हिमाचल", "पहाड़", "मंडी"];
@@ -48,7 +49,7 @@ export default function Transliterator() {
   return (
     <div className="accent-teal">
       <div className="mx-auto w-full max-w-5xl overflow-hidden rounded-lg border border-border bg-card shadow-brut">
-        <div aria-hidden className="h-2 border-b border-border bg-section-accent" />
+        <KathKuniBand className="h-5 border-b border-border text-section-accent" />
 
         <div className="p-6 md:p-8">
           <div className="grid items-stretch gap-4 md:grid-cols-[1fr_auto_1fr]">

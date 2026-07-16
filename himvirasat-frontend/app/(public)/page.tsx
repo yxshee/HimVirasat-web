@@ -3,7 +3,8 @@ import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { Coin } from "@/components/decor/coin";
-import { GlyphWatermark } from "@/components/decor/glyph-watermark";
+import { PagodaCrest } from "@/components/decor/pagoda-crest";
+import { TakriField } from "@/components/decor/takri-field";
 import { LogoMark } from "@/components/decor/logo-mark";
 import { Marquee } from "@/components/decor/marquee";
 import { ScriptCycle } from "@/components/decor/script-cycle";
@@ -52,7 +53,7 @@ export default function Home() {
     <>
       {/* ── Hero ─────────────────────────────────────────────────────── */}
       <section className="surface-ink accent-marigold relative flex min-h-[88svh] items-center justify-center overflow-hidden border-b border-border">
-        <GlyphWatermark glyph="𑚩" script="takri" className="-top-16 -right-8" />
+        <TakriField />
         <Coin
           glyph="𑚦"
           script="takri"
@@ -153,6 +154,7 @@ export default function Home() {
 
       {/* ── Mission ──────────────────────────────────────────────────── */}
       <section className="mx-auto max-w-6xl px-6 py-24">
+        <PagodaCrest className="mb-14 text-foreground/80" />
         <div className="grid gap-12 md:grid-cols-2">
           <SectionHeading
             eyebrow="The Mission"

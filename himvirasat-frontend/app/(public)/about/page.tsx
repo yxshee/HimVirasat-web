@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { TeamSection } from "@/components/about/team-section";
 import { SectionHeading } from "@/components/decor/section-heading";
 import { GlyphWatermark } from "@/components/decor/glyph-watermark";
+import { PagodaCrest } from "@/components/decor/pagoda-crest";
 import { devToTankri } from "@/lib/transliteration/devToTankri";
 
 export const metadata = {
@@ -25,6 +26,7 @@ export default function AboutPage() {
 
       <section className="surface-ink relative mt-16 overflow-hidden border-y border-border py-20">
         <GlyphWatermark glyph="𑚦" script="takri" className="-left-10 -top-20" />
+        <PagodaCrest className="mb-10 text-foreground/70" />
         <div className="relative mx-auto max-w-5xl px-6">
           <h2 className="font-display text-2xl tracking-tight">
             Beyond Just Words

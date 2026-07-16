@@ -6,16 +6,22 @@ import { cn } from "@/lib/utils";
  * Auto-scrolling ornament strip. Pauses on hover; static row under
  * prefers-reduced-motion (CSS in globals). Callers style the band
  * (e.g. "bg-marigold text-black border-y border-border py-3").
+ *
+ * Each half of the track repeats the item sequence `repeat` times so the
+ * content always exceeds the viewport width — the -50% keyframe then loops
+ * seamlessly with no visible gap.
  */
 export function Marquee({
   items,
   separator = "◆",
   speed = 30,
+  repeat = 4,
   className,
 }: {
   items: React.ReactNode[];
   separator?: string;
   speed?: number;
+  repeat?: number;
   className?: string;
 }) {
   const row = (hidden: boolean) => (
@@ -23,14 +29,16 @@ export function Marquee({
       aria-hidden={hidden || undefined}
       className="flex shrink-0 items-baseline"
     >
-      {items.map((item, i) => (
-        <Fragment key={i}>
-          <span className="px-5 leading-none whitespace-nowrap">{item}</span>
-          <span aria-hidden className="px-1 text-sm">
-            {separator}
-          </span>
-        </Fragment>
-      ))}
+      {Array.from({ length: repeat }).map((_, r) =>
+        items.map((item, i) => (
+          <Fragment key={`${r}-${i}`}>
+            <span className="px-5 leading-none whitespace-nowrap">{item}</span>
+            <span aria-hidden className="px-1 text-sm">
+              {separator}
+            </span>
+          </Fragment>
+        )),
+      )}
     </div>
   );
   return (

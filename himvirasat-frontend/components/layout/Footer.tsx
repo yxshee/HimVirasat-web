@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 import { LogoMark } from "@/components/decor/logo-mark";
-import { PahariBand } from "@/components/decor/pahari-band";
+import { KathKuniBand } from "@/components/decor/kath-kuni-band";
 import { site } from "@/lib/site";
 
 const columns = [
@@ -39,8 +39,8 @@ const linkClasses =
 export default function Footer() {
   return (
     <footer className="surface-ink accent-marigold relative overflow-hidden">
-      {/* Chunky carving ornament opens the ink band. */}
-      <PahariBand className="h-4 border-y border-border bg-transparent text-marigold" />
+      {/* Kath-kuni timber-and-stone course opens the ink band. */}
+      <KathKuniBand className="h-5 border-y border-border bg-transparent text-marigold" />
 
       <div className="mx-auto max-w-7xl px-6 py-14 lg:px-8">
         <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4">
