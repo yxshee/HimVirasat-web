@@ -135,38 +135,38 @@
   --sidebar-ring: #ff90e8;
 }
 
-/* ── Deodar Night canvas (dark): forest green-black, warm cream ─────── */
+/* ── True-black canvas (dark): warm neutral, no hue cast ────────────── */
 .dark {
-  --background: #131a14;
-  --foreground: #edeae0;
-  --card: #18201a;
-  --card-foreground: #edeae0;
-  --popover: #1b241d;
-  --popover-foreground: #edeae0;
+  --background: #0d0d0c;
+  --foreground: #ece9e2;
+  --card: #161614;
+  --card-foreground: #ece9e2;
+  --popover: #1a1a18;
+  --popover-foreground: #ece9e2;
   --primary: #ffc900;
   --primary-foreground: #000000;
-  --secondary: #1e2820;
-  --secondary-foreground: #edeae0;
-  --muted: #1a231c;
-  --muted-foreground: #a9b0a4;
-  --accent: #223026;
+  --secondary: #1d1d1a;
+  --secondary-foreground: #ece9e2;
+  --muted: #171715;
+  --muted-foreground: #a3a19a;
+  --accent: #22221f;
   --accent-foreground: #ffffff;
   --destructive: #ff6b52;
-  --border: rgb(237 234 224 / 0.22);
-  --input: rgb(237 234 224 / 0.22);
+  --border: rgb(236 233 226 / 0.25);
+  --input: rgb(236 233 226 / 0.25);
   --ring: #ff90e8;
   --pink-deep: #ff90e8;
   --marigold-deep: #ffc900;
   --teal-deep: #2fbfa9;
   --lavender-deep: #a8bcf5;
   --madder-deep: #ff6b52;
-  --sidebar: #0e130f;
-  --sidebar-foreground: #edeae0;
+  --sidebar: #0a0a09;
+  --sidebar-foreground: #ece9e2;
   --sidebar-primary: var(--marigold);
   --sidebar-primary-foreground: #000000;
-  --sidebar-accent: #1e2820;
+  --sidebar-accent: #1d1d1a;
   --sidebar-accent-foreground: #ffffff;
-  --sidebar-border: rgb(237 234 224 / 0.15);
+  --sidebar-border: rgb(236 233 226 / 0.15);
   --sidebar-ring: #ff90e8;
 }
 
@@ -196,34 +196,6 @@
   --brut-color: var(--section-accent);
   background-color: #000000;
   color: #f4f4f0;
-}
-
-/* In Deodar Night, ink bands INVERT to cream islands: the drama flips. */
-.dark .surface-ink {
-  --background: #f4f4f0;
-  --foreground: #000000;
-  --card: #ffffff;
-  --card-foreground: #000000;
-  --popover: #ffffff;
-  --popover-foreground: #000000;
-  --secondary: #e9e9e3;
-  --secondary-foreground: #000000;
-  --muted: #e9e9e3;
-  --muted-foreground: #52524e;
-  --accent: #e9e9e3;
-  --accent-foreground: #000000;
-  --border: #000000;
-  --input: #000000;
-  /* text-safe deeps flip back to light values on cream */
-  --pink-deep: #b0187e;
-  --marigold-deep: #7a6200;
-  --teal-deep: #14766c;
-  --lavender-deep: #4a5fa5;
-  --madder-deep: #b02412;
-  --saffron-deep: var(--marigold-deep);
-  --brut-color: var(--section-accent);
-  background-color: #f4f4f0;
-  color: #000000;
 }
 
 /* ── Section accent rotation ────────────────────────────────────────── */
