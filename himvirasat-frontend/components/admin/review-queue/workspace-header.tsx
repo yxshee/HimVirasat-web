@@ -61,7 +61,7 @@ export default function WorkspaceHeader({
                 className={cn(
                   "h-12 px-3 flex items-center gap-1.5 border-b-2 font-medium transition-all",
                   workspaceTab === tab.id
-                    ? "border-indigo-600 text-foreground font-bold"
+                    ? "border-saffron text-foreground font-bold"
                     : "border-transparent text-muted-foreground hover:text-foreground"
                 )}
               >
@@ -71,13 +71,22 @@ export default function WorkspaceHeader({
           })}
         </div>
         <div className="hidden xl:flex items-center gap-1.5">
-          <Badge variant="outline" className="text-[10px] font-mono">
+          <Badge
+            variant="outline"
+            className="text-[10px] font-mono bg-info/10 text-info border-info/25"
+          >
             Under Review {statusCounts.under_review}
           </Badge>
-          <Badge variant="outline" className="text-[10px] font-mono">
+          <Badge
+            variant="outline"
+            className="text-[10px] font-mono bg-success/10 text-success border-success/25"
+          >
             Approved {statusCounts.approved}
           </Badge>
-          <Badge variant="outline" className="text-[10px] font-mono">
+          <Badge
+            variant="outline"
+            className="text-[10px] font-mono bg-warning/10 text-warning border-warning/25"
+          >
             Flagged {statusCounts.flagged}
           </Badge>
         </div>
@@ -103,7 +112,7 @@ export default function WorkspaceHeader({
               <Button
                 size="sm"
                 onClick={saveInlineEdits}
-                className="h-7.5 text-xs bg-emerald-600 hover:bg-emerald-700 text-white"
+                className="h-7.5 text-xs"
               >
                 <Check className="size-3.5 mr-1" /> Save
               </Button>

@@ -3,17 +3,20 @@
 import { type FormEvent, useMemo, useState, useEffect } from "react";
 import { ArrowLeft, BookMarked, CheckCircle2, Send } from "lucide-react";
 import { toast } from "sonner";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { Skeleton } from "@/components/ui/skeleton";
+import { StatusBadge } from "@/components/admin/status-badge";
 import { SubmissionFormFields } from "@/components/admin/submissions/submission-form-fields";
-import { SubmissionFormValues } from "@/types/admin/FSM/contribution-rules";
-import { Contribution } from "@/types/admin/FSM/contribution-rules";
+import { PahariBand } from "@/components/decor/pahari-band";
+import {
+  Contribution,
+  SubmissionFormValues,
+} from "@/types/admin/FSM/contribution-rules";
 import { sharedMockDataset } from "@/types/admin/FSM/mockstore";
 import { useQuery } from "@tanstack/react-query";
 import { DataLookupService } from "@/lib/services/admin/datalookup-service";
-import React from "react";
 
 const contributor = {
   id: "usr_expert_77",
@@ -54,18 +57,22 @@ export default function ContributionSubmissionPage() {
   const [formData, setFormData] =
     useState<SubmissionFormValues>(initialFormData);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const completion = useMemo(() => {
-    const completed = coreRequiredFields.filter((field) =>
-      String(formData[field] || "").trim()
-    ).length;
-    return Math.round((completed / coreRequiredFields.length) * 100);
-  }, [formData]);
+  const completedCoreCount = useMemo(
+    () =>
+      coreRequiredFields.filter((field) => String(formData[field] || "").trim())
+        .length,
+    [formData]
+  );
+  const completion = Math.round(
+    (completedCoreCount / coreRequiredFields.length) * 100
+  );
 
   // 1. Fetch Dialects Dataset
   const {
     data: dbDialects = [],
     isLoading: isLoadingDialects,
     isError: isErrorDialects, // <-- Destructure the error state flag
+    refetch: refetchDialects,
   } = useQuery({
     queryKey: ["datalookup", "dialects"],
     queryFn: DataLookupService.getAvailableDialects,
@@ -77,6 +84,7 @@ export default function ContributionSubmissionPage() {
     data: dbCategories = [],
     isLoading: isLoadingCategories,
     isError: isErrorCategories, // <-- Destructure the error state flag
+    refetch: refetchCategories,
   } = useQuery({
     queryKey: ["datalookup", "categories"],
     queryFn: DataLookupService.getAvailableCategories,
@@ -88,6 +96,7 @@ export default function ContributionSubmissionPage() {
     data: dbPartsOfSpeech = [],
     isLoading: isLoadingPOS,
     isError: isErrorPOS, // <-- Destructure the error state flag
+    refetch: refetchPOS,
   } = useQuery({
     queryKey: ["datalookup", "partsOfSpeech"],
     queryFn: DataLookupService.getAvailablePartsOfSpeech,
@@ -114,19 +123,59 @@ export default function ContributionSubmissionPage() {
   // Render a fallback layout if things are still loading
   if (isDataSyncing) {
     return (
-      <div className="p-8 text-center text-xs text-muted-foreground animate-pulse">
-        Synchronizing data...
-      </div>
+      <main className="min-h-screen bg-muted/30 antialiased">
+        <div className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+          <div className="flex items-start gap-3">
+            <Skeleton className="size-9 rounded-md" />
+            <div className="space-y-2">
+              <Skeleton className="h-5 w-56" />
+              <Skeleton className="h-3 w-72" />
+            </div>
+          </div>
+          <Skeleton className="mt-6 h-1.5 w-full rounded-full" />
+          <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-[280px_minmax(0,1fr)]">
+            <div className="space-y-4">
+              <Skeleton className="h-10 w-full" />
+              <Skeleton className="h-24 w-full" />
+            </div>
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <Skeleton className="h-10" />
+                <Skeleton className="h-10" />
+                <Skeleton className="h-10" />
+                <Skeleton className="h-10" />
+              </div>
+              <Skeleton className="h-20 w-full" />
+              <Skeleton className="h-20 w-full" />
+            </div>
+          </div>
+        </div>
+      </main>
     );
   }
   if (hasSyncFailure) {
     return (
-      <div className="p-8 text-center text-xs text-red-500 border border-red-200/40 bg-red-500/5 rounded-xl max-w-md mx-auto my-12">
-        <p className="font-semibold">System Out of Sync</p>
-        <p className="opacity-80 mt-1">
-          Something really bad happened. Please refresh the page or check your
-          connection.
+      <div className="mx-auto my-12 max-w-md rounded-xl border border-destructive/40 bg-destructive/5 p-8 text-center text-xs">
+        <p className="font-semibold text-foreground">
+          Couldn&apos;t load form data
         </p>
+        <p className="mt-1 text-muted-foreground">
+          The dialect, category, and part-of-speech lists didn&apos;t come
+          through. Check your connection and try again.
+        </p>
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          className="mt-4"
+          onClick={() => {
+            void refetchDialects();
+            void refetchCategories();
+            void refetchPOS();
+          }}
+        >
+          Retry
+        </Button>
       </div>
     );
   }
@@ -135,7 +184,7 @@ export default function ContributionSubmissionPage() {
     field: K,
     value: SubmissionFormValues[K]
   ) => {
-    setFormData((previous: any) => ({ ...previous, [field]: value }));
+    setFormData((previous) => ({ ...previous, [field]: value }));
   };
 
   const handleSubmit = async (event: FormEvent) => {
@@ -157,25 +206,24 @@ export default function ContributionSubmissionPage() {
     try {
       const timestamp = new Date().toISOString();
 
-      const newSubmission: any = {
+      const newSubmission: Contribution = {
         id: createId("VOC-SUB"),
         contributor_id: contributor.id,
         contributor_name: contributor.name,
         dialect: formData.dialect.trim(),
         word_devanagari: formData.word_devanagari.trim(),
-        category: formData.category.trim(),
-        part_of_speech: formData.part_of_speech.trim(),
-        region: formData.region.trim(),
-        meaning_hindi: formData.meaning_hindi.trim(),
+        meaning: formData.meaning_hindi.trim(),
         example_sentence: formData.example_sentence.trim(),
-        example_sentence_hindi_meaning:
-          formData.example_sentence_hindi_meaning.trim(),
+        region: formData.region.trim(),
+        category: formData.category.trim(),
 
         // Advanced Optionals safely fallback to Null inside the ORM storage layer
-        word_latin: formData.word_latin?.trim() || null,
-        example_sentence_latin: formData.example_sentence_latin?.trim() || null,
-        word_takri: formData.word_takri?.trim() || null,
-        example_sentence_takri: formData.example_sentence_takri?.trim() || null,
+        word_latin: formData.word_latin.trim() || null,
+        ipa: null,
+        meaning_hindi: formData.meaning_hindi.trim(),
+        meaning_english: null,
+        example_sentence_english: null,
+        example_sentence_hindi: formData.example_sentence_hindi_meaning.trim(),
 
         status: "under_review",
         review_comments: [],
@@ -189,6 +237,12 @@ export default function ContributionSubmissionPage() {
             created_at: timestamp,
           },
         ],
+        flag_reason: null,
+        flagged_by: null,
+        rejected_reason: null,
+        rejected_by: null,
+        approved_by: null,
+        approved_at: null,
         created_at: timestamp,
         updated_at: timestamp,
       };
@@ -231,15 +285,10 @@ export default function ContributionSubmissionPage() {
                 </Button>
                 <div className="min-w-0">
                   <div className="flex flex-wrap items-center gap-2">
-                    <h1 className="text-lg font-bold tracking-tight text-foreground sm:text-xl">
+                    <h1 className="font-display text-lg tracking-tight text-foreground sm:text-xl">
                       New vocabulary submission
                     </h1>
-                    <Badge
-                      variant="secondary"
-                      className="rounded-md text-[10px]"
-                    >
-                      Under Review
-                    </Badge>
+                    <StatusBadge status="under_review" />
                   </div>
                   <p className="mt-1 max-w-2xl text-xs leading-relaxed text-muted-foreground sm:text-sm">
                     Provide a structured contribution with mandatory core items
@@ -261,7 +310,7 @@ export default function ContributionSubmissionPage() {
                 <Button
                   type="submit"
                   disabled={isSubmitting}
-                  className="h-9 rounded-md bg-neutral-900 px-4 text-xs font-semibold text-white hover:bg-neutral-800 dark:bg-white dark:text-neutral-950 dark:hover:bg-neutral-100"
+                  className="h-9 rounded-md px-4 text-xs font-semibold"
                 >
                   {isSubmitting ? "Submitting..." : "Submit for review"}
                   {!isSubmitting && <Send className="ml-2 size-3.5" />}
@@ -270,9 +319,20 @@ export default function ContributionSubmissionPage() {
             </div>
 
             <div className="flex items-center gap-3">
-              <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-muted">
+              <span className="shrink-0 text-[11px] font-semibold text-muted-foreground">
+                Core fields &middot; {completedCoreCount} of{" "}
+                {coreRequiredFields.length}
+              </span>
+              <div
+                role="progressbar"
+                aria-valuenow={completion}
+                aria-valuemin={0}
+                aria-valuemax={100}
+                aria-label="Core fields completion"
+                className="h-1.5 flex-1 overflow-hidden rounded-full bg-muted"
+              >
                 <div
-                  className="h-full rounded-full bg-emerald-500 transition-all"
+                  className="h-full rounded-full bg-saffron transition-all"
                   style={{ width: `${completion}%` }}
                 />
               </div>
@@ -288,10 +348,11 @@ export default function ContributionSubmissionPage() {
             <CardContent className="p-0">
               <div className="grid grid-cols-1 lg:grid-cols-[280px_minmax(0,1fr)]">
                 <aside className="border-b bg-muted/20 p-5 lg:border-b-0 lg:border-r lg:p-6">
+                  <PahariBand className="mb-5 h-2" />
                   <div className="space-y-6">
                     <div className="flex items-center gap-3">
                       <div className="flex size-10 items-center justify-center rounded-md border bg-background">
-                        <BookMarked className="size-4 text-indigo-600 dark:text-indigo-400" />
+                        <BookMarked className="size-4 text-primary" />
                       </div>
                       <div>
                         <p className="text-sm font-bold text-foreground">
@@ -307,14 +368,14 @@ export default function ContributionSubmissionPage() {
 
                     <div className="space-y-3 text-xs text-muted-foreground">
                       <div className="flex items-start gap-2">
-                        <CheckCircle2 className="mt-0.5 size-3.5 text-emerald-600" />
+                        <CheckCircle2 className="mt-0.5 size-3.5 text-saffron-deep" />
                         <p>
                           Core elements are parsed to construct direct
                           translations mapping.
                         </p>
                       </div>
                       <div className="flex items-start gap-2">
-                        <CheckCircle2 className="mt-0.5 size-3.5 text-emerald-600" />
+                        <CheckCircle2 className="mt-0.5 size-3.5 text-saffron-deep" />
                         <p>
                           Advanced fields offer deep tracking of phonetics and
                           context.
@@ -352,7 +413,7 @@ export default function ContributionSubmissionPage() {
             <Button
               type="submit"
               disabled={isSubmitting}
-              className="h-9 rounded-md bg-neutral-900 px-4 text-xs font-semibold text-white hover:bg-neutral-800 dark:bg-white dark:text-neutral-950"
+              className="h-9 rounded-md px-4 text-xs font-semibold"
             >
               {isSubmitting ? "Submitting..." : "Submit"}
               {!isSubmitting && <Send className="ml-2 size-3.5" />}

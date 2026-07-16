@@ -1,8 +1,21 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
+import dayjs from "dayjs";
+import { Trash2 } from "lucide-react";
 
-import { Badge } from "@/components/ui/badge";
+import { StatusBadge } from "@/components/admin/status-badge";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 
 import type { LanguageExpert } from "@/types/admin/user";
@@ -25,6 +38,9 @@ export function getExpertColumns(
     {
       accessorKey: "email",
       header: "Email",
+
+      cell: ({ row }) =>
+        row.original.email ?? <span className="text-muted-foreground">—</span>,
     },
 
     {
@@ -32,14 +48,29 @@ export function getExpertColumns(
       header: "Dialects",
 
       cell: ({ row }) =>
-        row.original.dialects.length > 0
-          ? row.original.dialects.join(", ")
-          : "-",
+        row.original.dialects.length > 0 ? (
+          <div className="flex flex-wrap gap-1">
+            {row.original.dialects.map((dialect) => (
+              <span
+                key={dialect}
+                className="rounded-full border border-border px-2 py-0.5 text-xs"
+              >
+                {dialect}
+              </span>
+            ))}
+          </div>
+        ) : (
+          <span className="text-muted-foreground">—</span>
+        ),
     },
 
     {
       accessorKey: "points",
-      header: "Points",
+      header: () => <div className="w-full text-right">Points</div>,
+
+      cell: ({ row }) => (
+        <div className="text-right tabular-nums">{row.original.points}</div>
+      ),
     },
 
     {
@@ -47,9 +78,7 @@ export function getExpertColumns(
       header: "Status",
 
       cell: ({ row }) => (
-        <Badge variant={row.original.is_active ? "default" : "secondary"}>
-          {row.original.is_active ? "Active" : "Inactive"}
-        </Badge>
+        <StatusBadge status={row.original.is_active ? "active" : "inactive"} />
       ),
     },
 
@@ -57,7 +86,7 @@ export function getExpertColumns(
       accessorKey: "created_at",
       header: "Created",
 
-      cell: ({ row }) => new Date(row.original.created_at).toLocaleDateString(),
+      cell: ({ row }) => dayjs(row.original.created_at).format("DD MMM YYYY"),
     },
     {
       id: "actions",
@@ -65,14 +94,41 @@ export function getExpertColumns(
       enableSorting: false,
 
       cell: ({ row }) => (
-        <Button
-          variant="destructive"
-          size="sm"
-          disabled={deletingId === row.original.id}
-          onClick={() => onRemove(row.original.id)}
-        >
-          {deletingId === row.original.id ? "Removing..." : "Remove"}
-        </Button>
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="text-destructive"
+              disabled={deletingId === row.original.id}
+              aria-label={`Remove ${row.original.username}`}
+            >
+              <Trash2 aria-hidden className="size-4" />
+            </Button>
+          </AlertDialogTrigger>
+
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>
+                Remove @{row.original.username}?
+              </AlertDialogTitle>
+              <AlertDialogDescription>
+                This permanently removes the expert account. This cannot be
+                undone.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction
+                variant="destructive"
+                onClick={() => onRemove(row.original.id)}
+              >
+                Remove
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       ),
     },
   ];

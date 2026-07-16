@@ -1,8 +1,9 @@
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
-import { ShieldCheck, SlidersHorizontal } from "lucide-react";
+import { Inbox, ShieldCheck, SlidersHorizontal } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { EmptyState } from "@/components/admin/empty-state";
 import {
   Contribution,
   ContributionHistoryEvent,
@@ -313,20 +314,20 @@ export default function ReviewQueueDashboardPage() {
   };
 
   return (
-    <div className="h-screen w-full flex flex-col overflow-hidden bg-background border-t antialiased font-sans text-sm text-foreground">
+    <div className="h-[calc(100svh-3.5rem)] w-full flex flex-col overflow-hidden bg-background border-t antialiased font-sans text-sm text-foreground">
       <header className="h-14 shrink-0 flex items-center justify-between border-b px-6 bg-card/60 backdrop-blur-md z-10">
         <div className="flex items-center gap-3">
-          <div className="bg-primary/5 text-primary p-2 rounded-lg border border-primary/10 shadow-sm">
-            <ShieldCheck className="size-4.5 text-indigo-600 dark:text-indigo-400" />
+          <div className="bg-primary/10 text-primary p-2 rounded-lg">
+            <ShieldCheck className="size-4.5" />
           </div>
           <div>
             <h1 className="text-sm font-bold tracking-tight text-foreground flex items-center gap-1.5">
               Linguistic Review Queue
               <Badge
-                variant="secondary"
-                className="text-[10px] py-0 px-1.5 font-mono font-normal"
+                variant="outline"
+                className="text-[10px] py-0 px-1.5 font-normal border-border text-muted-foreground"
               >
-                pr-style
+                PR-style review
               </Badge>
             </h1>
             <p className="text-[11px] text-muted-foreground">
@@ -338,25 +339,30 @@ export default function ReviewQueueDashboardPage() {
           </div>
         </div>
 
-        <div className="flex items-center gap-2 border bg-muted/40 p-1 rounded-xl">
+        <div className="flex items-center gap-2">
           <span className="text-[10px] uppercase tracking-wider font-mono px-2 text-muted-foreground flex items-center gap-1">
             <SlidersHorizontal className="size-3" /> Test Identity Tier:
           </span>
-          {(["language_expert", "language_head", "super_admin"] as const).map(
-            (role) => (
-              <button
-                key={role}
-                onClick={() => {
-                  setActiveUser((previous) => ({ ...previous, role }));
-                  setIsEditMode(false);
-                }}
-                className="text-[11px] px-2.5 py-1 rounded-lg font-medium transition-all capitalize data-[active=true]:bg-background data-[active=true]:text-foreground data-[active=true]:shadow-xs data-[active=true]:border data-[active=true]:text-xs text-muted-foreground hover:text-foreground"
-                data-active={activeUser.role === role}
-              >
-                {role.replace("_", " ")}
-              </button>
-            )
-          )}
+          <div className="inline-flex items-center gap-1 rounded-lg bg-muted p-1">
+            {(["language_expert", "language_head", "super_admin"] as const).map(
+              (role) => (
+                <button
+                  key={role}
+                  onClick={() => {
+                    setActiveUser((previous) => ({ ...previous, role }));
+                    setIsEditMode(false);
+                  }}
+                  className="px-3 py-1.5 text-xs rounded-md transition-colors capitalize text-muted-foreground hover:text-foreground data-[active=true]:bg-background data-[active=true]:text-foreground data-[active=true]:shadow-xs data-[active=true]:font-medium"
+                  data-active={activeUser.role === role}
+                >
+                  {role.replace("_", " ")}
+                </button>
+              )
+            )}
+          </div>
+          <span className="border border-dashed border-border rounded-full px-2 text-[10px] text-muted-foreground">
+            Demo
+          </span>
         </div>
       </header>
 
@@ -403,15 +409,13 @@ export default function ReviewQueueDashboardPage() {
               />
             </div>
           ) : (
-            <div className="flex-1 flex flex-col items-center justify-center p-8 text-muted-foreground text-center">
-              <ShieldCheck className="size-10 stroke-[1.2] text-muted-foreground/40 mb-2" />
-              <h3 className="text-sm font-bold text-foreground/80">
-                No entries in this queue
-              </h3>
-              <p className="text-xs max-w-xs mt-1 opacity-70">
-                Adjust the filter or search term to review another moderation
-                scope.
-              </p>
+            <div className="flex-1 flex items-center justify-center p-8">
+              <EmptyState
+                icon={Inbox}
+                title="Nothing selected"
+                description="Pick an entry from the queue to start reviewing."
+                className="w-full max-w-sm"
+              />
             </div>
           )}
         </main>

@@ -1,14 +1,10 @@
-import {
-  SidebarProvider,
-  SidebarInset,
-  SidebarTrigger,
-} from "@/components/ui/sidebar";
+import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 
 import { AdminSidebar } from "./sidebar";
+import { AdminHeader } from "./admin-header";
 
 import type { UserDto } from "@/types/admin/user";
 
-import { BackgroundDecor } from "@/components/layout/background-decor";
 export function DashboardShell({
   user,
   children,
@@ -17,22 +13,16 @@ export function DashboardShell({
   children: React.ReactNode;
 }) {
   return (
-    <div className="relative min-h-screen overflow-hidden">
-      <BackgroundDecor />
+    <div className="min-h-screen bg-background">
+      <SidebarProvider defaultOpen={true}>
+        <AdminSidebar user={user} />
 
-      <div className="relative z-10">
-        <SidebarProvider defaultOpen={true}>
-          <AdminSidebar user={user} />
+        <SidebarInset>
+          <AdminHeader />
 
-          <SidebarInset className="bg-transparent">
-            <header className="sticky top-0 z-20 flex h-14 items-center border-b bg-background/80 px-4 backdrop-blur">
-              <SidebarTrigger />
-            </header>
-
-            <main>{children}</main>
-          </SidebarInset>
-        </SidebarProvider>
-      </div>
+          <main>{children}</main>
+        </SidebarInset>
+      </SidebarProvider>
     </div>
   );
 }

@@ -8,7 +8,7 @@ import { AdminAuthService } from "@/lib/services/admin/admin-auth-service";
 
 import type { UserDto } from "@/types/admin/user";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { BackgroundDecor } from "@/components/layout/background-decor";
+import { AdminSplash } from "@/components/admin/admin-splash";
 export default function DashboardLayout({
   children,
 }: {
@@ -33,7 +33,7 @@ export default function DashboardLayout({
   }, [router]);
 
   if (!user) {
-    return <div className="p-6">Loading...</div>;
+    return <AdminSplash />;
   }
 
   return (

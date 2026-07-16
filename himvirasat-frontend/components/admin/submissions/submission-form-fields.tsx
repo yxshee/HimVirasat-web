@@ -54,8 +54,7 @@ export function SubmissionFormFields({
       <div className="space-y-12">
         {/* Core Section - All Fields Mandatory */}
         <FormSection
-          eyebrow="Section 1"
-          title="Core Lexical Fields"
+          eyebrow="01 · Core lexical fields"
           description="All parameters in this primary segment are fully required to form a viable lexical resource entry."
         >
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -79,7 +78,7 @@ export function SubmissionFormFields({
 
             <Field label="Word in Devanagari" required icon={Type}>
               <Input
-                className={cn(inputClass, "font-semibold")}
+                className={cn(inputClass, "font-deva font-semibold")}
                 placeholder="उदाहरणात्मक शब्द"
                 value={values.word_devanagari}
                 onChange={(event) =>
@@ -136,7 +135,7 @@ export function SubmissionFormFields({
 
           <Field label="Meaning in Hindi" required icon={BookOpen}>
             <Textarea
-              className={cn(textareaClass, "min-h-20")}
+              className={cn(textareaClass, "min-h-20 font-deva")}
               placeholder="शब्द का हिंदी में स्पष्ट अर्थ और संदर्भ लिखें।"
               value={values.meaning_hindi}
               onChange={(event) =>
@@ -151,7 +150,7 @@ export function SubmissionFormFields({
             icon={Quote}
           >
             <Textarea
-              className={cn(textareaClass, "min-h-20")}
+              className={cn(textareaClass, "min-h-20 font-deva")}
               placeholder="पहाड़ी वाक्य (देवनागरी लिपि में)"
               value={values.example_sentence}
               onChange={(event) =>
@@ -162,7 +161,7 @@ export function SubmissionFormFields({
 
           <Field label="Sentence Meaning in Hindi" required icon={BookOpen}>
             <Textarea
-              className={cn(textareaClass, "min-h-20")}
+              className={cn(textareaClass, "min-h-20 font-deva")}
               placeholder="ऊपर लिखे गए पहाड़ी वाक्य का हिंदी अनुवाद"
               value={values.example_sentence_hindi_meaning}
               onChange={(event) =>
@@ -174,8 +173,7 @@ export function SubmissionFormFields({
 
         {/* Advanced Section - Optional Fields */}
         <FormSection
-          eyebrow="Section 2"
-          title="Advanced Metadata Fields"
+          eyebrow="02 · Script variants"
           description="Phonetics, secondary script variants, and transliterations. These can be left blank."
         >
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -284,23 +282,20 @@ export function SubmissionFormFields({
 
 function FormSection({
   eyebrow,
-  title,
   description,
   children,
 }: {
   eyebrow: string;
-  title: string;
   description: string;
   children: ReactNode;
 }) {
   return (
     <section className="space-y-5">
       <div className="border-b pb-3">
-        <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+        <h2 className="text-xs font-semibold uppercase tracking-[0.2em] text-saffron-deep">
           {eyebrow}
-        </p>
-        <h2 className="mt-1 text-base font-bold text-foreground">{title}</h2>
-        <p className="mt-1 max-w-2xl text-xs leading-relaxed text-muted-foreground">
+        </h2>
+        <p className="mt-2 max-w-2xl text-xs leading-relaxed text-muted-foreground">
           {description}
         </p>
       </div>
@@ -346,9 +341,10 @@ function ReadinessItem({
     <div className="flex items-center justify-between gap-3 rounded-md border bg-background px-3 py-2">
       <span className="font-medium text-foreground">{label}</span>
       <span
+        aria-hidden
         className={cn(
           "size-2 rounded-full",
-          complete ? "bg-emerald-500" : "bg-muted-foreground/30"
+          complete ? "bg-success" : "bg-muted"
         )}
       />
     </div>

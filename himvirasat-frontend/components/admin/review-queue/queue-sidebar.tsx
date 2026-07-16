@@ -5,10 +5,11 @@ import { Inbox, Search, MessageSquare } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { EmptyState } from "@/components/admin/empty-state";
+import { StatusBadge } from "@/components/admin/status-badge";
 import { cn } from "@/lib/utils";
 import {
   Contribution,
-  ContributionStatus,
   getOpenReviewCommentCount,
 } from "@/types/admin/FSM/contribution-rules";
 
@@ -114,7 +115,7 @@ function renderPipelineConnector(
               : "left-[70%] right-[10%]",
         isSegmentActive
           ? getActiveLineClasses(activeTone)
-          : "bg-neutral-200 dark:bg-neutral-800"
+          : "bg-border"
       )}
     />
   );
@@ -139,10 +140,10 @@ function renderPipelineNode(
           "size-4.5 rounded-full flex items-center justify-center transition-all duration-300 border-[3px] shadow-sm z-10",
           isActive
             ? getActiveNodeClasses(activeTone)
-            : "bg-background border-neutral-300 dark:border-neutral-700 group-hover:border-neutral-400 dark:group-hover:border-neutral-600"
+            : "bg-background border-border group-hover:border-muted-foreground/50"
         )}
       >
-        {isActive && <div className="size-1.5 rounded-full bg-white" />}
+        {isActive && <div className="size-1.5 rounded-full bg-background" />}
       </div>
 
       <span
@@ -161,13 +162,12 @@ function renderPipelineNode(
 
 function renderEmptyState() {
   return (
-    <div className="p-8 text-center flex flex-col items-center justify-center text-muted-foreground h-64">
-      <Inbox className="size-6 stroke-[1.5] mb-2 text-muted-foreground/50" />
-      <p className="text-xs font-semibold text-foreground/80">Queue is clear</p>
-      <p className="text-[11px] max-w-48 mx-auto mt-0.5 opacity-70">
-        No vocabulary entries match this filter and search.
-      </p>
-    </div>
+    <EmptyState
+      icon={Inbox}
+      title="Queue is clear"
+      description="No vocabulary entries match this filter and search."
+      className="m-3 p-8"
+    />
   );
 }
 
@@ -185,7 +185,6 @@ function renderQueueList(
         const openComments = getOpenReviewCommentCount(item);
         const totalComments = item.review_comments.length;
         const isMine = item.contributor_id === activeUserId;
-        const badgeCfg = statusBadgeConfig[item.status];
 
         return (
           <button
@@ -194,12 +193,12 @@ function renderQueueList(
             className={cn(
               "w-full p-3.5 cursor-pointer text-left transition-all relative flex flex-col gap-1.5 group",
               isSelected
-                ? "bg-accent/40 backdrop-blur-xs after:absolute after:left-0 after:top-0 after:bottom-0 after:w-1 after:bg-indigo-600 dark:after:bg-indigo-400"
+                ? "bg-accent/40 backdrop-blur-xs after:absolute after:left-0 after:top-0 after:bottom-0 after:w-1 after:bg-saffron"
                 : "hover:bg-muted/20"
             )}
           >
             <div className="flex items-center justify-between gap-2">
-              <span className="font-bold text-sm tracking-tight text-foreground">
+              <span className="font-deva font-bold text-sm tracking-tight text-foreground">
                 {item.word_devanagari}
               </span>
               <span className="text-[10px] font-mono text-muted-foreground opacity-80">
@@ -228,15 +227,10 @@ function renderQueueList(
 
               <div className="flex items-center gap-2">
                 {totalComments > 0 && renderReviewCommentsBadge(openComments)}
-                <Badge
-                  variant="outline"
-                  className={cn(
-                    "text-[9px] px-1.5 py-0 font-semibold border shadow-none",
-                    badgeCfg.style
-                  )}
-                >
-                  {badgeCfg.label}
-                </Badge>
+                <StatusBadge
+                  status={item.status}
+                  className="text-[9px] px-1.5 py-0"
+                />
               </div>
             </div>
           </button>
@@ -268,79 +262,55 @@ function renderReviewCommentsBadge(openComments: number) {
   );
 }
 
-const statusBadgeConfig: Record<
-  ContributionStatus,
-  { label: string; style: string }
-> = {
-  under_review: {
-    label: "Under Review",
-    style: "bg-blue-500/10 text-blue-600 border-blue-500/20 dark:text-blue-400",
-  },
-  approved: {
-    label: "Approved",
-    style:
-      "bg-emerald-500/10 text-emerald-600 border-emerald-500/20 dark:text-emerald-400",
-  },
-  flagged: {
-    label: "Flagged",
-    style:
-      "bg-amber-500/10 text-amber-600 border-amber-500/20 dark:text-amber-400",
-  },
-  rejected: {
-    label: "Rejected",
-    style: "bg-red-500/10 text-red-600 border-red-500/20 dark:text-red-400",
-  },
-};
-
 const getPipelineTone = (filter: QueueFilter) => {
-  if (filter === "flagged") return "amber";
-  if (filter === "rejected") return "red";
-  if (filter === "approved") return "emerald";
-  if (filter === "my_submissions") return "indigo";
-  return "blue";
+  if (filter === "flagged") return "warning";
+  if (filter === "rejected") return "destructive";
+  if (filter === "approved") return "success";
+  if (filter === "my_submissions") return "saffron";
+  return "info";
 };
 
 const getActiveNodeClasses = (tone: ReturnType<typeof getPipelineTone>) => {
   switch (tone) {
-    case "amber":
-      return "bg-amber-500 border-amber-500 ring-4 ring-amber-500/20";
-    case "red":
-      return "bg-red-500 border-red-500 ring-4 ring-red-500/20";
-    case "emerald":
-      return "bg-emerald-500 border-emerald-500 ring-4 ring-emerald-500/20";
-    case "indigo":
-      return "bg-indigo-500 border-indigo-500 ring-4 ring-indigo-500/20";
+    case "warning":
+      return "bg-warning border-warning ring-4 ring-warning/20";
+    case "destructive":
+      return "bg-destructive border-destructive ring-4 ring-destructive/20";
+    case "success":
+      return "bg-success border-success ring-4 ring-success/20";
+    case "saffron":
+      return "bg-saffron border-saffron ring-4 ring-saffron/20";
     default:
-      return "bg-blue-500 border-blue-500 ring-4 ring-blue-500/20";
+      return "bg-info border-info ring-4 ring-info/20";
   }
 };
 
 const getActiveTextClasses = (tone: ReturnType<typeof getPipelineTone>) => {
   switch (tone) {
-    case "amber":
-      return "text-amber-600";
-    case "red":
-      return "text-red-600";
-    case "emerald":
-      return "text-emerald-600";
-    case "indigo":
-      return "text-indigo-600";
+    case "warning":
+      return "text-warning";
+    case "destructive":
+      return "text-destructive";
+    case "success":
+      return "text-success";
+    case "saffron":
+      return "text-saffron-deep";
     default:
-      return "text-blue-600";
+      return "text-info";
   }
 };
 
 const getActiveLineClasses = (tone: ReturnType<typeof getPipelineTone>) => {
   switch (tone) {
-    case "amber":
-      return "bg-amber-500";
-    case "red":
-      return "bg-red-500";
-    case "emerald":
-      return "bg-emerald-500";
-    case "indigo":
-      return "bg-indigo-500";
+    case "warning":
+      return "bg-warning";
+    case "destructive":
+      return "bg-destructive";
+    case "success":
+      return "bg-success";
+    case "saffron":
+      return "bg-saffron";
     default:
-      return "bg-blue-500";
+      return "bg-info";
   }
 };

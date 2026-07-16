@@ -18,7 +18,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-import { primaryButtonStyles } from "@/lib/constants";
 import { UserService } from "@/lib/services/admin/user-service";
 import { DataLookupService } from "@/lib/services/admin/datalookup-service";
 
@@ -195,7 +194,6 @@ export function CreateExpertDialog({
             <Button
               type="submit"
               disabled={isSubmitting || isLoadingDialects || isErrorDialects}
-              className={"rounded-b-none " + primaryButtonStyles}
             >
               {isSubmitting ? "Creating..." : "Create"}
             </Button>
@@ -216,7 +214,7 @@ function renderLoadingState() {
 
 function renderErrorState() {
   return (
-    <div className="p-3 text-xs border rounded-md border-red-200 bg-red-500/5 text-red-500 text-center">
+    <div className="p-3 text-xs border rounded-md border-destructive/25 bg-destructive/5 text-destructive text-center">
       Could not retrieve runtime lookups. Fill out fields later.
     </div>
   );
@@ -263,13 +261,13 @@ function renderDialectSelection(
               onClick={() => onToggle(dialect)}
               className={`flex items-center justify-between text-left px-2.5 py-1.5 text-xs font-medium rounded border transition-all cursor-pointer ${
                 isChecked
-                  ? "bg-green-500/10 text-green-600 border-green-500/30 dark:text-green-400"
+                  ? "bg-success/10 text-success border-success/30"
                   : "hover:bg-muted/40 text-muted-foreground border-transparent"
               }`}
             >
               <span>{dialect}</span>
               {isChecked && (
-                <Check className="size-3 shrink-0 text-green-600 dark:text-green-400" />
+                <Check className="size-3 shrink-0 text-success" />
               )}
             </button>
           );

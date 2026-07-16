@@ -40,12 +40,12 @@ import {
 } from "@/components/ui/alert-dialog";
 import {
   Contribution,
-  ReviewCommentStatus,
   SystemRole,
   WORKFLOW_RULES,
   getOpenReviewCommentCount,
   isAuthorityRole,
 } from "@/types/admin/FSM/contribution-rules";
+import { StatusBadge } from "@/components/admin/status-badge";
 import { cn } from "@/lib/utils";
 
 interface WorkspaceContentProps {
@@ -80,13 +80,6 @@ const fieldOptions = [
   "Region",
   "Category",
 ];
-
-const statusStyles: Record<ReviewCommentStatus, string> = {
-  open: "bg-blue-500/10 text-blue-600 border-blue-500/20 dark:text-blue-400",
-  resolved:
-    "bg-emerald-500/10 text-emerald-600 border-emerald-500/20 dark:text-emerald-400",
-  rejected: "bg-red-500/10 text-red-600 border-red-500/20 dark:text-red-400",
-};
 
 const initials = (name: string) =>
   name
@@ -163,10 +156,10 @@ export default function WorkspaceContent({
             <div className="space-y-4">
               {(currentItem.status === "flagged" ||
                 currentItem.status === "rejected") && (
-                  <div className="rounded-xl border border-amber-500/30 bg-amber-500/5 p-4 flex items-start gap-3 text-xs">
-                    <AlertTriangle className="size-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+                  <div className="rounded-xl border border-warning/30 bg-warning/5 p-4 flex items-start gap-3 text-xs">
+                    <AlertTriangle className="size-4 text-warning shrink-0 mt-0.5" />
                     <div className="space-y-1">
-                      <span className="font-bold uppercase tracking-wider text-[10px] text-amber-600 dark:text-amber-400">
+                      <span className="font-bold uppercase tracking-wider text-[10px] text-warning">
                         {currentItem.status === "flagged"
                           ? "Active Flag"
                           : "Rejected Entry"}
@@ -195,7 +188,7 @@ export default function WorkspaceContent({
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 border-b border-border/40 pb-6">
                 <div className="space-y-1">
-                  <label className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider block">
+                  <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide block">
                     Devanagari Root Script
                   </label>
                   {isEditMode ? (
@@ -207,17 +200,17 @@ export default function WorkspaceContent({
                           word_devanagari: event.target.value,
                         }))
                       }
-                      className="font-bold text-lg bg-background border-border text-foreground"
+                      className="font-deva font-bold text-lg bg-background border-border text-foreground"
                     />
                   ) : (
-                    <h2 className="text-3xl font-extrabold text-foreground tracking-tight select-all">
+                    <h2 className="font-deva text-3xl font-extrabold text-foreground tracking-tight select-all">
                       {currentItem.word_devanagari}
                     </h2>
                   )}
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider block">
+                  <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide block">
                     Latin Text
                   </label>
                   {isEditMode ? (
@@ -239,7 +232,7 @@ export default function WorkspaceContent({
                 </div>
 
                 <div className="space-y-1 md:col-span-2">
-                  <label className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider block">
+                  <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide block">
                     International Phonetic Alphabet (IPA)
                   </label>
                   {isEditMode ? (
@@ -254,7 +247,7 @@ export default function WorkspaceContent({
                       className="font-mono max-w-sm bg-background border-border text-foreground"
                     />
                   ) : (
-                    <span className="inline-flex items-center font-mono text-xs tracking-wide text-indigo-600 dark:text-indigo-400 font-semibold bg-indigo-500/5 dark:bg-indigo-500/10 px-2.5 py-1 rounded border border-indigo-500/20 select-all">
+                    <span className="inline-flex items-center font-mono text-xs tracking-wide text-primary font-semibold bg-primary/5 px-2.5 py-1 rounded border border-primary/20 select-all">
                       /{currentItem.ipa || "Not Documented"}/
                     </span>
                   )}
@@ -262,7 +255,7 @@ export default function WorkspaceContent({
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider block">
+                <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide block">
                   Detailed Dialect Meaning
                 </label>
                 {isEditMode ? (
@@ -314,11 +307,11 @@ export default function WorkspaceContent({
                 <h4 className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
                   Usage Validation Context Sentences
                 </h4>
-                <div className="relative overflow-hidden rounded-xl bg-indigo-500/2 p-4.5 border border-indigo-500/20 dark:border-indigo-500/10">
-                  <div className="absolute left-0 top-0 bottom-0 w-1 bg-indigo-500/60" />
+                <div className="relative overflow-hidden rounded-xl bg-saffron/5 p-4.5 border border-saffron/20 dark:border-saffron/10">
+                  <div className="absolute left-0 top-0 bottom-0 w-1 bg-saffron/60" />
                   <div className="space-y-3.5 pl-1">
                     <div className="space-y-1">
-                      <span className="text-[10px] font-bold tracking-wider text-indigo-600 dark:text-indigo-400 uppercase block">
+                      <span className="text-[10px] font-bold tracking-wider text-saffron-deep uppercase block">
                         Dialect Execution
                       </span>
                       {isEditMode ? (
@@ -330,14 +323,14 @@ export default function WorkspaceContent({
                               example_sentence: event.target.value,
                             }))
                           }
-                          className="font-semibold bg-background text-foreground border-border"
+                          className="font-deva font-semibold bg-background text-foreground border-border"
                         />
                       ) : (
-                        <p className="text-base font-bold text-foreground select-all">
+                        <p className="font-deva text-base font-bold text-foreground select-all">
                           {"\""}{currentItem.example_sentence}{"\""}
                         </p>)}
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2.5 border-t border-indigo-500/20 dark:border-indigo-500/10">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2.5 border-t border-saffron/20 dark:border-saffron/10">
                       <FieldValue
                         label="English Translation"
                         value={currentItem.example_sentence_english}
@@ -429,7 +422,7 @@ export default function WorkspaceContent({
                     <div className="flex justify-end">
                       <Button
                         size="sm"
-                        className="h-8 text-xs bg-indigo-600 hover:bg-indigo-700 text-white"
+                        className="h-8 text-xs bg-primary hover:bg-primary/90 text-primary-foreground"
                         disabled={!commentMessage.trim()}
                         onClick={submitComment}
                       >
@@ -454,7 +447,7 @@ export default function WorkspaceContent({
                       <CardContent className="p-4">
                         <div className="flex items-start gap-3">
                           <Avatar size="sm">
-                            <AvatarFallback>
+                            <AvatarFallback className="bg-primary/10 text-primary">
                               {initials(comment.author_name)}
                             </AvatarFallback>
                           </Avatar>
@@ -470,15 +463,10 @@ export default function WorkspaceContent({
                                   ).toLocaleString()}
                                 </p>
                               </div>
-                              <Badge
-                                variant="outline"
-                                className={cn(
-                                  "text-[10px] capitalize",
-                                  statusStyles[comment.status]
-                                )}
-                              >
-                                {comment.status}
-                              </Badge>
+                              <StatusBadge
+                                status={comment.status}
+                                className="text-[10px]"
+                              />
                             </div>
                             <div className="space-y-1">
                               <p className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
@@ -608,7 +596,7 @@ export default function WorkspaceContent({
       <div className="shrink-0 border-t border-border bg-card/90 dark:bg-background/95 backdrop-blur px-6 py-3 shadow-[0_-4px_12px_-4px_rgba(0,0,0,0.08)] relative z-10">
         <div className="max-w-3xl mx-auto flex items-center justify-between gap-4 flex-wrap">
           <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground bg-muted/80 dark:bg-muted/40 px-2.5 py-1 rounded-md border border-border/60">
-            <Clock className="size-3 text-indigo-500" />
+            <Clock className="size-3 text-primary" />
             <span>
               Role:{" "}
               <span className="font-bold text-foreground capitalize">
@@ -625,7 +613,7 @@ export default function WorkspaceContent({
               <Button
                 size="sm"
                 onClick={() => handleSubmitForReview(currentItem.id)}
-                className="h-8 text-xs font-semibold bg-indigo-600 hover:bg-indigo-700 text-white px-4 rounded-lg shadow-sm"
+                className="h-8 text-xs font-semibold bg-primary hover:bg-primary/90 text-primary-foreground px-4 rounded-lg shadow-sm"
               >
                 Submit for Review
               </Button>
@@ -645,13 +633,13 @@ export default function WorkspaceContent({
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="h-8 text-xs font-semibold text-destructive dark:text-red-400 hover:bg-destructive/10 px-3 rounded-lg"
+                      className="h-8 text-xs font-semibold text-destructive hover:bg-destructive/10 hover:text-destructive px-3 rounded-lg"
                     >
                       <Trash2 className="size-3.5 mr-1.5" /> Reject
                     </Button>
                   }
                   actionLabel="Reject Entry"
-                  actionClassName="bg-destructive hover:bg-destructive/90 text-white"
+                  actionClassName="bg-destructive hover:bg-destructive/90 text-primary-foreground"
                   onConfirm={() => {
                     handleReject(currentItem.id, rejectReason.trim());
                     setRejectReason("");
@@ -685,13 +673,13 @@ export default function WorkspaceContent({
                   <Button
                     variant="outline"
                     size="sm"
-                    className="h-8 text-xs font-semibold border-amber-500/30 dark:border-amber-500/20 text-amber-600 dark:text-amber-400 bg-background hover:bg-amber-500/5 px-3 shadow-none rounded-lg"
+                    className="h-8 text-xs font-semibold border-warning/25 text-warning bg-warning/10 hover:bg-warning/20 hover:text-warning px-3 shadow-none rounded-lg"
                   >
                     <Flag className="size-3.5 mr-1.5" /> Flag
                   </Button>
                 }
                 actionLabel="Flag Entry"
-                actionClassName="bg-amber-600 hover:bg-amber-700 text-white"
+                actionClassName="bg-warning hover:bg-warning/90 text-primary-foreground"
                 onConfirm={() => {
                   handleFlag(currentItem.id, flagReason.trim());
                   setFlagReason("");
@@ -704,7 +692,7 @@ export default function WorkspaceContent({
                 size="sm"
                 onClick={() => handleApprove(currentItem.id)}
                 disabled={!canApprove && !canOverride}
-                className="h-8 text-xs font-semibold bg-indigo-600 hover:bg-indigo-700 text-white px-4 rounded-lg shadow-sm"
+                className="h-8 text-xs font-semibold border border-success/25 bg-success/10 text-success hover:bg-success/20 px-4 rounded-lg shadow-none"
               >
                 <CheckCircle2 className="size-3.5 mr-1.5" />
                 {openCommentCount > 0 && canOverride
@@ -832,7 +820,7 @@ function ReasonDialog({
           </AlertDialogDescription>
         </AlertDialogHeader>
         <div className="my-4 space-y-1.5">
-          <label className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider block">
+          <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide block">
             {reasonLabel} <span className="text-destructive">*</span>
           </label>
           <Textarea
