@@ -107,8 +107,8 @@ export default function Footer() {
           <p className="text-xs text-muted-foreground">
             &copy; {new Date().getFullYear()} HimVirasat
           </p>
-          <p className="text-xs text-muted-foreground">
-            Open source, community built.
+          <p lang="hi" className="font-deva text-xs text-muted-foreground">
+            जय हिमाचल! जय देवभूमि!
           </p>
         </div>
       </div>
