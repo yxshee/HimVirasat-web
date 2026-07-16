@@ -42,39 +42,44 @@ export default function Footer() {
       {/* Kath-kuni timber-and-stone course opens the ink band. */}
       <KathKuniBand className="h-5 border-y border-border bg-transparent text-marigold" />
 
-      <div className="mx-auto max-w-7xl px-6 py-14 lg:px-8">
-        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4">
-          <div className="flex flex-col items-start gap-4 border-border lg:border-l-0 lg:pl-0">
-            <Link href="/" className="flex items-center gap-2.5">
-              <LogoMark size={32} />
-              <span className="flex flex-col">
-                <span className="font-display font-medium leading-tight tracking-tight">
-                  HimVirasat
-                </span>
-                <span
-                  aria-hidden
-                  className="font-takri mt-0.5 text-[10px] leading-none tracking-wide text-section-accent-deep"
-                >
-                  {site.takriName}
-                </span>
+      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+        <div className="flex flex-wrap items-center justify-between gap-6 border-b border-border py-10">
+          <Link href="/" className="flex items-center gap-2.5">
+            <LogoMark size={32} />
+            <span className="flex flex-col">
+              <span className="font-display leading-none font-medium tracking-tight">
+                HimVirasat
               </span>
-            </Link>
+              <span
+                aria-hidden
+                className="font-takri mt-1 text-[10px] leading-none tracking-wide text-section-accent-deep"
+              >
+                {site.takriName}
+              </span>
+            </span>
+          </Link>
+          <div className="flex max-w-md flex-col gap-2 sm:text-right">
             <p className="text-sm leading-6 text-muted-foreground">
               An open source initiative dedicated to the digital preservation
               of Himachal&apos;s linguistic heritage and cultural memory.
             </p>
-            <p aria-hidden className="font-takri text-sm text-muted-foreground/60">
+            <p
+              aria-hidden
+              className="font-takri text-sm text-muted-foreground/60"
+            >
               {site.takriName}
             </p>
           </div>
+        </div>
 
+        <div className="grid grid-cols-1 gap-10 py-12 sm:grid-cols-3 sm:gap-0 sm:divide-x sm:divide-border">
           {columns.map((column) => (
             <nav
               key={column.heading}
               aria-label={column.heading}
-              className="flex flex-col gap-4 border-border lg:border-l lg:pl-8"
+              className="flex flex-col gap-4 sm:px-8"
             >
-              <h3 className="text-xs uppercase tracking-[0.2em] text-section-accent-deep">
+              <h3 className="text-xs leading-none uppercase tracking-[0.2em] text-section-accent-deep">
                 {column.heading}
               </h3>
               <ul className="flex flex-col gap-2.5">
@@ -103,11 +108,11 @@ export default function Footer() {
       </div>
 
       <div className="border-t border-border">
-        <div className="relative mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-x-8 gap-y-2 px-6 py-6 lg:px-8">
-          <p className="text-xs text-muted-foreground">
+        <div className="relative mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-x-8 gap-y-2 px-6 py-5 lg:px-8">
+          <p className="text-xs leading-none text-muted-foreground">
             &copy; {new Date().getFullYear()} HimVirasat
           </p>
-          <p lang="hi" className="font-deva text-xs text-muted-foreground">
+          <p lang="hi" className="font-deva text-xs leading-none text-muted-foreground">
             जय हिमाचल! जय देवभूमि!
           </p>
         </div>

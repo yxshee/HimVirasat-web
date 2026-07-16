@@ -27,26 +27,26 @@ export default function Navbar() {
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-border bg-background">
-      <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6 lg:px-8">
+      <nav className="mx-auto grid h-16 max-w-7xl grid-cols-[1fr_auto_1fr] items-stretch px-6 lg:px-8">
         <Link
           href="/"
-          className="flex h-full items-center gap-2.5 border-r border-border pl-0 pr-4"
+          className="flex h-full items-center gap-2.5 justify-self-start"
         >
           <LogoMark size={32} />
           <span className="flex flex-col">
-            <span className="font-display font-medium leading-tight tracking-tight">
+            <span className="font-display leading-none font-medium tracking-tight">
               HimVirasat
             </span>
             <span
               aria-hidden
-              className="font-takri mt-0.5 text-[10px] leading-none tracking-wide text-marigold-deep"
+              className="font-takri mt-1 text-[10px] leading-none tracking-wide text-marigold-deep"
             >
               {site.takriName}
             </span>
           </span>
         </Link>
 
-        <ul className="hidden items-center gap-6 md:flex">
+        <ul className="hidden h-full items-center gap-2 border-x border-border px-6 md:flex">
           {navLinks.map((link) => {
             const isActive = isActiveLink(link.href);
             return (
@@ -68,7 +68,7 @@ export default function Navbar() {
           })}
         </ul>
 
-        <div className="flex h-full items-center gap-1 border-l border-border pl-4">
+        <div className="col-start-3 flex h-full items-center gap-1 justify-self-end">
           <ThemeToggle />
           <button
             type="button"
