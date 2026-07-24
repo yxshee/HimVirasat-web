@@ -1,3 +1,4 @@
+import { RailProgress } from "@/components/motion/rail-progress";
 import { cn } from "@/lib/utils";
 
 import { Eyebrow } from "./eyebrow";
@@ -31,6 +32,7 @@ export function StickyRailSection({
         <div>
           <Eyebrow nativeEcho={nativeEcho}>{eyebrow}</Eyebrow>
           <p className="text-title mt-4 text-balance">{railTitle}</p>
+          <RailProgress />
         </div>
         {railFooter && (
           <div className="text-body-sm text-muted-foreground">{railFooter}</div>
