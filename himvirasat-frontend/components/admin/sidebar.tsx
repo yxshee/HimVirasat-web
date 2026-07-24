@@ -192,7 +192,7 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" tooltip={user.full_name}>
-              <div className="flex aspect-square size-8 shrink-0 items-center justify-center rounded-full border border-border bg-flame-amber text-xs font-semibold text-black">
+              <div className="flex aspect-square size-8 shrink-0 items-center justify-center rounded-full border border-border bg-pine-100 text-xs font-semibold text-[#07070b]">
                 {getInitials(user.full_name)}
               </div>
 

@@ -44,7 +44,7 @@ export default function DialectCard({ name, formUrl }: DialectCardProps) {
         <p className="mt-4">
           <Link
             href="/vocabulary/mandeali"
-            className="text-flame-text text-body-sm link-quiet inline-flex items-center gap-1"
+            className="text-verdant text-body-sm link-quiet inline-flex items-center gap-1"
           >
             Vocabulary live
             <PixelIcon name="chevron-right" className="size-3.5" />

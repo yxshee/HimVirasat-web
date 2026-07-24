@@ -11,14 +11,14 @@
 
 @theme inline {
   /* ── Fonts ─────────────────────────────────────────────────────────
-     Inter carries body copy, Space Grotesk the display sizes, Space Mono
+     Inter carries body copy, Geist the display sizes, Space Mono
      the uppercase eyebrows. Devanagari and Takri are content faces and
      are never used for chrome. */
   --font-sans:
     var(--font-inter), ui-sans-serif, system-ui, sans-serif,
     "Apple Color Emoji", "Segoe UI Emoji";
   --font-display:
-    var(--font-grotesk), var(--font-inter), ui-sans-serif, sans-serif;
+    var(--font-geist), var(--font-inter), ui-sans-serif, sans-serif;
   --font-mono: var(--font-space-mono), ui-monospace, monospace;
   --font-deva: var(--font-noto-serif-deva), Georgia, serif;
   --font-takri: var(--font-noto-takri), sans-serif;
@@ -119,26 +119,33 @@
      `surface-3` is the deepest warm tint (mosaic neutrals, table zebra).
      `ink` is the full-bleed dark band; it stays dark in both themes. */
   --color-surface-3: var(--surface-3);
-  --color-ink: #151524;
+  --color-ink: #0a0a0c;
   --color-ink-foreground: #fbfbf8;
-  --color-ink-border: #31313a;
+  --color-ink-border: #26262b;
   --color-hairline-strong: var(--hairline-strong);
 
-  /* ── Flame ramp ────────────────────────────────────────────────────
-     Fill-only: every step below fails contrast as text on at least one
-     of the two canvases. When a warm colour must carry text, use
-     `text-flame-text` — it is the one theme-aware step, dark enough for
-     cream and light enough for the blue-black. */
-  --color-flame-amber: #ffaf01;
-  --color-flame-orange: #ff8204;
-  --color-flame-red-orange: #ff5229;
-  --color-flame-red: #e51300;
-  --color-flame-deep: #b31000;
-  --color-flame-text: var(--flame-text);
+  /* ── Deodar ramp ───────────────────────────────────────────────────
+     Himachal in three registers: forest green, glacial blue-green, and
+     the earth browns of kath-kuni timber. Fill-only — the ramp spans
+     both light and dark values, so glyphs sitting on a tile pick their
+     ink per tone (see components/mistral/takri-mosaic.tsx). When a green
+     must carry text, use `text-verdant`: the one theme-aware step, dark
+     enough for the cream canvas and light enough for the near-black. */
+  --color-pine-100: #7fb69b;
+  --color-pine-300: #4e9578;
+  --color-pine-500: #2e7358;
+  --color-pine-700: #1c5341;
+  --color-pine-900: #0f3a2e;
 
-  /* Cool counterpoint — tools, datasets, admin surfaces. */
-  --color-azure: #0082e6;
-  --color-azure-pale: #b9daff;
+  /* Glacial melt — the cool counterpoint, and the snow on the mark. */
+  --color-glacier-300: #7ec6c6;
+  --color-glacier-500: #3e9ca3;
+
+  /* Timber and slate — used sparingly, and for warning states. */
+  --color-clay-400: #a98363;
+  --color-clay-600: #6e4e36;
+
+  --color-verdant: var(--verdant);
 
   /* ── Radii ─────────────────────────────────────────────────────────
      Derived from --radius: sm 4 · md 6 · lg 8 · xl 12. Mosaic tiles and
@@ -176,18 +183,24 @@
   /* Hairlines carry all the structure. */
   --border: #e4e3de;
   --input: #e4e3de;
-  --ring: #ff5229;
+  --ring: #3e9ca3;
 
   --surface-3: #ebe9e0;
   --hairline-strong: #c9c9c4;
-  /* 7.0:1 on the cream canvas. */
-  --flame-text: #b31000;
+  /* pine-700 — 8.4:1 on the cream canvas. */
+  --verdant: #1c5341;
 
-  --chart-1: #ffaf01;
-  --chart-2: #ff8204;
-  --chart-3: #ff5229;
-  --chart-4: #0082e6;
-  --chart-5: #b9daff;
+  /* Mosaic tile neutrals. Kept separate from the surface palette so the
+     tiles do not follow the canvas when the theme goes dark. */
+  --mosaic-1: #f5f4ef;
+  --mosaic-2: #ebe9e0;
+  --mosaic-3: #c9c9c4;
+
+  --chart-1: #2e7358;
+  --chart-2: #3e9ca3;
+  --chart-3: #7fb69b;
+  --chart-4: #a98363;
+  --chart-5: #7ec6c6;
 
   --sidebar: #fbfbf8;
   --sidebar-foreground: #07070b;
@@ -196,45 +209,51 @@
   --sidebar-accent: #f5f4ef;
   --sidebar-accent-foreground: #07070b;
   --sidebar-border: #e4e3de;
-  --sidebar-ring: #ff5229;
+  --sidebar-ring: #3e9ca3;
 }
 
-/* ── Dark: blue-black, same structure ───────────────────────────────── */
+/* ── Dark: neutral near-black, same structure ───────────────────────── */
 .dark {
-  --background: #151524;
+  --background: #0a0a0c;
   --foreground: #fbfbf8;
-  --card: #151524;
+  --card: #0a0a0c;
   --card-foreground: #fbfbf8;
-  --popover: #1c1c2b;
+  --popover: #121215;
   --popover-foreground: #fbfbf8;
 
   --primary: #fbfbf8;
-  --primary-foreground: #151524;
-  --secondary: #1c1c2b;
+  --primary-foreground: #0a0a0c;
+  --secondary: #121215;
   --secondary-foreground: #fbfbf8;
-  --muted: #1c1c2b;
-  --muted-foreground: #a0a0ac;
-  --accent: #242435;
+  --muted: #121215;
+  --muted-foreground: #9b9ba3;
+  --accent: #1a1a1e;
   --accent-foreground: #fbfbf8;
   --destructive: #ff5229;
 
-  --border: #31313a;
-  --input: #31313a;
-  --ring: #ff8204;
+  --border: #26262b;
+  --input: #26262b;
+  --ring: #7ec6c6;
 
-  --surface-3: #242435;
-  --hairline-strong: #3e3e4a;
-  /* #b31000 is only 2.57:1 here — step up the ramp for dark. */
-  --flame-text: #ff8204;
+  --surface-3: #1a1a1e;
+  --hairline-strong: #34343a;
+  /* pine-700 is only 1.7:1 here — step to the light end of the ramp. */
+  --verdant: #7fb69b;
 
-  --sidebar: #12121f;
+  /* Mosaic tiles stay light in both themes, so the block always reads as
+     white-and-flame rather than dissolving into the canvas. */
+  --mosaic-1: #fbfbf8;
+  --mosaic-2: #efeee8;
+  --mosaic-3: #dcdbd4;
+
+  --sidebar: #08080a;
   --sidebar-foreground: #fbfbf8;
   --sidebar-primary: #fbfbf8;
-  --sidebar-primary-foreground: #151524;
-  --sidebar-accent: #1c1c2b;
+  --sidebar-primary-foreground: #0a0a0c;
+  --sidebar-accent: #121215;
   --sidebar-accent-foreground: #fbfbf8;
-  --sidebar-border: #31313a;
-  --sidebar-ring: #ff8204;
+  --sidebar-border: #26262b;
+  --sidebar-ring: #7ec6c6;
 }
 
 @layer base {
@@ -275,7 +294,7 @@
   }
 
   ::selection {
-    background-color: #ffaf01;
+    background-color: #7ec6c6;
     color: #07070b;
   }
 }
@@ -285,25 +304,28 @@
    nested inside pick up the right hairline and muted values. Identical
    in light and dark themes by design. */
 .surface-ink {
-  --background: #151524;
+  --background: #0a0a0c;
   --foreground: #fbfbf8;
-  --card: #151524;
+  --card: #0a0a0c;
   --card-foreground: #fbfbf8;
-  --popover: #1c1c2b;
+  --popover: #121215;
   --popover-foreground: #fbfbf8;
   --primary: #fbfbf8;
-  --primary-foreground: #151524;
-  --secondary: #1c1c2b;
+  --primary-foreground: #0a0a0c;
+  --secondary: #121215;
   --secondary-foreground: #fbfbf8;
-  --muted: #1c1c2b;
-  --muted-foreground: #a0a0ac;
-  --accent: #242435;
+  --muted: #121215;
+  --muted-foreground: #9b9ba3;
+  --accent: #1a1a1e;
   --accent-foreground: #fbfbf8;
-  --border: #31313a;
-  --input: #31313a;
-  --surface-3: #242435;
-  --hairline-strong: #3e3e4a;
-  background-color: #151524;
+  --border: #26262b;
+  --input: #26262b;
+  --surface-3: #1a1a1e;
+  --hairline-strong: #34343a;
+  --mosaic-1: #fbfbf8;
+  --mosaic-2: #efeee8;
+  --mosaic-3: #dcdbd4;
+  background-color: #0a0a0c;
   color: #fbfbf8;
 }
 

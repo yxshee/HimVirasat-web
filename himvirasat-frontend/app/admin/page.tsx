@@ -25,11 +25,11 @@ export default function AdminPage() {
             <p className="font-display text-display-md mt-5">HimVirasat</p>
             <p
               aria-hidden
-              className="font-takri mt-1 text-lg leading-none text-[#a0a0ac]"
+              className="font-takri mt-1 text-lg leading-none text-muted-foreground"
             >
               {site.takriName}
             </p>
-            <p className="text-body-sm mt-6 max-w-md text-[#a0a0ac]">
+            <p className="text-body-sm mt-6 max-w-md text-muted-foreground">
               {site.description}
             </p>
           </div>

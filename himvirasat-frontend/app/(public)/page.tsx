@@ -257,7 +257,7 @@ export default function Home() {
               </p>
               <p
                 aria-hidden
-                className="font-takri text-flame-text mt-4 text-4xl leading-none"
+                className="font-takri text-verdant mt-4 text-4xl leading-none"
               >
                 {devToTankri(sample.deva)}
               </p>
@@ -284,7 +284,7 @@ export default function Home() {
               href={item.href}
               className="ruled-cell hover:bg-secondary group flex flex-col p-8 transition-colors"
             >
-              <PixelIcon name={item.icon} className="text-flame-red size-7" />
+              <PixelIcon name={item.icon} className="text-verdant size-7" />
               <h3 className="text-title mt-5">{item.title}</h3>
               <p className="text-body-sm text-muted-foreground mt-2 flex-1">
                 {item.description}
@@ -392,7 +392,7 @@ export default function Home() {
             {WAYS.map((way) => (
               <div key={way.title} className="bg-ink flex flex-col p-8 lg:p-10">
                 <h3 className="text-title">{way.title}</h3>
-                <p className="text-body-sm mt-3 flex-1 text-[#a0a0ac]">
+                <p className="text-body-sm mt-3 flex-1 text-muted-foreground">
                   {way.body}
                 </p>
                 <div className="mt-8">

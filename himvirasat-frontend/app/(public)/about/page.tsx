@@ -43,19 +43,19 @@ export default function AboutPage() {
           <h2 className="text-display-md max-w-3xl text-balance">
             Beyond just words.
           </h2>
-          <p className="text-body-lg mt-6 max-w-3xl text-[#a0a0ac]">
+          <p className="text-body-lg mt-6 max-w-3xl text-muted-foreground">
             HimVirasat is not only a dictionary, it is a technical ecosystem.
             From maintaining this digital archive to developing{" "}
-            <strong className="font-medium text-[#fbfbf8]">
+            <strong className="font-medium text-foreground">
               open source Pahadi learning tools
             </strong>
             , we are building the infrastructure for Himachal&rsquo;s digital
             future. The work scales from{" "}
-            <strong className="font-medium text-[#fbfbf8]">
+            <strong className="font-medium text-foreground">
               specialised language models
             </strong>{" "}
             to live{" "}
-            <strong className="font-medium text-[#fbfbf8]">
+            <strong className="font-medium text-foreground">
               dialect translators
             </strong>
             .

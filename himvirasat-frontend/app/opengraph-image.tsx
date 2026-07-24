@@ -10,25 +10,39 @@ const CANVAS = "#fbfbf8";
 const INK = "#07070b";
 const MUTED = "#5a5a63";
 const HAIRLINE = "#e4e3de";
-const FLAME = ["#ffaf01", "#ff8204", "#ff5229", "#e51300", "#b31000"];
+/** summit → base: glacier, sage, forest, pine, timber. */
+const PEAK = ["#7ec6c6", "#7fb69b", "#2e7358", "#1c5341", "#6e4e36"];
 
-/** Ridgeline mark, matching components/mistral/logo-mark.tsx. */
+/** The wider Deodar ramp, used for the tile band. */
+const DEODAR = [
+  "#7fb69b",
+  "#4e9578",
+  "#2e7358",
+  "#1c5341",
+  "#0f3a2e",
+  "#7ec6c6",
+  "#3e9ca3",
+  "#a98363",
+  "#6e4e36",
+];
+
+/** Snow-capped ridgeline, matching components/mistral/logo-mark.tsx. */
 const MARK_TILES: Array<[number, number, number]> = [
   [2, 0, 0],
-  [1, 1, 0],
+  [1, 1, 1],
   [2, 1, 1],
-  [0, 2, 1],
+  [0, 2, 2],
   [1, 2, 2],
   [2, 2, 2],
   [3, 2, 3],
-  [0, 3, 2],
-  [1, 3, 3],
+  [0, 3, 4],
+  [1, 3, 4],
   [2, 3, 3],
   [3, 3, 4],
 ];
 
 /* Deterministic tile band along the bottom edge. */
-const BAND = Array.from({ length: 20 }, (_, i) => FLAME[(i * 7 + 3) % 5]);
+const BAND = Array.from({ length: 20 }, (_, i) => DEODAR[(i * 7 + 3) % 9]);
 
 async function loadGoogleFont(family: string): Promise<ArrayBuffer> {
   const css = await fetch(`https://fonts.googleapis.com/css2?family=${family}`, {
@@ -53,7 +67,7 @@ function composition(withDevanagari: boolean) {
         position: "relative",
         padding: "0 96px",
         backgroundColor: CANVAS,
-        fontFamily: withDevanagari ? "Space Grotesk" : "sans-serif",
+        fontFamily: withDevanagari ? "Geist" : "sans-serif",
       }}
     >
       <div
@@ -130,7 +144,7 @@ function composition(withDevanagari: boolean) {
               top: row * 66,
               width: 66,
               height: 66,
-              backgroundColor: FLAME[step],
+              backgroundColor: PEAK[step],
             }}
           />
         ))}
@@ -172,9 +186,9 @@ function composition(withDevanagari: boolean) {
 
 export default async function OpengraphImage() {
   try {
-    const [deva, grotesk, takri] = await Promise.all([
+    const [deva, display, takri] = await Promise.all([
       loadGoogleFont("Noto+Serif+Devanagari:wght@600&subset=devanagari"),
-      loadGoogleFont("Space+Grotesk:wght@500"),
+      loadGoogleFont("Geist:wght@500"),
       // css2 subset param is unreliable for Takri; the default TTF covers it.
       loadGoogleFont("Noto+Sans+Takri:wght@400"),
     ]);
@@ -187,7 +201,7 @@ export default async function OpengraphImage() {
           style: "normal",
           weight: 600,
         },
-        { name: "Space Grotesk", data: grotesk, style: "normal", weight: 500 },
+        { name: "Geist", data: display, style: "normal", weight: 500 },
         { name: "Noto Sans Takri", data: takri, style: "normal", weight: 400 },
       ],
     });

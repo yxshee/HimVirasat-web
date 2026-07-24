@@ -193,7 +193,7 @@ function renderQueueList(
             className={cn(
               "w-full p-3.5 cursor-pointer text-left transition-all relative flex flex-col gap-1.5 group",
               isSelected
-                ? "bg-accent/40 backdrop-blur-xs after:absolute after:left-0 after:top-0 after:bottom-0 after:w-1 after:bg-flame-red"
+                ? "bg-accent/40 backdrop-blur-xs after:absolute after:left-0 after:top-0 after:bottom-0 after:w-1 after:bg-pine-500"
                 : "hover:bg-muted/20"
             )}
           >
@@ -266,7 +266,7 @@ const getPipelineTone = (filter: QueueFilter) => {
   if (filter === "flagged") return "warning";
   if (filter === "rejected") return "destructive";
   if (filter === "approved") return "success";
-  if (filter === "my_submissions") return "flame-red";
+  if (filter === "my_submissions") return "pine-500";
   return "info";
 };
 
@@ -278,8 +278,8 @@ const getActiveNodeClasses = (tone: ReturnType<typeof getPipelineTone>) => {
       return "bg-destructive border-destructive ring-4 ring-destructive/20";
     case "success":
       return "bg-success border-success ring-4 ring-success/20";
-    case "flame-red":
-      return "bg-flame-red border-flame-red ring-4 ring-flame-red/20";
+    case "pine-500":
+      return "bg-pine-500 border-pine-500 ring-4 ring-pine-500/20";
     default:
       return "bg-info border-info ring-4 ring-info/20";
   }
@@ -293,8 +293,8 @@ const getActiveTextClasses = (tone: ReturnType<typeof getPipelineTone>) => {
       return "text-destructive";
     case "success":
       return "text-success";
-    case "flame-red":
-      return "text-flame-text";
+    case "pine-500":
+      return "text-verdant";
     default:
       return "text-info";
   }
@@ -308,8 +308,8 @@ const getActiveLineClasses = (tone: ReturnType<typeof getPipelineTone>) => {
       return "bg-destructive";
     case "success":
       return "bg-success";
-    case "flame-red":
-      return "bg-flame-red";
+    case "pine-500":
+      return "bg-pine-500";
     default:
       return "bg-info";
   }

@@ -22,7 +22,7 @@ export function ToolCard({
       {glyph && (
         <span
           aria-hidden
-          className="bg-flame-amber font-takri mb-6 grid size-14 place-items-center text-3xl text-[#07070b]"
+          className="bg-pine-100 font-takri mb-6 grid size-14 place-items-center text-3xl text-[#07070b]"
         >
           {glyph}
         </span>

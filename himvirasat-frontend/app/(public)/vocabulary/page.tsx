@@ -36,7 +36,7 @@ export default function VocabularyPage() {
               {dialect.nativeName && (
                 <span
                   aria-hidden
-                  className="font-deva text-flame-text text-lg"
+                  className="font-deva text-verdant text-lg"
                 >
                   {dialect.nativeName}
                 </span>

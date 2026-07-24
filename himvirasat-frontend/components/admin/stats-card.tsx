@@ -32,7 +32,7 @@ export function StatCard({
         </div>
         <div
           aria-hidden
-          className="grid size-10 shrink-0 place-items-center rounded-md border border-border bg-flame-amber text-black"
+          className="grid size-10 shrink-0 place-items-center rounded-md border border-border bg-pine-100 text-[#07070b]"
         >
           <Icon className="size-5" />
         </div>

@@ -100,7 +100,7 @@ export default function ContributePage() {
           </p>
         </div>
 
-        <blockquote className="border-flame-red text-title text-foreground h-fit border-l-2 pl-6">
+        <blockquote className="border-pine-500 text-title text-foreground h-fit border-l-2 pl-6">
           One word today can preserve a language tomorrow.
         </blockquote>
       </div>
@@ -112,7 +112,7 @@ export default function ContributePage() {
             <li key={step.title} className="ruled-cell p-8">
               <span
                 aria-hidden
-                className="bg-flame-amber font-takri grid size-12 place-items-center text-2xl text-[#07070b]"
+                className="bg-pine-100 font-takri grid size-12 place-items-center text-2xl text-[#07070b]"
               >
                 {step.numeral}
               </span>

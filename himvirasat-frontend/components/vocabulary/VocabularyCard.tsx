@@ -25,7 +25,7 @@ function highlightText(text: string, query: string) {
         regex.test(part) ? (
           <mark
             key={i}
-            className="bg-flame-amber rounded-none px-0.5 text-[#07070b]"
+            className="bg-pine-100 rounded-none px-0.5 text-[#07070b]"
           >
             {part}
           </mark>

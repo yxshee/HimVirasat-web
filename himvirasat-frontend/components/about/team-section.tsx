@@ -57,7 +57,7 @@ function PersonCard({ member }: { member: TeamMember }) {
     <div className="ruled-cell flex flex-col p-8">
       <Avatar className="border-border size-16 border">
         <AvatarImage src={member.avatar} alt={member.name} />
-        <AvatarFallback className="bg-flame-amber text-[#07070b]">
+        <AvatarFallback className="bg-pine-100 text-[#07070b]">
           {initials(member.name)}
         </AvatarFallback>
       </Avatar>

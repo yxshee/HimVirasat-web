@@ -13,14 +13,16 @@ type BadgeStatus =
 
 /**
  * Colour rides in the dot, never in the fill. Settled states get a solid
- * foreground dot; states still needing attention get a flame step.
+ * foreground dot; states needing attention get an earth tone, which reads
+ * as "look at this" without a warm accent surviving elsewhere in the
+ * palette. Rejection keeps destructive red — that one is semantic.
  */
 const STATUS_CONFIG: Record<BadgeStatus, { label: string; dot: string }> = {
-  under_review: { label: "Under Review", dot: "bg-azure" },
+  under_review: { label: "Under Review", dot: "bg-glacier-500" },
   approved: { label: "Approved", dot: "bg-foreground" },
-  flagged: { label: "Flagged", dot: "bg-flame-orange" },
-  rejected: { label: "Rejected", dot: "bg-flame-red" },
-  open: { label: "Open", dot: "bg-flame-amber" },
+  flagged: { label: "Flagged", dot: "bg-clay-600" },
+  rejected: { label: "Rejected", dot: "bg-destructive" },
+  open: { label: "Open", dot: "bg-clay-400" },
   resolved: { label: "Resolved", dot: "bg-foreground" },
   active: { label: "Active", dot: "bg-foreground" },
   inactive: { label: "Inactive", dot: "bg-muted-foreground" },

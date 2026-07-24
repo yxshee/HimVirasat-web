@@ -307,11 +307,11 @@ export default function WorkspaceContent({
                 <h4 className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
                   Usage Validation Context Sentences
                 </h4>
-                <div className="relative overflow-hidden rounded-xl bg-flame-red/5 p-4.5 border border-flame-red/20 dark:border-flame-red/10">
-                  <div className="absolute left-0 top-0 bottom-0 w-1 bg-flame-red/60" />
+                <div className="relative overflow-hidden rounded-xl bg-pine-500/5 p-4.5 border border-pine-500/20 dark:border-pine-500/10">
+                  <div className="absolute left-0 top-0 bottom-0 w-1 bg-pine-500/60" />
                   <div className="space-y-3.5 pl-1">
                     <div className="space-y-1">
-                      <span className="text-[10px] font-bold tracking-wider text-flame-text uppercase block">
+                      <span className="text-[10px] font-bold tracking-wider text-verdant uppercase block">
                         Dialect Execution
                       </span>
                       {isEditMode ? (
@@ -330,7 +330,7 @@ export default function WorkspaceContent({
                           {"\""}{currentItem.example_sentence}{"\""}
                         </p>)}
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2.5 border-t border-flame-red/20 dark:border-flame-red/10">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2.5 border-t border-pine-500/20 dark:border-pine-500/10">
                       <FieldValue
                         label="English Translation"
                         value={currentItem.example_sentence_english}

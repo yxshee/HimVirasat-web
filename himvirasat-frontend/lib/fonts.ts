@@ -1,8 +1,8 @@
 import {
+  Geist,
   Inter,
   Noto_Sans_Takri,
   Noto_Serif_Devanagari,
-  Space_Grotesk,
   Space_Mono,
 } from "next/font/google";
 
@@ -13,10 +13,14 @@ export const inter = Inter({
   display: "swap",
 });
 
-/** Display sizes only — headings, wordmark, section titles. */
-export const spaceGrotesk = Space_Grotesk({
+/**
+ * Display sizes only — headings, wordmark, section titles. A neutral
+ * neo-grotesque: large x-height, even colour, and no novelty letterforms,
+ * which is what keeps the big sizes reading as composed rather than loud.
+ */
+export const geist = Geist({
   subsets: ["latin"],
-  variable: "--font-grotesk",
+  variable: "--font-geist",
   display: "swap",
 });
 
@@ -45,7 +49,7 @@ export const notoSansTakri = Noto_Sans_Takri({
 
 export const fontVariables = [
   inter.variable,
-  spaceGrotesk.variable,
+  geist.variable,
   spaceMono.variable,
   notoSerifDevanagari.variable,
   notoSansTakri.variable,

@@ -22,21 +22,34 @@ function makeRng(seed: number) {
   };
 }
 
-/** Flame steps stay constant across themes; neutrals follow the theme. */
-const FLAME = [
-  { fill: "#ffaf01", ink: "#07070b" },
-  { fill: "#ff8204", ink: "#07070b" },
-  { fill: "#ff5229", ink: "#07070b" },
-  { fill: "#e51300", ink: "#fbfbf8" },
-  { fill: "#b31000", ink: "#fbfbf8" },
+/**
+ * Deodar steps stay constant across themes; neutrals follow the theme.
+ *
+ * Unlike the old warm ramp, these span both light and dark values, so ink
+ * is chosen per tone rather than fixed. Measured against each fill:
+ * near-black clears 5.5:1 or better on sage, meadow, both glaciers and
+ * clay; cream clears 5.7:1 or better on forest, pine, deep pine and
+ * timber. Changing a fill means re-checking its ink.
+ */
+const DEODAR = [
+  { fill: "#7fb69b", ink: "#07070b" }, // sage
+  { fill: "#4e9578", ink: "#07070b" }, // meadow
+  { fill: "#2e7358", ink: "#fbfbf8" }, // forest
+  { fill: "#1c5341", ink: "#fbfbf8" }, // pine
+  { fill: "#0f3a2e", ink: "#fbfbf8" }, // deep pine
+  { fill: "#7ec6c6", ink: "#07070b" }, // glacial melt
+  { fill: "#3e9ca3", ink: "#07070b" }, // glacier
+  { fill: "#a98363", ink: "#07070b" }, // clay
+  { fill: "#6e4e36", ink: "#fbfbf8" }, // timber
 ];
 
-// Deliberately excludes --background: a tile the same colour as the page
-// reads as a hole in the mosaic rather than as a quiet tile.
+// These read from dedicated --mosaic-* tokens rather than the surface
+// palette, so the tiles stay light when the theme goes dark instead of
+// following the canvas down and reading as holes in the block.
 const NEUTRAL = [
-  { fill: "var(--secondary)", ink: "var(--muted-foreground)" },
-  { fill: "var(--surface-3)", ink: "var(--muted-foreground)" },
-  { fill: "var(--hairline-strong)", ink: "var(--background)" },
+  { fill: "var(--mosaic-1)", ink: "#07070b" },
+  { fill: "var(--mosaic-2)", ink: "#07070b" },
+  { fill: "var(--mosaic-3)", ink: "#07070b" },
 ];
 
 /** Takri syllables, matching the script used across the site's content. */
@@ -55,10 +68,11 @@ const GLYPHS = [
   "𑚀",
 ];
 
+/** `tinted` is the share of tiles taking a Deodar step; the rest are neutral. */
 const VARIANTS = {
-  hero: { tiles: 30, cols: "grid-cols-6 sm:grid-cols-10", flame: 0.62 },
-  band: { tiles: 24, cols: "grid-cols-6 sm:grid-cols-12", flame: 0.45 },
-  panel: { tiles: 16, cols: "grid-cols-4", flame: 0.7 },
+  hero: { tiles: 30, cols: "grid-cols-6 sm:grid-cols-10", tinted: 0.62 },
+  band: { tiles: 24, cols: "grid-cols-6 sm:grid-cols-12", tinted: 0.45 },
+  panel: { tiles: 16, cols: "grid-cols-4", tinted: 0.7 },
 } as const;
 
 export function TakriMosaic({
@@ -71,19 +85,20 @@ export function TakriMosaic({
   seed?: number;
   className?: string;
 }) {
-  const { tiles, cols, flame } = VARIANTS[variant];
+  const { tiles, cols, tinted } = VARIANTS[variant];
   const rng = makeRng(seed);
 
   const cells = Array.from({ length: tiles }, () => {
-    const isFlame = rng() < flame;
-    const palette = isFlame ? FLAME : NEUTRAL;
+    const isTinted = rng() < tinted;
+    const palette = isTinted ? DEODAR : NEUTRAL;
     const tone = palette[Math.floor(rng() * palette.length)];
-    // Glyphs and diamonds only ride on flame tiles, so the neutrals stay
-    // quiet and the eye reads the warm blocks as the figure.
+    // Glyphs and diamonds only ride on tinted tiles, so the neutrals stay
+    // quiet and the eye reads the coloured blocks as the figure.
     const roll = rng();
-    const kind = isFlame && roll < 0.3 ? "glyph" : isFlame && roll < 0.4 ? "diamond" : "plain";
+    const kind =
+      isTinted && roll < 0.3 ? "glyph" : isTinted && roll < 0.4 ? "diamond" : "plain";
     const glyph = GLYPHS[Math.floor(rng() * GLYPHS.length)];
-    const diamondTone = FLAME[Math.floor(rng() * FLAME.length)];
+    const diamondTone = DEODAR[Math.floor(rng() * DEODAR.length)];
     return { tone, kind, glyph, diamondTone };
   });
 

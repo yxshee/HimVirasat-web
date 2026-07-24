@@ -37,7 +37,7 @@ export default function DatasetsPage() {
             <article key={dataset.id} className="ruled-cell flex flex-col p-8">
               <div className="flex flex-wrap items-baseline justify-between gap-3">
                 <h2 className="text-title">{dataset.name}</h2>
-                <Eyebrow className="text-flame-text">
+                <Eyebrow className="text-verdant">
                   {dataset.version}
                 </Eyebrow>
               </div>

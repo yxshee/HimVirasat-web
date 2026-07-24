@@ -7,9 +7,9 @@ import type { SystemRole } from "@/types/admin/FSM/contribution-rules";
  * foreground contrast and the badge stays legible in both themes.
  */
 const ROLE_CONFIG: Record<SystemRole, { label: string; dot: string }> = {
-  super_admin: { label: "Super Admin", dot: "bg-flame-red" },
-  language_head: { label: "Language Head", dot: "bg-azure" },
-  language_expert: { label: "Language Expert", dot: "bg-flame-amber" },
+  super_admin: { label: "Super Admin", dot: "bg-pine-700" },
+  language_head: { label: "Language Head", dot: "bg-glacier-500" },
+  language_expert: { label: "Language Expert", dot: "bg-pine-100" },
 };
 
 export function RoleBadge({

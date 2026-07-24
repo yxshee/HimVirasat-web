@@ -331,7 +331,7 @@ export default function ContributionSubmissionPage() {
                 className="h-1.5 flex-1 overflow-hidden rounded-full border border-border bg-muted"
               >
                 <div
-                  className="h-full rounded-full bg-flame-amber transition-all"
+                  className="h-full rounded-full bg-pine-500 transition-all"
                   style={{ width: `${completion}%` }}
                 />
               </div>
@@ -347,7 +347,7 @@ export default function ContributionSubmissionPage() {
             <CardContent className="p-0">
               <div className="grid grid-cols-1 lg:grid-cols-[280px_minmax(0,1fr)]">
                 <aside className="border-b bg-muted/20 p-5 lg:border-b-0 lg:border-r lg:p-6">
-                  <div aria-hidden className="bg-flame-amber mb-5 h-1 w-10" />
+                  <div aria-hidden className="bg-pine-500 mb-5 h-1 w-10" />
                   <div className="space-y-6">
                     <div className="flex items-center gap-3">
                       <div className="flex size-10 items-center justify-center rounded-md border bg-background">
