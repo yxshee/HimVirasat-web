@@ -5,6 +5,7 @@ import { Eyebrow } from "@/components/mistral/eyebrow";
 import { InkBand } from "@/components/mistral/ink-band";
 import { PixelIcon, type PixelIconName } from "@/components/mistral/pixel-icon";
 import { RuledCell, RuledGrid } from "@/components/mistral/ruled-grid";
+import { ScrollCue } from "@/components/mistral/scroll-cue";
 import { SectionHeading } from "@/components/mistral/section-heading";
 import { StickyRailSection } from "@/components/mistral/sticky-rail-section";
 import { TakriMosaic } from "@/components/mistral/takri-mosaic";
@@ -170,6 +171,7 @@ export default function Home() {
             </Button>
           </div>
         </Reveal>
+        <ScrollCue className="mt-16" />
       </section>
 
       {/* ── Mosaic ───────────────────────────────────────────────────── */}

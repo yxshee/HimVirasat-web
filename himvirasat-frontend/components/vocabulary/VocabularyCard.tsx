@@ -71,12 +71,12 @@ export default memo(function VocabularyCard({
 
       <div className="mt-5 flex flex-wrap items-center gap-2">
         {entry.region && (
-          <span className="border-border text-body-sm text-muted-foreground rounded-md border px-2.5 py-0.5">
+          <span className="animate-pop-in border-border text-body-sm text-muted-foreground rounded-md border px-2.5 py-0.5">
             {entry.region}
           </span>
         )}
         {entry.contributor_username && (
-          <span className="border-border text-body-sm text-muted-foreground rounded-md border px-2.5 py-0.5">
+          <span className="animate-pop-in border-border text-body-sm text-muted-foreground rounded-md border px-2.5 py-0.5">
             {entry.contributor_username}
           </span>
         )}

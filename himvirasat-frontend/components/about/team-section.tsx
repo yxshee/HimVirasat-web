@@ -70,7 +70,7 @@ function PersonCard({ member }: { member: TeamMember }) {
           {member.languages.map((language) => (
             <span
               key={language}
-              className="border-border text-body-sm text-muted-foreground rounded-md border px-2.5 py-0.5"
+              className="animate-pop-in border-border text-body-sm text-muted-foreground rounded-md border px-2.5 py-0.5"
             >
               {language}
             </span>

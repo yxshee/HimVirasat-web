@@ -24,7 +24,7 @@ export function RoleBadge({
   return (
     <span
       className={cn(
-        "border-border bg-secondary text-foreground font-mono text-eyebrow inline-flex items-center gap-1.5 rounded-md border px-2 py-0.5 uppercase",
+        "animate-pop-in border-border bg-secondary text-foreground font-mono text-eyebrow inline-flex items-center gap-1.5 rounded-md border px-2 py-0.5 uppercase",
         className,
       )}
     >

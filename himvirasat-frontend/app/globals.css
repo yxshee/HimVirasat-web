@@ -374,31 +374,188 @@
   }
 }
 
-/* ── Motion: scroll reveal (JS-gated so no-JS users always see content) ─ */
+/* ═══════════════════════════════════════════════════════════════════════
+   Motion
+   Short distances, few durations, one curve. Reveals move 4px over 200ms;
+   entrances land in 500ms; only ambient loops run longer. Everything is
+   disabled wholesale under prefers-reduced-motion at the end of this file.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── Scroll reveal (JS-gated so no-JS users always see content) ─────── */
 html.js [data-reveal] {
   opacity: 0;
-  transform: translateY(8px);
+  transform: translateY(4px);
   transition:
-    opacity 0.3s cubic-bezier(0.22, 0.61, 0.36, 1),
-    transform 0.3s cubic-bezier(0.22, 0.61, 0.36, 1);
+    opacity 0.2s ease-in-out,
+    transform 0.2s ease-in-out;
   transition-delay: var(--reveal-delay, 0ms);
 }
 html.js [data-reveal][data-revealed="true"] {
   opacity: 1;
   transform: none;
 }
-@media (prefers-reduced-motion: reduce) {
-  [data-reveal] {
-    transition: none !important;
-    opacity: 1 !important;
-    transform: none !important;
+
+/* ── Block entrance ──────────────────────────────────────────────────
+   Tiles fall in and settle: land, squash to 95%, overshoot to 102%, rest.
+   The squash is what stops a grid of falling squares reading as a slide. */
+@keyframes tile-fall {
+  0% {
+    opacity: 0;
+    transform: translateY(-200px);
   }
+  50% {
+    opacity: 1;
+    transform: translateY(0) scaleY(1);
+  }
+  65% {
+    opacity: 1;
+    transform: translateY(0) scaleY(0.95);
+  }
+  80% {
+    opacity: 1;
+    transform: translateY(0) scaleY(1.02);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scaleY(1);
+  }
+}
+
+/* Rotated tiles scale in instead of falling — a diamond dropping from
+   above reads as debris, where scaling reads as placement. */
+@keyframes tile-scale-in {
+  0% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ── Mosaic ambient loop ─────────────────────────────────────────────
+   Each tile holds one of four phase colours and cross-fades between
+   them. Phases are aligned across every tile (no per-tile delay), so
+   neighbours that share a colour momentarily read as one merged block
+   and split again when they diverge. That is the whole merge/split
+   effect — no geometry animates, so nothing reflows. */
+@keyframes mosaic-drift {
+  0%,
+  22% {
+    background-color: var(--t0);
+  }
+  25%,
+  47% {
+    background-color: var(--t1);
+  }
+  50%,
+  72% {
+    background-color: var(--t2);
+  }
+  75%,
+  97% {
+    background-color: var(--t3);
+  }
+  100% {
+    background-color: var(--t0);
+  }
+}
+
+@keyframes mosaic-diamond {
+  0% {
+    rotate: 45deg;
+  }
+  50% {
+    rotate: 135deg;
+  }
+  100% {
+    rotate: 45deg;
+  }
+}
+
+[data-mosaic][data-revealed="true"] .mosaic-tile {
+  animation-name: tile-fall, mosaic-drift;
+  animation-duration: 0.5s, var(--mosaic-loop, 18s);
+  animation-timing-function: ease-in, linear;
+  animation-iteration-count: 1, infinite;
+  animation-fill-mode: backwards, none;
+  /* Entrance staggers by diagonal wave; the drift starts for every tile
+     at the same moment so the phases stay in lockstep. */
+  animation-delay: calc(var(--i, 0) * 30ms), 1.2s;
+}
+
+[data-mosaic][data-revealed="true"] .mosaic-tile[data-kind="diamond"] {
+  animation-name: tile-scale-in, mosaic-drift;
+}
+
+[data-mosaic][data-revealed="true"] .mosaic-diamond {
+  animation: mosaic-diamond var(--mosaic-loop, 18s) ease-in-out infinite;
+}
+
+/* ── Menu unroll ─────────────────────────────────────────────────────
+   Panels unroll downward rather than fading in place. */
+@keyframes unroll-in {
+  0% {
+    opacity: 0;
+    max-height: 0;
+  }
+  30% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+    max-height: 40rem;
+  }
+}
+
+.animate-unroll-in {
+  animation: unroll-in 0.5s forwards ease-in-out;
+  overflow: hidden;
+}
+
+/* ── Small-element entrance ──────────────────────────────────────────
+   The only overshoot in the system, reserved for chips and badges. */
+@keyframes pop-in {
+  0% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.animate-pop-in {
+  animation: pop-in 0.3s forwards ease-in-out;
+}
+
+/* ── Scroll cue ──────────────────────────────────────────────────────
+   Three stacked chevrons pulsing in sequence. */
+@keyframes arrow-cue {
+  0%,
+  40% {
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 1;
+  }
+  60%,
+  100% {
+    opacity: 0.2;
+  }
+}
+
+.animate-arrow-cue {
+  animation: arrow-cue 2s linear infinite;
 }
 
 @keyframes fade-slide {
   from {
     opacity: 0;
-    transform: translateY(8px);
+    transform: translateY(4px);
   }
   to {
     opacity: 1;
@@ -407,5 +564,29 @@ html.js [data-reveal][data-revealed="true"] {
 }
 
 .animate-fade-slide {
-  animation: fade-slide 0.3s ease-out forwards;
+  animation: fade-slide 0.2s ease-in-out forwards;
+}
+
+/* ── Reduced motion ──────────────────────────────────────────────────
+   Everything above resolves to its end state. Ambient loops stop rather
+   than freezing mid-phase, which would leave tiles on an arbitrary
+   colour; `animation: none` returns them to their painted fill. */
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] {
+    transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  [data-mosaic] .mosaic-tile,
+  [data-mosaic] .mosaic-diamond,
+  .animate-unroll-in,
+  .animate-pop-in,
+  .animate-arrow-cue,
+  .animate-fade-slide {
+    animation: none !important;
+  }
+  .animate-unroll-in {
+    max-height: none;
+    opacity: 1;
+  }
 }

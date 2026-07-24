@@ -163,9 +163,11 @@ export type PixelIconName = keyof typeof ICONS;
 export function PixelIcon({
   name,
   className,
+  style,
 }: {
   name: PixelIconName;
   className?: string;
+  style?: React.CSSProperties;
 }) {
   return (
     <svg
@@ -174,6 +176,7 @@ export function PixelIcon({
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={cn("size-5 shrink-0", className)}
+      style={style}
     >
       {ICONS[name].map(([col, row]) => (
         <rect

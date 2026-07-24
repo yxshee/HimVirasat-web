@@ -79,7 +79,7 @@ export function MegaMenu({
               />
             </NavigationMenu.Trigger>
 
-            <NavigationMenu.Content className="animate-fade-slide bg-popover border-border absolute top-full left-0 z-50 w-[min(92vw,36rem)] border-x border-b">
+            <NavigationMenu.Content className="animate-unroll-in bg-popover border-border absolute top-full left-0 z-50 w-[min(92vw,36rem)] border-x border-b">
               <div
                 className={cn(
                   "bg-border grid gap-px",
