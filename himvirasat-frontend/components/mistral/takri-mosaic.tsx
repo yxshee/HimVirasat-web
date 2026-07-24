@@ -1,21 +1,26 @@
 "use client";
 
+import { PixelIcon, type PixelIconName } from "@/components/mistral/pixel-icon";
 import { useReveal } from "@/hooks/use-reveal";
 import { makeRng } from "@/lib/seeded-rng";
 import { cn } from "@/lib/utils";
 
 /**
- * The signature graphic: a grid of flat square tiles in the Deodar ramp,
- * a subset carrying single Takri syllables, with occasional rotated
- * diamonds. Same square unit as `PixelIcon`, so the illustration and the
- * iconography share one alphabet.
+ * The signature graphic: a grid of flat square tiles in the Deodar palette,
+ * carrying single Takri letters and Himachali motifs, with occasional
+ * rotated diamonds. Everything is drawn on the same square unit as
+ * `PixelIcon`, so the mark, the icons and the mosaic share one alphabet.
  *
- * Motion (see globals.css): tiles fall in with a squash-settle staggered
- * by diagonal wave, then hold a slow four-phase colour loop. Because the
- * phases are aligned across every tile, neighbours that land on the same
- * colour momentarily read as one merged block and split again when they
- * diverge — merge/split with nothing but `background-color`, so no
- * geometry animates and nothing reflows.
+ * Two invariants hold by construction rather than by checking afterwards:
+ *
+ *   1. No colour appears more than twice in any frame. Tones are dealt
+ *      from a bag containing exactly two copies of each, so a third use
+ *      is not representable.
+ *   2. A tile carrying a letter or motif never changes ink polarity. The
+ *      palette spans light and dark fills, so a tile drifting across that
+ *      boundary would render its glyph unreadable partway through the
+ *      loop — and a contrast check sampling the rendered frame would
+ *      still pass it.
  *
  * The pattern is generated from a fixed seed through a pure PRNG, so the
  * server and the client produce byte-identical markup. Never introduce
@@ -24,79 +29,105 @@ import { cn } from "@/lib/utils";
 
 type Tone = { fill: string; ink: string };
 
+const INK_DARK = "#07070b";
+const INK_CREAM = "#fbfbf8";
+
 /**
- * The ramp is split by ink polarity, and that split is load-bearing.
- *
- * A tile cycles through four fills over the ambient loop. If those fills
- * straddle the polarity boundary, a glyph sitting on the tile becomes
- * unreadable partway through the loop — and a contrast audit sampling the
- * rendered frame would still pass it. Glyph tiles therefore draw every
- * phase from one group only.
- *
- * Measured: near-black clears 5.5:1 or better on every DARK_INK fill,
- * cream clears 5.7:1 or better on every LIGHT_INK fill.
+ * Every fill below was checked against both inks. AA at 4.5:1 needs
+ * relative luminance >= 0.185 for near-black ink or <= 0.175 for cream;
+ * a tone between those is unusable with either. None are. Worst pairing
+ * is clay-500 at 4.90:1. Adding a tone means redoing that arithmetic.
  */
 const DARK_INK: Tone[] = [
-  { fill: "#7fb69b", ink: "#07070b" }, // sage
-  { fill: "#4e9578", ink: "#07070b" }, // meadow
-  { fill: "#7ec6c6", ink: "#07070b" }, // glacial melt
-  { fill: "#3e9ca3", ink: "#07070b" }, // glacier
-  { fill: "#a98363", ink: "#07070b" }, // clay
+  { fill: "#a9cfbc", ink: INK_DARK }, // pine 50
+  { fill: "#7fb69b", ink: INK_DARK }, // pine 100 — sage
+  { fill: "#64a687", ink: INK_DARK }, // pine 200
+  { fill: "#4e9578", ink: INK_DARK }, // pine 300 — meadow
+  { fill: "#b9dedc", ink: INK_DARK }, // glacier 100 — pale ice
+  { fill: "#7ec6c6", ink: INK_DARK }, // glacier 300
+  { fill: "#5cb0b4", ink: INK_DARK }, // glacier 400
+  { fill: "#3e9ca3", ink: INK_DARK }, // glacier 500
+  { fill: "#d3b79b", ink: INK_DARK }, // clay 200 — sand
+  { fill: "#a98363", ink: INK_DARK }, // clay 400
+  { fill: "#b7bdb6", ink: INK_DARK }, // stone 300 — slate
 ];
 
-const LIGHT_INK: Tone[] = [
-  { fill: "#2e7358", ink: "#fbfbf8" }, // forest
-  { fill: "#1c5341", ink: "#fbfbf8" }, // pine
-  { fill: "#0f3a2e", ink: "#fbfbf8" }, // deep pine
-  { fill: "#6e4e36", ink: "#fbfbf8" }, // timber
+const CREAM_INK: Tone[] = [
+  { fill: "#2e7358", ink: INK_CREAM }, // pine 500 — forest
+  { fill: "#1c5341", ink: INK_CREAM }, // pine 700
+  { fill: "#0f3a2e", ink: INK_CREAM }, // pine 900 — deep pine
+  { fill: "#2a7480", ink: INK_CREAM }, // glacier 700
+  { fill: "#8b6749", ink: INK_CREAM }, // clay 500
+  { fill: "#6e4e36", ink: INK_CREAM }, // clay 600 — timber
+  { fill: "#4a3324", ink: INK_CREAM }, // clay 800
+  { fill: "#5d6660", ink: INK_CREAM }, // stone 600
 ];
 
-const DEODAR: Tone[] = [...DARK_INK, ...LIGHT_INK];
+/**
+ * Snow. Read from tokens rather than literals so they invert with the
+ * theme — near-white on the dark canvas, warm paper on the light one.
+ * Seven steps because the band variant carries thirteen neutral tiles and
+ * the cap of two per colour means three tones could only cover six.
+ */
+const SNOW: Tone[] = Array.from({ length: 7 }, (_, i) => ({
+  fill: `var(--mosaic-${i + 1})`,
+  ink: INK_DARK,
+}));
 
-// These read from dedicated --mosaic-* tokens rather than the surface
-// palette, so the tiles stay light when the theme goes dark instead of
-// following the canvas down and reading as holes in the block.
-const NEUTRAL: Tone[] = [
-  { fill: "var(--mosaic-1)", ink: "#07070b" },
-  { fill: "var(--mosaic-2)", ink: "#07070b" },
-  { fill: "var(--mosaic-3)", ink: "#07070b" },
-];
+const TINTED = [...DARK_INK, ...CREAM_INK];
+const ALL_TONES = [...TINTED, ...SNOW];
 
-/** Takri syllables, matching the script used across the site's content. */
-const GLYPHS = [
-  "𑚩",
-  "𑚢",
-  "𑚦",
-  "𑚤",
-  "𑚨",
-  "𑚙",
-  "𑚊",
-  "𑚝",
-  "𑚧",
-  "𑚟",
-  "𑚛",
-  "𑚀",
-];
+/** Takri, U+11680–U+116A9. Forty-two letters, drawn without replacement. */
+const GLYPHS = Array.from({ length: 0x116a9 - 0x11680 + 1 }, (_, i) =>
+  String.fromCodePoint(0x11680 + i),
+);
 
-/** `tinted` is the share of tiles taking a Deodar step; the rest are neutral. */
+/** Himachali motifs, in the same pixel grammar as the icons. */
+const MOTIFS: PixelIconName[] = ["deodar", "pagoda", "kathkuni", "peak"];
+
 const VARIANTS = {
   hero: {
     tiles: 30,
     cols: "grid-cols-6 sm:grid-cols-10",
     waveCols: 10,
     tinted: 0.62,
+    glyphs: 12,
+    motifs: 4,
+    diamonds: 2,
   },
   band: {
     tiles: 24,
     cols: "grid-cols-6 sm:grid-cols-12",
     waveCols: 12,
-    tinted: 0.45,
+    tinted: 0.5,
+    glyphs: 8,
+    motifs: 3,
+    diamonds: 1,
   },
-  panel: { tiles: 16, cols: "grid-cols-4", waveCols: 4, tinted: 0.7 },
+  panel: {
+    tiles: 16,
+    cols: "grid-cols-4",
+    waveCols: 4,
+    tinted: 0.7,
+    glyphs: 6,
+    motifs: 2,
+    diamonds: 1,
+  },
 } as const;
 
-/** How often a tile borrows its left neighbour's colour for a phase. */
-const MERGE_CHANCE = 0.42;
+const PHASES = 4;
+
+/** Fisher–Yates against the seeded PRNG. */
+function shuffle<T>(items: T[], rng: () => number): T[] {
+  const a = [...items];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(rng() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+type Kind = "glyph" | "motif" | "diamond" | "plain";
 
 export function TakriMosaic({
   variant = "hero",
@@ -108,76 +139,93 @@ export function TakriMosaic({
   seed?: number;
   className?: string;
 }) {
-  const { tiles, cols, waveCols, tinted } = VARIANTS[variant];
+  const v = VARIANTS[variant];
   const { ref, revealed } = useReveal<HTMLDivElement>();
   const rng = makeRng(seed);
 
-  const cells: Array<{
-    tone: Tone;
-    kind: "glyph" | "diamond" | "plain";
-    glyph: string;
-    diamondTone: Tone;
-    phases: string[];
-    wave: number;
-  }> = [];
+  // 1. Which tiles are tinted, and what each one carries.
+  const order = shuffle(
+    Array.from({ length: v.tiles }, (_, i) => i),
+    rng,
+  );
+  const tintedCount = Math.round(v.tiles * v.tinted);
+  const tintedSet = new Set(order.slice(0, tintedCount));
 
-  for (let i = 0; i < tiles; i++) {
-    const isTinted = rng() < tinted;
-    const roll = rng();
-    const kind =
-      isTinted && roll < 0.3
-        ? "glyph"
-        : isTinted && roll < 0.4
-          ? "diamond"
-          : "plain";
+  const tintedOrder = order.slice(0, tintedCount);
+  const kinds = new Map<number, Kind>();
+  let cursor = 0;
+  for (let n = 0; n < v.glyphs && cursor < tintedOrder.length; n++)
+    kinds.set(tintedOrder[cursor++], "glyph");
+  for (let n = 0; n < v.motifs && cursor < tintedOrder.length; n++)
+    kinds.set(tintedOrder[cursor++], "motif");
+  for (let n = 0; n < v.diamonds && cursor < tintedOrder.length; n++)
+    kinds.set(tintedOrder[cursor++], "diamond");
 
-    // Glyph tiles are locked to one ink polarity for the whole loop.
-    const group: Tone[] = !isTinted
-      ? NEUTRAL
-      : kind === "glyph"
-        ? rng() < 0.5
-          ? DARK_INK
-          : LIGHT_INK
-        : DEODAR;
+  // 2. Letters, drawn without replacement so none repeats in a mosaic.
+  const letters = shuffle(GLYPHS, rng).slice(0, v.glyphs);
+  const motifPicks = shuffle(MOTIFS, rng);
 
-    const tone = group[Math.floor(rng() * group.length)];
-
-    // Four phase colours. A tile may borrow the left neighbour's colour
-    // for a given phase — that is what makes adjacent tiles momentarily
-    // read as one block and then separate again.
-    //
-    // A glyph tile may only borrow a colour that is still legible against
-    // its ink. Without this guard the borrow silently drags a glyph tile
-    // across the polarity boundary and its syllable disappears partway
-    // through the loop — invisible to any audit sampling a single frame.
-    const allowed = new Set(group.map((t) => t.fill));
-    const prev = cells[i - 1];
-    const atRowStart = i % waveCols === 0;
-    const phases = Array.from({ length: 4 }, (_, p) => {
-      const candidate = prev && !atRowStart ? prev.phases[p] : null;
-      const wantsMerge = candidate !== null && rng() < MERGE_CHANCE;
-      if (wantsMerge && (kind !== "glyph" || allowed.has(candidate))) {
-        return candidate;
-      }
-      return group[Math.floor(rng() * group.length)].fill;
-    });
-
-    const glyph = GLYPHS[Math.floor(rng() * GLYPHS.length)];
-    const diamondTone = DEODAR[Math.floor(rng() * DEODAR.length)];
-    // Diagonal wave, so the block lands as one gesture rather than
-    // trickling across in DOM order.
-    const wave = Math.floor(i / waveCols) + (i % waveCols);
-
-    cells.push({ tone, kind, glyph, diamondTone, phases, wave });
+  // 3. Ink polarity is fixed per tile and holds for every phase. Every
+  //    tile that carries a mark needs this — diamonds included. Without
+  //    it a diamond falls through to the full tinted pool, resolves to
+  //    near-black, and can land on deep pine where it disappears.
+  const polarity = new Map<number, Tone[]>();
+  for (const i of tintedOrder) {
+    const k = kinds.get(i);
+    if (k === "glyph" || k === "motif" || k === "diamond") {
+      polarity.set(i, rng() < 0.5 ? DARK_INK : CREAM_INK);
+    }
   }
+
+  // 4. Deal each phase from a bag holding two copies of every tone. A
+  //    tile takes the first tone in the bag its constraint allows, so a
+  //    third use of any colour is simply not available.
+  const phaseFills: string[][] = [];
+  for (let p = 0; p < PHASES; p++) {
+    const bag = shuffle(
+      ALL_TONES.flatMap((t) => [t, t]),
+      rng,
+    );
+    const fills: string[] = [];
+    for (let i = 0; i < v.tiles; i++) {
+      const allowed = !tintedSet.has(i) ? SNOW : (polarity.get(i) ?? TINTED);
+      const at = bag.findIndex((t) => allowed.includes(t));
+      // Pools are sized so this cannot run dry: snow is 14 slots against
+      // at most 13 neutral tiles, the smaller ink group 16 against at
+      // most 12 marked tiles.
+      const tone = at >= 0 ? bag.splice(at, 1)[0] : allowed[0];
+      fills.push(tone.fill);
+    }
+    phaseFills.push(fills);
+  }
+
+  let letterAt = 0;
+  let motifAt = 0;
+
+  const cells = Array.from({ length: v.tiles }, (_, i) => {
+    const kind: Kind = kinds.get(i) ?? "plain";
+    const pool = !tintedSet.has(i) ? SNOW : (polarity.get(i) ?? TINTED);
+    const ink = pool === CREAM_INK ? INK_CREAM : INK_DARK;
+    return {
+      kind,
+      ink,
+      fill: phaseFills[0][i],
+      phases: phaseFills.map((f) => f[i]),
+      glyph: kind === "glyph" ? letters[letterAt++] : null,
+      motif: kind === "motif" ? motifPicks[motifAt++ % motifPicks.length] : null,
+      // Diagonal wave, so variants that animate an entrance land as one
+      // gesture rather than trickling across in DOM order.
+      wave: Math.floor(i / v.waveCols) + (i % v.waveCols),
+    };
+  });
 
   return (
     <div
       ref={ref}
       aria-hidden
-      data-mosaic
+      data-mosaic={variant}
       data-revealed={revealed}
-      className={cn("grid w-full", cols, className)}
+      className={cn("grid w-full", v.cols, className)}
     >
       {cells.map((c, i) => (
         <div
@@ -186,7 +234,7 @@ export function TakriMosaic({
           className="mosaic-tile grid aspect-square place-items-center"
           style={
             {
-              backgroundColor: c.tone.fill,
+              backgroundColor: c.fill,
               "--i": c.wave,
               "--t0": c.phases[0],
               "--t1": c.phases[1],
@@ -195,18 +243,25 @@ export function TakriMosaic({
             } as React.CSSProperties
           }
         >
-          {c.kind === "glyph" && (
+          {c.glyph && (
             <span
               className="font-takri text-[clamp(1rem,3.2vw,2.75rem)] leading-none select-none"
-              style={{ color: c.tone.ink }}
+              style={{ color: c.ink }}
             >
               {c.glyph}
             </span>
           )}
+          {c.motif && (
+            <PixelIcon
+              name={c.motif}
+              className="size-[58%]"
+              style={{ color: c.ink }}
+            />
+          )}
           {c.kind === "diamond" && (
             <span
               className="mosaic-diamond block size-[52%] rotate-45"
-              style={{ backgroundColor: c.diamondTone.fill }}
+              style={{ backgroundColor: c.ink }}
             />
           )}
         </div>

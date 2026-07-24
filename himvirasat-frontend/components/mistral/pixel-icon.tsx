@@ -156,6 +156,96 @@ const ICONS = {
     [1, 4],
     [3, 4],
   ],
+
+  /* Himachali motifs. Same 4×4-square unit as everything above, so they
+     sit in the mosaic beside the Takri letters without changing register. */
+
+  /**
+   * Deodar — a solid conifer over a single-cell trunk. The trunk is what
+   * separates it from the pagoda at tile size; an earlier version widened
+   * the base and both motifs just read as crosses.
+   */
+  deodar: [
+    [2, 0],
+    [1, 1],
+    [2, 1],
+    [3, 1],
+    [1, 2],
+    [2, 2],
+    [3, 2],
+    [0, 3],
+    [1, 3],
+    [2, 3],
+    [3, 3],
+    [4, 3],
+    [2, 4],
+  ],
+
+  /**
+   * Pagoda — two roof tiers with a gap between them. The gap is the
+   * distinguishing feature: the deodar is a filled triangle, this is not.
+   */
+  pagoda: [
+    [2, 0],
+    [1, 1],
+    [2, 1],
+    [3, 1],
+    [2, 2],
+    [0, 3],
+    [1, 3],
+    [2, 3],
+    [3, 3],
+    [4, 3],
+    [1, 4],
+    [2, 4],
+    [3, 4],
+  ],
+
+  /**
+   * Kath-kuni — timber courses banded with dry-stone infill. Horizontal
+   * banding, not a chequer; the chequer version read as noise.
+   */
+  kathkuni: [
+    [0, 0],
+    [1, 0],
+    [2, 0],
+    [3, 0],
+    [4, 0],
+    [0, 1],
+    [2, 1],
+    [4, 1],
+    [0, 2],
+    [1, 2],
+    [2, 2],
+    [3, 2],
+    [4, 2],
+    [0, 3],
+    [2, 3],
+    [4, 3],
+    [0, 4],
+    [1, 4],
+    [2, 4],
+    [3, 4],
+    [4, 4],
+  ],
+
+  /** Peak — the ridgeline of the brand mark, at tile scale. */
+  peak: [
+    [2, 1],
+    [1, 2],
+    [2, 2],
+    [3, 2],
+    [0, 3],
+    [1, 3],
+    [2, 3],
+    [3, 3],
+    [4, 3],
+    [0, 4],
+    [1, 4],
+    [2, 4],
+    [3, 4],
+    [4, 4],
+  ],
 } as const;
 
 export type PixelIconName = keyof typeof ICONS;

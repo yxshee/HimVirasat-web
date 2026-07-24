@@ -33,21 +33,40 @@ const FEATURED = {
   href: "/vocabulary/mandeali",
 };
 
+/** Pre-split, so each line can be masked and timed independently. */
+const HEADLINE_LINES = [
+  "Himachal speaks in many",
+  "tongues. We are writing",
+  "them down.",
+];
+
 /**
- * Words fade and grow into place on staggered delays. Seeded rather than
- * random so the server and client emit identical inline styles — a
- * `Math.random()` here would desynchronise hydration on every load.
+ * Characters rise from behind a per-line mask.
+ *
+ * The reference splits its title into lines, words and characters, clips
+ * each line, and tweens every character from `y: 100%` to `0` on a stagger
+ * of `index * random(1..5) * 5ms` — so a line resolves left to right but
+ * unevenly. That unevenness is the character of the motion; an even
+ * stagger reads as a mechanical sweep.
+ *
+ * Delays are seeded rather than random so the server and client emit
+ * identical inline styles — `Math.random()` here would desynchronise
+ * hydration on every load.
  */
-function buildWordDelays(text: string) {
+function buildLines(text: string, lines: string[]) {
   const rng = makeRng(seedFromString(text));
-  return text.split(" ").map((word) => ({
-    word,
-    delay: Math.round(rng() * 220),
+  return lines.map((line, li) => ({
+    line,
+    lineDelay: li * 90,
+    chars: Array.from(line).map((ch, ci) => ({
+      ch,
+      delay: li * 90 + Math.round(ci * (1 + rng() * 4) * 5),
+    })),
   }));
 }
 
 export function Hero() {
-  const words = buildWordDelays(HEADLINE);
+  const lines = buildLines(HEADLINE, HEADLINE_LINES);
 
   return (
     <section className="border-border border-b lg:min-h-[200dvh]">
@@ -65,21 +84,32 @@ export function Hero() {
             </Eyebrow>
 
             {/* The real heading, for assistive tech and for search. The
-                animated copy below is decorative: read word-by-word it
-                would be announced as disconnected fragments. */}
+                animated copy below is decorative: split to characters it
+                would be announced letter by letter. */}
             <h1 className="sr-only">{HEADLINE}</h1>
             <p
               aria-hidden
-              className="font-display text-display-md md:text-display-xl max-w-4xl text-balance"
+              className="font-display text-display-md md:text-display-xl max-w-4xl"
             >
-              {words.map(({ word, delay }, i) => (
+              {lines.map(({ line, lineDelay, chars }, li) => (
                 <span
-                  key={`${word}-${i}`}
-                  className="hero-word"
-                  style={{ "--word-delay": `${delay}ms` } as React.CSSProperties}
+                  key={line}
+                  className="hero-line hero-line-grow"
+                  style={
+                    { "--line-delay": `${lineDelay}ms` } as React.CSSProperties
+                  }
                 >
-                  {word}
-                  {i < words.length - 1 ? " " : ""}
+                  {chars.map(({ ch, delay }, ci) => (
+                    <span
+                      key={`${li}-${ci}`}
+                      className="hero-char"
+                      style={
+                        { "--char-delay": `${delay}ms` } as React.CSSProperties
+                      }
+                    >
+                      {ch}
+                    </span>
+                  ))}
                 </span>
               ))}
             </p>
