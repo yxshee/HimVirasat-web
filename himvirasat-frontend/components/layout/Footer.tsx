@@ -96,7 +96,10 @@ export default function Footer() {
         <p className="text-body-sm text-muted-foreground">
           &copy; {new Date().getFullYear()} HimVirasat
         </p>
-        <p lang="hi" className="font-deva text-body-sm text-muted-foreground">
+        {/* Larger than the copyright beside it on purpose: Devanagari reads
+            smaller than Latin at the same nominal size, so matching specs
+            would leave the sign-off looking undersized. */}
+        <p lang="hi" className="font-deva text-title text-muted-foreground">
           जय देवभूमि
         </p>
       </div>
