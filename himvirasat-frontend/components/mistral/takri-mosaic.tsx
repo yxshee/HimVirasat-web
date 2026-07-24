@@ -1,6 +1,7 @@
 "use client";
 
 import { useReveal } from "@/hooks/use-reveal";
+import { makeRng } from "@/lib/seeded-rng";
 import { cn } from "@/lib/utils";
 
 /**
@@ -20,17 +21,6 @@ import { cn } from "@/lib/utils";
  * server and the client produce byte-identical markup. Never introduce
  * `Math.random()` here — it would desynchronise hydration.
  */
-
-/** mulberry32 — small, fast, fully deterministic. */
-function makeRng(seed: number) {
-  let a = seed >>> 0;
-  return () => {
-    a = (a + 0x6d2b79f5) >>> 0;
-    let t = Math.imul(a ^ (a >>> 15), 1 | a);
-    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
 
 type Tone = { fill: string; ink: string };
 

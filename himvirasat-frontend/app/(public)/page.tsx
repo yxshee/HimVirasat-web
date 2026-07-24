@@ -2,14 +2,13 @@ import Link from "next/link";
 
 import { ArrowRow } from "@/components/mistral/arrow-row";
 import { Eyebrow } from "@/components/mistral/eyebrow";
+import { Hero } from "@/components/mistral/hero";
 import { InkBand } from "@/components/mistral/ink-band";
 import { PixelIcon, type PixelIconName } from "@/components/mistral/pixel-icon";
 import { RuledCell, RuledGrid } from "@/components/mistral/ruled-grid";
-import { ScrollCue } from "@/components/mistral/scroll-cue";
 import { SectionHeading } from "@/components/mistral/section-heading";
 import { StickyRailSection } from "@/components/mistral/sticky-rail-section";
 import { TakriMosaic } from "@/components/mistral/takri-mosaic";
-import { Reveal } from "@/components/motion/reveal";
 import { Button } from "@/components/ui/button";
 import { dialectsConfig } from "@/lib/dialects/dialect-config";
 import { site } from "@/lib/site";
@@ -22,12 +21,9 @@ const shell = "mx-auto w-full max-w-content px-6 lg:px-10";
  * each points at a feature that actually exists. Replace with dated news
  * entries once the project has any.
  */
+/* The Mandeali item is promoted into the hero's right column, so it is
+   deliberately absent here rather than shown twice. */
 const FEATURED = [
-  {
-    label: "Mandeali vocabulary is live",
-    description: "The first dialect archive is open to search.",
-    href: "/vocabulary/mandeali",
-  },
   {
     label: "Devanagari and Takri, both directions",
     description: "Convert between the two scripts in the browser.",
@@ -139,43 +135,7 @@ export default function Home() {
   return (
     <>
       {/* ── Hero ─────────────────────────────────────────────────────── */}
-      <section className={`${shell} py-20 md:py-32`}>
-        <Reveal>
-          <Eyebrow
-            size="lg"
-            nativeEcho={devToTankri("हिमाचल की विरासत")}
-            className="mb-8"
-          >
-            Open language preservation
-          </Eyebrow>
-        </Reveal>
-        <Reveal delay={60}>
-          <h1 className="text-display-md md:text-display-xl max-w-4xl text-balance">
-            Himachal speaks in many tongues. We are writing them down.
-          </h1>
-        </Reveal>
-        <Reveal delay={120}>
-          <p className="text-body-lg text-muted-foreground mt-8 max-w-2xl">
-            An initiative driven by the community to preserve Himachal
-            Pradesh&rsquo;s languages, dialects, traditions and cultural memory,
-            and bring them into the digital age.
-          </p>
-        </Reveal>
-        <Reveal delay={180}>
-          <div className="mt-10 flex flex-wrap items-center gap-3">
-            <Button asChild size="lg">
-              <Link href="/contribute">Start contributing</Link>
-            </Button>
-            <Button asChild size="lg" variant="secondary">
-              <Link href="/vocabulary">Explore the vocabulary</Link>
-            </Button>
-          </div>
-        </Reveal>
-        <ScrollCue className="mt-16" />
-      </section>
-
-      {/* ── Mosaic ───────────────────────────────────────────────────── */}
-      <TakriMosaic variant="hero" seed={7} />
+      <Hero />
 
       {/* ── Featured ─────────────────────────────────────────────────── */}
       <section className={`${shell} py-20 md:py-28`}>

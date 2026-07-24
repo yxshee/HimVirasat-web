@@ -493,6 +493,45 @@ html.js [data-reveal][data-revealed="true"] {
   animation: mosaic-diamond var(--mosaic-loop, 18s) ease-in-out infinite;
 }
 
+/* ── Headline word-grow ──────────────────────────────────────────────
+   The headline assembles itself: each word fades and grows very slightly
+   into place on its own delay. The delay is seeded, not random, so the
+   server and client agree — see lib/seeded-rng.ts.
+
+   `scale` rather than `transform` so it composes with nothing else, and
+   the scale is only 0.96 — enough to feel like settling, not enough to
+   reflow the line or blur the type mid-flight. */
+@keyframes word-grow {
+  0% {
+    opacity: 0;
+    scale: 0.96;
+  }
+  100% {
+    opacity: 1;
+    scale: 1;
+  }
+}
+
+.hero-word {
+  display: inline-block;
+  animation: word-grow 0.4s ease-in-out backwards;
+  animation-delay: var(--word-delay, 0ms);
+}
+
+/* ── Hero pin ────────────────────────────────────────────────────────
+   The first screen sticks under the header while the second scrolls up
+   over it. `top` matches the 4rem fixed header.
+
+   Desktop only. Below `lg` the two rows are content-height rather than
+   viewport-height, so pinning them would hold a tall, awkward block in
+   place instead of a composed screen. */
+@media (min-width: 64rem) {
+  .hero-pin {
+    position: sticky;
+    top: 4rem;
+  }
+}
+
 /* ── Menu unroll ─────────────────────────────────────────────────────
    Panels unroll downward rather than fading in place. */
 @keyframes unroll-in {
@@ -567,6 +606,21 @@ html.js [data-reveal][data-revealed="true"] {
   animation: fade-slide 0.2s ease-in-out forwards;
 }
 
+/* Mosaic entering the hero: a plain fade, held back just long enough for
+   the headline's first words to land first. */
+.hero-fade-in {
+  animation: fade-in 0.6s 0.3s ease-in-out both;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 /* ── Reduced motion ──────────────────────────────────────────────────
    Everything above resolves to its end state. Ambient loops stop rather
    than freezing mid-phase, which would leave tiles on an arbitrary
@@ -582,11 +636,18 @@ html.js [data-reveal][data-revealed="true"] {
   .animate-unroll-in,
   .animate-pop-in,
   .animate-arrow-cue,
-  .animate-fade-slide {
+  .animate-fade-slide,
+  .hero-word,
+  .hero-fade-in {
     animation: none !important;
   }
   .animate-unroll-in {
     max-height: none;
     opacity: 1;
+  }
+  /* Pinning is motion too: without it the hero is simply two stacked
+     screens, which is the correct reduced-motion reading. */
+  .hero-pin {
+    position: static !important;
   }
 }
