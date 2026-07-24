@@ -97,7 +97,7 @@ export default function Footer() {
           &copy; {new Date().getFullYear()} HimVirasat
         </p>
         <p lang="hi" className="font-deva text-body-sm text-muted-foreground">
-          जय हिमाचल! जय देवभूमि!
+          जय देवभूमि
         </p>
       </div>
     </footer>
