@@ -1,6 +1,7 @@
 import Link from "next/link";
-import { ExternalLink } from "lucide-react";
 
+import { Eyebrow } from "@/components/mistral/eyebrow";
+import { PixelIcon } from "@/components/mistral/pixel-icon";
 import { Button } from "@/components/ui/button";
 
 type DialectCardProps = {
@@ -30,41 +31,34 @@ export default function DialectCard({ name, formUrl }: DialectCardProps) {
   const hasVocabulary = lowerName.includes("mandeali");
 
   return (
-    <article className="hover-brut relative flex h-full flex-col overflow-hidden rounded-lg border border-border bg-card">
-      <div className="h-2 border-b border-border bg-section-accent" />
+    <article className="ruled-cell flex h-full flex-col p-8">
+      <h3 className="text-title">{name}</h3>
+      {district && <Eyebrow className="mt-2">{district}</Eyebrow>}
 
-      <div className="flex flex-1 flex-col p-6">
-        <h3 className="font-display text-xl">{name}</h3>
-        {district && (
-          <p className="mt-1 text-xs tracking-wider text-section-accent-deep uppercase">
-            {district}
-          </p>
-        )}
+      <p className="text-body-sm text-muted-foreground mt-4">
+        Contribute everyday sentences and Hindi translations in the {name}{" "}
+        dialect.
+      </p>
 
-        <p className="mt-3 text-sm leading-6 text-muted-foreground">
-          Contribute everyday sentences and Hindi translations in the {name}{" "}
-          dialect.
+      {hasVocabulary && (
+        <p className="mt-4">
+          <Link
+            href="/vocabulary/mandeali"
+            className="text-flame-text text-body-sm link-quiet inline-flex items-center gap-1"
+          >
+            Vocabulary live
+            <PixelIcon name="chevron-right" className="size-3.5" />
+          </Link>
         </p>
+      )}
 
-        {hasVocabulary && (
-          <p className="mt-3">
-            <Link
-              href="/vocabulary/mandeali"
-              className="inline-block rounded-full border border-border bg-teal px-2.5 py-0.5 text-xs text-black"
-            >
-              Vocabulary live →
-            </Link>
-          </p>
-        )}
-
-        <div className="mt-auto pt-6">
-          <Button asChild className="w-full">
-            <Link href={formUrl} target="_blank" rel="noopener noreferrer">
-              Open the {name} form
-              <ExternalLink aria-hidden className="size-4" />
-            </Link>
-          </Button>
-        </div>
+      <div className="mt-auto pt-8">
+        <Button asChild variant="secondary" className="w-full">
+          <Link href={formUrl} target="_blank" rel="noopener noreferrer">
+            Open the {name} form
+            <PixelIcon name="arrow-up-right" className="size-4" />
+          </Link>
+        </Button>
       </div>
     </article>
   );

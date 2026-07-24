@@ -1,8 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useEffect, useMemo, useRef, useState, useDeferredValue } from "react";
-import { Search, X } from "lucide-react";
+import { useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 import searchVocabulary from "@/lib/vocabulary/search-vocabulary";
 import { VocabularyEntry } from "@/types/vocabulary/vocabulary-types";
 import { datasetFilesMap } from "@/lib/dialects/dialect-config";
@@ -51,40 +50,37 @@ export default function VocabularySearch({ dialect }: { dialect: string }) {
   return (
     <section className="w-full">
       <div className="relative max-w-2xl">
-        <Search
-          aria-hidden
-          className="absolute left-4 top-1/2 size-5 -translate-y-1/2 text-muted-foreground"
-        />
         <Input
           ref={inputRef}
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder={`Search ${dialect} vocabulary…`}
-          className="h-14 rounded-md border-input bg-card pl-12 pr-14 text-base focus-visible:border-ring focus-visible:ring-ring/50"
+          className="border-border bg-background h-14 rounded-md pr-24 pl-4 text-base"
         />
         {query && (
           <Button
             variant="ghost"
-            size="icon"
-            aria-label="Clear search"
-            className="absolute right-2 top-1/2 -translate-y-1/2"
+            size="sm"
+            className="absolute top-1/2 right-2 -translate-y-1/2"
             onClick={() => {
               setQuery("");
               inputRef.current?.focus();
             }}
           >
-            <X aria-hidden className="size-4" />
+            Clear
           </Button>
         )}
       </div>
 
-      <p className="mt-3 text-sm text-muted-foreground tabular-nums">
+      <p className="text-body-sm text-muted-foreground mt-3 tabular-nums">
         {loading
-          ? `Loading ${dialect} heritage...`
+          ? `Loading ${dialect} vocabulary…`
           : `${results.length} of ${data.length} entries`}
       </p>
 
-      <div className="mt-8 flex flex-col gap-4">
+      {/* Entries read as one continuous ruled table rather than a stack of
+          floating cards — the hairlines carry the structure. */}
+      <div className="border-border bg-border mt-8 grid gap-px border">
         {results.length > 0 ? (
           results.map((entry, idx) => (
             <VocabularyCard
@@ -95,16 +91,18 @@ export default function VocabularySearch({ dialect }: { dialect: string }) {
             />
           ))
         ) : !loading ? (
-          <div className="rounded-lg border-2 border-dashed border-border px-6 py-16 text-center">
-            <p>No matches. Try a shorter fragment.</p>
-            <p className="mt-2 text-sm text-muted-foreground">
+          <div className="ruled-cell px-6 py-16 text-center">
+            <p className="text-body">No matches. Try a shorter fragment.</p>
+            <p className="text-body-sm text-muted-foreground mt-2">
               Search is fuzzy: partial words and approximate spellings still
               match.
             </p>
           </div>
         ) : (
           Array.from({ length: 5 }).map((_, i) => (
-            <div key={i} className="h-28 animate-pulse rounded-md bg-muted" />
+            <div key={i} className="ruled-cell">
+              <div className="bg-muted h-28 animate-pulse" />
+            </div>
           ))
         )}
       </div>

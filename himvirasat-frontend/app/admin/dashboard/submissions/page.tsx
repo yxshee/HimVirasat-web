@@ -9,7 +9,6 @@ import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { StatusBadge } from "@/components/admin/status-badge";
 import { SubmissionFormFields } from "@/components/admin/submissions/submission-form-fields";
-import { PahariBand } from "@/components/decor/pahari-band";
 import {
   Contribution,
   SubmissionFormValues,
@@ -332,7 +331,7 @@ export default function ContributionSubmissionPage() {
                 className="h-1.5 flex-1 overflow-hidden rounded-full border border-border bg-muted"
               >
                 <div
-                  className="h-full rounded-full bg-marigold transition-all"
+                  className="h-full rounded-full bg-flame-amber transition-all"
                   style={{ width: `${completion}%` }}
                 />
               </div>
@@ -348,7 +347,7 @@ export default function ContributionSubmissionPage() {
             <CardContent className="p-0">
               <div className="grid grid-cols-1 lg:grid-cols-[280px_minmax(0,1fr)]">
                 <aside className="border-b bg-muted/20 p-5 lg:border-b-0 lg:border-r lg:p-6">
-                  <PahariBand className="mb-5 h-2" />
+                  <div aria-hidden className="bg-flame-amber mb-5 h-1 w-10" />
                   <div className="space-y-6">
                     <div className="flex items-center gap-3">
                       <div className="flex size-10 items-center justify-center rounded-md border bg-background">
@@ -368,14 +367,14 @@ export default function ContributionSubmissionPage() {
 
                     <div className="space-y-3 text-xs text-muted-foreground">
                       <div className="flex items-start gap-2">
-                        <CheckCircle2 className="mt-0.5 size-3.5 text-marigold-deep" />
+                        <CheckCircle2 className="mt-0.5 size-3.5 text-muted-foreground" />
                         <p>
                           Core elements are parsed to construct direct
                           translations mapping.
                         </p>
                       </div>
                       <div className="flex items-start gap-2">
-                        <CheckCircle2 className="mt-0.5 size-3.5 text-marigold-deep" />
+                        <CheckCircle2 className="mt-0.5 size-3.5 text-muted-foreground" />
                         <p>
                           Advanced fields offer deep tracking of phonetics and
                           context.

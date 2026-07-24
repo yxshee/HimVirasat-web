@@ -11,45 +11,19 @@ type BadgeStatus =
   | "active"
   | "inactive";
 
-const STATUS_CONFIG: Record<
-  BadgeStatus,
-  { label: string; dot?: boolean; classes: string }
-> = {
-  under_review: {
-    label: "Under Review",
-    dot: true,
-    classes: "bg-lavender text-black border-border",
-  },
-  approved: {
-    label: "Approved",
-    classes: "bg-teal text-black border-border",
-  },
-  flagged: {
-    label: "Flagged",
-    classes: "bg-marigold text-black border-border",
-  },
-  rejected: {
-    label: "Rejected",
-    classes: "bg-madder text-white border-border",
-  },
-  open: {
-    label: "Open",
-    dot: true,
-    classes: "bg-marigold text-black border-border",
-  },
-  resolved: {
-    label: "Resolved",
-    classes: "bg-teal text-black border-border",
-  },
-  active: {
-    label: "Active",
-    dot: true,
-    classes: "bg-teal text-black border-border",
-  },
-  inactive: {
-    label: "Inactive",
-    classes: "bg-muted text-foreground border-border",
-  },
+/**
+ * Colour rides in the dot, never in the fill. Settled states get a solid
+ * foreground dot; states still needing attention get a flame step.
+ */
+const STATUS_CONFIG: Record<BadgeStatus, { label: string; dot: string }> = {
+  under_review: { label: "Under Review", dot: "bg-azure" },
+  approved: { label: "Approved", dot: "bg-foreground" },
+  flagged: { label: "Flagged", dot: "bg-flame-orange" },
+  rejected: { label: "Rejected", dot: "bg-flame-red" },
+  open: { label: "Open", dot: "bg-flame-amber" },
+  resolved: { label: "Resolved", dot: "bg-foreground" },
+  active: { label: "Active", dot: "bg-foreground" },
+  inactive: { label: "Inactive", dot: "bg-muted-foreground" },
 };
 
 export function StatusBadge({
@@ -64,20 +38,11 @@ export function StatusBadge({
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[11px] font-medium",
-        config.classes,
-        className
+        "border-border bg-secondary text-foreground font-mono text-eyebrow inline-flex items-center gap-1.5 rounded-md border px-2 py-0.5 uppercase",
+        className,
       )}
     >
-      {config.dot ? (
-        <span
-          aria-hidden
-          className={cn(
-            "size-1.5 rounded-full",
-            status === "rejected" ? "bg-white/60" : "bg-black/40"
-          )}
-        />
-      ) : null}
+      <span aria-hidden className={cn("size-1.5 rounded-full", config.dot)} />
       {config.label}
     </span>
   );

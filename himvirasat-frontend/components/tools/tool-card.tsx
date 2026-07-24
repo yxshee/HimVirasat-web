@@ -1,6 +1,8 @@
 import Link from "next/link";
 
-/** Editorial card linking to a language tool, with an optional Takri glyph tile. */
+import { PixelIcon } from "@/components/mistral/pixel-icon";
+
+/** Card linking to a language tool, with an optional Takri glyph tile. */
 export function ToolCard({
   href,
   title,
@@ -15,23 +17,24 @@ export function ToolCard({
   return (
     <Link
       href={href}
-      className="block h-full rounded-lg focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+      className="ruled-cell hover:bg-secondary group flex h-full flex-col p-8 transition-colors focus-visible:outline-none focus-visible:bg-secondary"
     >
-      <article className="hover-brut relative h-full rounded-lg border border-border bg-card p-8">
-        {glyph && (
-          <span
-            aria-hidden
-            className="mb-6 grid size-16 place-items-center border border-border bg-marigold font-takri text-4xl text-black"
-          >
-            {glyph}
-          </span>
-        )}
-        <h2 className="font-display text-xl">{title}</h2>
-        <p className="mt-2 text-sm text-muted-foreground">{description}</p>
-        <span className="link-ink text-section-accent-deep mt-4 inline-block text-sm font-medium">
-          Open &rarr;
+      {glyph && (
+        <span
+          aria-hidden
+          className="bg-flame-amber font-takri mb-6 grid size-14 place-items-center text-3xl text-[#07070b]"
+        >
+          {glyph}
         </span>
-      </article>
+      )}
+      <h2 className="text-title">{title}</h2>
+      <p className="text-body-sm text-muted-foreground mt-2 flex-1">
+        {description}
+      </p>
+      <PixelIcon
+        name="chevron-right"
+        className="text-muted-foreground mt-6 size-4 transition-transform duration-300 group-hover:translate-x-1"
+      />
     </Link>
   );
 }

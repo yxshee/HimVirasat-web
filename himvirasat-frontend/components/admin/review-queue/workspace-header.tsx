@@ -61,7 +61,7 @@ export default function WorkspaceHeader({
                 className={cn(
                   "h-12 px-3 flex items-center gap-1.5 border-b-2 font-medium transition-all",
                   workspaceTab === tab.id
-                    ? "border-saffron text-foreground font-bold"
+                    ? "border-flame-red text-foreground font-bold"
                     : "border-transparent text-muted-foreground hover:text-foreground"
                 )}
               >

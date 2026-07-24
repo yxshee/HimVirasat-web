@@ -58,7 +58,7 @@ export function AdminLoginForm() {
   }
 
   return (
-    <div className="rounded-lg border border-border bg-card p-8 shadow-brut">
+    <div className="rounded-lg border border-border bg-card p-8">
       <h1 className="font-display text-2xl">Sign in</h1>
       <p className="mt-1 text-sm text-muted-foreground">Admin console access</p>
 

@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 
 import DialectCard from "@/components/dialects/DialectCard";
-import { Coin } from "@/components/decor/coin";
-import { SectionHeading } from "@/components/decor/section-heading";
+import { Eyebrow } from "@/components/mistral/eyebrow";
+import { RuledGrid } from "@/components/mistral/ruled-grid";
+import { SectionHeading } from "@/components/mistral/section-heading";
 import { Reveal } from "@/components/motion/reveal";
 import { devToTankri } from "@/lib/transliteration/devToTankri";
 
@@ -49,115 +50,95 @@ const steps = [
   {
     numeral: "𑛁",
     title: "Pick your dialect",
-    line: "Choose your dialect from the plaques below.",
-    tilt: -6,
-    fill: "var(--marigold)",
+    line: "Choose your dialect from the forms below.",
   },
   {
     numeral: "𑛂",
     title: "Write everyday sentences",
-    line: "Write the words you use every day, with their Hindi translations, in the Google Form.",
-    tilt: 0,
-    fill: "var(--pink)",
+    line: "Write the words you use every day, with their Hindi translations, in the form.",
   },
   {
     numeral: "𑛃",
-    title: "Reviewed & credited",
-    line: "Every contribution is tracked and verified, and contributors are recognized and credited.",
-    tilt: 6,
-    fill: "var(--teal)",
+    title: "Reviewed and credited",
+    line: "Every contribution is tracked and verified, and contributors are recognised and credited.",
   },
-];
-
-const cardAccents = [
-  "accent-pink",
-  "accent-marigold",
-  "accent-teal",
-  "accent-madder",
-  "accent-lavender",
-  "accent-pink",
 ];
 
 export default function ContributePage() {
   return (
-    <div className="mx-auto max-w-6xl px-6 py-20 sm:px-10 md:py-24">
+    <div className="mx-auto w-full max-w-content px-6 py-20 md:py-28 lg:px-10">
       <SectionHeading
         as="h1"
+        align="left"
         eyebrow="Contribute"
         nativeEcho={devToTankri("योगदान")}
-        title="Language & Translation Contributions"
+        title="Language and translation contributions"
+        description="Choose your dialect below and contribute parallel sentences to help build open Hindi to Himachali translation datasets for research, education, and language tools."
       />
 
-      <div className="mt-8 max-w-2xl space-y-4 leading-7 text-muted-foreground">
-        <p>
-          Choose your dialect below and contribute parallel sentences to help
-          build open Hindi ↔ Himachali translation datasets for research,
-          education, and language tools.
-        </p>
+      <div className="mt-16 grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,20rem)]">
+        <div className="text-body text-muted-foreground max-w-prose space-y-5">
+          <h2 className="text-display-md text-foreground">
+            Your words matter
+          </h2>
+          <p>
+            Every word you contribute helps keep Himachal&rsquo;s languages
+            alive in the digital world. Even a single word or sentence from your
+            dialect is valuable. It captures how people actually speak,
+            something no book or machine can recreate.
+          </p>
+          <p>
+            All contributions to HimVirasat are carefully tracked and verified,
+            ensuring your effort is never lost or overlooked. As the project
+            grows, contributors will be recognised and credited across our
+            official platforms, including the HimVirasat website, our Discord
+            server, and community posts.
+          </p>
+          <p>
+            You do not need to be an expert. Just write the words you use every
+            day. That is how a language truly lives on.
+          </p>
+        </div>
 
-        <h2 className="pt-6 font-display text-2xl text-foreground">
-          Your Words Matter
-        </h2>
-
-        <p>
-          Every word you contribute helps keep Himachal’s languages alive in
-          the digital world. Even a single word or sentence from your dialect
-          is valuable. It captures how people actually speak, something no book
-          or machine can recreate.
-        </p>
-
-        <p>
-          All contributions to HimVirasat are carefully tracked and verified,
-          ensuring that your effort is never lost or overlooked. As the project
-          grows, contributors will be recognized and credited across our
-          official platforms, including the HimVirasat website, our official
-          Discord server, and community posts on Reddit.
-        </p>
-
-        <p>
-          You don’t need to be an expert. Just write the words you use every
-          day that’s how a language truly lives on.
-        </p>
-
-        <blockquote className="border-l-4 border-foreground bg-secondary p-6 font-display text-xl text-foreground">
+        <blockquote className="border-flame-red text-title text-foreground h-fit border-l-2 pl-6">
           One word today can preserve a language tomorrow.
         </blockquote>
       </div>
 
-      <section aria-label="How contributing works" className="mt-16 md:mt-20">
-        <ol className="relative grid gap-8 sm:grid-cols-3 sm:before:absolute sm:before:top-8 sm:before:right-0 sm:before:left-0 sm:before:h-px sm:before:bg-border">
+      <section aria-label="How contributing works" className="mt-20">
+        <Eyebrow className="mb-6">How it works</Eyebrow>
+        <RuledGrid cols={3} as="ol">
           {steps.map((step) => (
-            <li key={step.title}>
-              <Coin
-                glyph={step.numeral}
-                script="takri"
-                size={64}
-                tilt={step.tilt}
-                fill={step.fill}
-                className="relative bg-background"
-              />
-              <h3 className="mt-3 font-display text-lg">{step.title}</h3>
-              <p className="mt-1.5 text-sm leading-6 text-muted-foreground">
+            <li key={step.title} className="ruled-cell p-8">
+              <span
+                aria-hidden
+                className="bg-flame-amber font-takri grid size-12 place-items-center text-2xl text-[#07070b]"
+              >
+                {step.numeral}
+              </span>
+              <h3 className="text-title mt-5">{step.title}</h3>
+              <p className="text-body-sm text-muted-foreground mt-2">
                 {step.line}
               </p>
             </li>
           ))}
-        </ol>
+        </RuledGrid>
       </section>
 
-      <section aria-label="Dialect forms" className="mt-16 md:mt-20">
-        <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <section aria-label="Dialect forms" className="mt-20">
+        <Eyebrow className="mb-6">Dialects collecting now</Eyebrow>
+        <RuledGrid cols="2-3" as="ul">
           {dialects.map((dialect, index) => (
             <Reveal
               as="li"
               key={dialect.id}
-              delay={index * 80}
-              className={`h-full ${cardAccents[index % cardAccents.length]}`}
+              delay={index * 60}
+              className="ruled-cell h-full"
             >
               <DialectCard name={dialect.name} formUrl={dialect.formUrl} />
             </Reveal>
           ))}
-        </ul>
+        </RuledGrid>
       </section>
     </div>
   );

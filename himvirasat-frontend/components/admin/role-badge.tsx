@@ -2,19 +2,14 @@ import { cn } from "@/lib/utils";
 
 import type { SystemRole } from "@/types/admin/FSM/contribution-rules";
 
-const ROLE_CONFIG: Record<SystemRole, { label: string; classes: string }> = {
-  super_admin: {
-    label: "Super Admin",
-    classes: "bg-marigold text-black border-border",
-  },
-  language_head: {
-    label: "Language Head",
-    classes: "bg-teal text-black border-border",
-  },
-  language_expert: {
-    label: "Language Expert",
-    classes: "bg-lavender text-black border-border",
-  },
+/**
+ * Colour rides in the dot, never in the fill: the label keeps full
+ * foreground contrast and the badge stays legible in both themes.
+ */
+const ROLE_CONFIG: Record<SystemRole, { label: string; dot: string }> = {
+  super_admin: { label: "Super Admin", dot: "bg-flame-red" },
+  language_head: { label: "Language Head", dot: "bg-azure" },
+  language_expert: { label: "Language Expert", dot: "bg-flame-amber" },
 };
 
 export function RoleBadge({
@@ -29,11 +24,11 @@ export function RoleBadge({
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[11px] font-medium",
-        config.classes,
-        className
+        "border-border bg-secondary text-foreground font-mono text-eyebrow inline-flex items-center gap-1.5 rounded-md border px-2 py-0.5 uppercase",
+        className,
       )}
     >
+      <span aria-hidden className={cn("size-1.5 rounded-full", config.dot)} />
       {config.label}
     </span>
   );

@@ -6,22 +6,34 @@ export const alt = "HimVirasat · Open language preservation for Himachal";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-const CREAM = "#f4f4f0";
-const INK = "#000000";
-const MARIGOLD = "#ffc900";
-const MUTED = "#52524e";
+const CANVAS = "#fbfbf8";
+const INK = "#07070b";
+const MUTED = "#5a5a63";
+const HAIRLINE = "#e4e3de";
+const FLAME = ["#ffaf01", "#ff8204", "#ff5229", "#e51300", "#b31000"];
 
-/* Sawtooth zigzag: 19 teeth across a 1140-unit viewBox, stretched to fit. */
-const ZIGZAG = `M0,40 ${Array.from(
-  { length: 19 },
-  (_, i) => `L${i * 60 + 30},0 L${i * 60 + 60},40`
-).join(" ")} Z`;
+/** Ridgeline mark, matching components/mistral/logo-mark.tsx. */
+const MARK_TILES: Array<[number, number, number]> = [
+  [2, 0, 0],
+  [1, 1, 0],
+  [2, 1, 1],
+  [0, 2, 1],
+  [1, 2, 2],
+  [2, 2, 2],
+  [3, 2, 3],
+  [0, 3, 2],
+  [1, 3, 3],
+  [2, 3, 3],
+  [3, 3, 4],
+];
+
+/* Deterministic tile band along the bottom edge. */
+const BAND = Array.from({ length: 20 }, (_, i) => FLAME[(i * 7 + 3) % 5]);
 
 async function loadGoogleFont(family: string): Promise<ArrayBuffer> {
-  const css = await fetch(
-    `https://fonts.googleapis.com/css2?family=${family}`,
-    { headers: { "User-Agent": "Mozilla/5.0" } }
-  ).then((res) => res.text());
+  const css = await fetch(`https://fonts.googleapis.com/css2?family=${family}`, {
+    headers: { "User-Agent": "Mozilla/5.0" },
+  }).then((res) => res.text());
   const match = css.match(/url\((https:[^)]+\.(?:ttf|woff))\)/);
   if (!match) throw new Error("No usable font URL in Google Fonts CSS");
   const font = await fetch(match[1]);
@@ -40,21 +52,10 @@ function composition(withDevanagari: boolean) {
         justifyContent: "space-between",
         position: "relative",
         padding: "0 96px",
-        backgroundColor: CREAM,
+        backgroundColor: CANVAS,
         fontFamily: withDevanagari ? "Space Grotesk" : "sans-serif",
       }}
     >
-      <div
-        style={{
-          position: "absolute",
-          top: 32,
-          left: 32,
-          right: 32,
-          bottom: 32,
-          border: `2px solid ${INK}`,
-        }}
-      />
-
       <div
         style={{
           display: "flex",
@@ -65,13 +66,9 @@ function composition(withDevanagari: boolean) {
         <div
           style={{
             display: "flex",
-            backgroundColor: MARIGOLD,
-            border: `2px solid ${INK}`,
-            borderRadius: 999,
-            padding: "10px 24px",
             fontSize: 22,
-            letterSpacing: 2,
-            color: INK,
+            letterSpacing: 3,
+            color: MUTED,
           }}
         >
           OPEN LANGUAGE PRESERVATION
@@ -82,9 +79,9 @@ function composition(withDevanagari: boolean) {
             style={{
               display: "flex",
               fontFamily: "Noto Serif Devanagari",
-              fontSize: 120,
+              fontSize: 104,
               lineHeight: 1.2,
-              marginTop: 20,
+              marginTop: 24,
               color: INK,
             }}
           >
@@ -95,8 +92,8 @@ function composition(withDevanagari: boolean) {
         <div
           style={{
             display: "flex",
-            fontSize: 48,
-            marginTop: withDevanagari ? 4 : 36,
+            fontSize: 52,
+            marginTop: withDevanagari ? 8 : 36,
             color: INK,
           }}
         >
@@ -115,54 +112,59 @@ function composition(withDevanagari: boolean) {
         </div>
       </div>
 
+      {/* Mosaic mark */}
       <div
         style={{
           display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          width: 220,
-          height: 220,
-          borderRadius: 220,
-          backgroundColor: MARIGOLD,
-          border: `8px solid ${INK}`,
+          width: 264,
+          height: 264,
+          position: "relative",
         }}
       >
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            width: 168,
-            height: 168,
-            borderRadius: 168,
-            border: `2px solid ${INK}`,
-            fontFamily: withDevanagari ? "Noto Sans Takri" : "sans-serif",
-            fontSize: 90,
-            color: INK,
-          }}
-        >
-          {withDevanagari ? "𑚩" : null}
-        </div>
+        {MARK_TILES.map(([col, row, step]) => (
+          <div
+            key={`${col}-${row}`}
+            style={{
+              position: "absolute",
+              left: col * 66,
+              top: row * 66,
+              width: 66,
+              height: 66,
+              backgroundColor: FLAME[step],
+            }}
+          />
+        ))}
       </div>
+
+      {/* Hairline above the tile band */}
+      <div
+        style={{
+          position: "absolute",
+          left: 0,
+          right: 0,
+          bottom: 48,
+          height: 1,
+          backgroundColor: HAIRLINE,
+          display: "flex",
+        }}
+      />
 
       <div
         style={{
           position: "absolute",
-          left: 34,
-          right: 34,
-          bottom: 34,
-          height: 40,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          height: 48,
           display: "flex",
         }}
       >
-        <svg
-          width="100%"
-          height="40"
-          viewBox="0 0 1140 40"
-          preserveAspectRatio="none"
-        >
-          <path d={ZIGZAG} fill={INK} />
-        </svg>
+        {BAND.map((fill, i) => (
+          <div
+            key={i}
+            style={{ width: 60, height: 48, backgroundColor: fill }}
+          />
+        ))}
       </div>
     </div>
   );

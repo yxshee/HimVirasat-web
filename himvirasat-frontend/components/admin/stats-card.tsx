@@ -17,7 +17,7 @@ export function StatCard({
   loading?: boolean;
 }) {
   return (
-    <Card className="rounded-lg border-border shadow-brut-sm">
+    <Card className="rounded-lg border-border">
       <CardContent className="flex items-start justify-between gap-4">
         <div className="min-w-0">
           <p className="text-sm text-muted-foreground">{title}</p>
@@ -32,7 +32,7 @@ export function StatCard({
         </div>
         <div
           aria-hidden
-          className="grid size-10 shrink-0 place-items-center rounded-md border border-border bg-marigold text-black"
+          className="grid size-10 shrink-0 place-items-center rounded-md border border-border bg-flame-amber text-black"
         >
           <Icon className="size-5" />
         </div>

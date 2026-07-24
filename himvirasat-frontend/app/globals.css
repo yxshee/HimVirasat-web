@@ -3,240 +3,247 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* ═══════════════════════════════════════════════════════════════════════
+   Warm off-white canvas, hairline-ruled grids, near-zero shadow, flame
+   accent ramp. Structure comes from 1px rules, not from fills or
+   elevation. Colour is decoration, never the only carrier of meaning.
+   ═══════════════════════════════════════════════════════════════════ */
+
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  /* ── Fonts ─────────────────────────────────────────────────────────
+     Inter carries body copy, Space Grotesk the display sizes, Space Mono
+     the uppercase eyebrows. Devanagari and Takri are content faces and
+     are never used for chrome. */
   --font-sans:
-    var(--font-grotesk), var(--font-mukta), ui-sans-serif, system-ui,
-    sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
-  --font-display: var(--font-grotesk), var(--font-mukta), ui-sans-serif, sans-serif;
+    var(--font-inter), ui-sans-serif, system-ui, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji";
+  --font-display:
+    var(--font-grotesk), var(--font-inter), ui-sans-serif, sans-serif;
+  --font-mono: var(--font-space-mono), ui-monospace, monospace;
   --font-deva: var(--font-noto-serif-deva), Georgia, serif;
   --font-takri: var(--font-noto-takri), sans-serif;
-  --color-sidebar-ring: var(--sidebar-ring);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar: var(--sidebar);
-  --color-chart-5: var(--chart-5);
-  --color-chart-4: var(--chart-4);
-  --color-chart-3: var(--chart-3);
-  --color-chart-2: var(--chart-2);
-  --color-chart-1: var(--chart-1);
-  --color-ring: var(--ring);
-  --color-input: var(--input);
-  --color-border: var(--border);
-  --color-destructive: var(--destructive);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-accent: var(--accent);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-muted: var(--muted);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-secondary: var(--secondary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-primary: var(--primary);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-popover: var(--popover);
-  --color-card-foreground: var(--card-foreground);
+
+  /* ── Type scale ────────────────────────────────────────────────────
+     Tracking is in em so it stays proportional across the ramp: -0.01em
+     on display sizes, +0.01/+0.02em on the small UI sizes. */
+  --text-display-xl: 3.5rem;
+  --text-display-xl--line-height: 1.05;
+  --text-display-xl--letter-spacing: -0.01em;
+  --text-display-xl--font-weight: 500;
+
+  --text-display-lg: 2.75rem;
+  --text-display-lg--line-height: 1.08;
+  --text-display-lg--letter-spacing: -0.01em;
+  --text-display-lg--font-weight: 500;
+
+  --text-display-md: 2rem;
+  --text-display-md--line-height: 1.15;
+  --text-display-md--letter-spacing: -0.01em;
+  --text-display-md--font-weight: 500;
+
+  --text-title: 1.5rem;
+  --text-title--line-height: 1.25;
+  --text-title--letter-spacing: -0.01em;
+  --text-title--font-weight: 500;
+
+  --text-label: 1rem;
+  --text-label--line-height: 1.5;
+  --text-label--letter-spacing: 0.01em;
+  --text-label--font-weight: 500;
+
+  --text-nav: 0.875rem;
+  --text-nav--line-height: 1.4;
+  --text-nav--letter-spacing: 0.02em;
+  --text-nav--font-weight: 500;
+
+  --text-body-lg: 1.25rem;
+  --text-body-lg--line-height: 1.6;
+  --text-body-lg--letter-spacing: -0.02em;
+
+  --text-body: 1rem;
+  --text-body--line-height: 1.6;
+  --text-body--letter-spacing: -0.01em;
+
+  --text-body-sm: 0.8125rem;
+  --text-body-sm--line-height: 1.55;
+
+  --text-eyebrow: 0.6875rem;
+  --text-eyebrow--line-height: 1.4;
+
+  --text-eyebrow-lg: 0.8125rem;
+  --text-eyebrow-lg--line-height: 1.4;
+
+  /* ── Containers and rhythm ─────────────────────────────────────────
+     1728px outer shell, 1360px ruled content band, 1024px prose. */
+  --container-shell: 108rem;
+  --container-content: 85rem;
+  --container-prose: 64rem;
+  --spacing-section: 10rem;
+
+  /* ── shadcn contract, re-pointed ───────────────────────────────────
+     The ui/ primitives read these, so changing them here restyles the
+     whole surface area including the admin dashboard. */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
   --color-card: var(--card);
-  /* Brand hues (raw — bg/border/shadow use; never text on light surfaces) */
-  --color-pink: var(--pink);
-  --color-marigold: var(--marigold);
-  --color-yellow: var(--yellow);
-  --color-teal: var(--teal);
-  --color-lavender: var(--lavender);
-  --color-madder: var(--madder);
-  /* Text-safe deeps */
-  --color-pink-deep: var(--pink-deep);
-  --color-marigold-deep: var(--marigold-deep);
-  --color-teal-deep: var(--teal-deep);
-  --color-lavender-deep: var(--lavender-deep);
-  --color-madder-deep: var(--madder-deep);
-  /* Section accent rotation */
-  --color-section-accent: var(--section-accent);
-  --color-section-accent-deep: var(--section-accent-deep);
-  /* v1 compat aliases (saffron vocabulary still used across pages/admin) */
-  --color-saffron: var(--saffron);
-  --color-saffron-deep: var(--saffron-deep);
-  --color-terracotta: var(--terracotta);
-  --color-ice: var(--ice);
-  --color-success: var(--success);
-  --color-warning: var(--warning);
-  --color-info: var(--info);
-  /* Hard offset shadows — the only shadows in the system */
-  --shadow-brut: 0.25rem 0.25rem 0 0 var(--brut-color, var(--foreground));
-  --shadow-brut-sm: 2px 2px 0 0 var(--brut-color, var(--foreground));
-  --shadow-card: 2px 2px 0 0 var(--foreground);
-  --shadow-lift: 4px 4px 0 0 var(--foreground);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  /* ── Surfaces beyond the shadcn contract ───────────────────────────
+     `surface-3` is the deepest warm tint (mosaic neutrals, table zebra).
+     `ink` is the full-bleed dark band; it stays dark in both themes. */
+  --color-surface-3: var(--surface-3);
+  --color-ink: #151524;
+  --color-ink-foreground: #fbfbf8;
+  --color-ink-border: #31313a;
+  --color-hairline-strong: var(--hairline-strong);
+
+  /* ── Flame ramp ────────────────────────────────────────────────────
+     Fill-only: every step below fails contrast as text on at least one
+     of the two canvases. When a warm colour must carry text, use
+     `text-flame-text` — it is the one theme-aware step, dark enough for
+     cream and light enough for the blue-black. */
+  --color-flame-amber: #ffaf01;
+  --color-flame-orange: #ff8204;
+  --color-flame-red-orange: #ff5229;
+  --color-flame-red: #e51300;
+  --color-flame-deep: #b31000;
+  --color-flame-text: var(--flame-text);
+
+  /* Cool counterpoint — tools, datasets, admin surfaces. */
+  --color-azure: #0082e6;
+  --color-azure-pale: #b9daff;
+
+  /* ── Radii ─────────────────────────────────────────────────────────
+     Derived from --radius: sm 4 · md 6 · lg 8 · xl 12. Mosaic tiles and
+     ruled cells stay square and opt out entirely. */
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
   --radius-2xl: calc(var(--radius) + 8px);
   --radius-3xl: calc(var(--radius) + 12px);
-  --radius-4xl: calc(var(--radius) + 16px);
 }
 
-/* ── Cream canvas (light) ───────────────────────────────────────────── */
+/* ── Light: warm off-white ──────────────────────────────────────────── */
 :root {
-  --radius: 0.375rem;
-  --background: #f4f4f0;
-  --foreground: #000000;
-  --card: #ffffff;
-  --card-foreground: #000000;
+  --radius: 0.5rem;
+
+  --background: #fbfbf8;
+  --foreground: #07070b;
+  --card: #fbfbf8;
+  --card-foreground: #07070b;
   --popover: #ffffff;
-  --popover-foreground: #000000;
-  --primary: #ffc900;
-  --primary-foreground: #000000;
-  --secondary: #e9e9e3;
-  --secondary-foreground: #000000;
-  --muted: #e9e9e3;
-  --muted-foreground: #52524e;
-  --accent: #e9e9e3;
-  --accent-foreground: #000000;
-  --destructive: #dc341e;
-  --border: #000000;
-  --input: #000000;
-  --ring: #ff90e8;
-  --pink: #ff90e8;
-  --marigold: #ffc900;
-  --yellow: #f1f333;
-  --teal: #23a094;
-  --lavender: #90a8ed;
-  --madder: #dc341e;
-  --pink-deep: #b0187e;
-  --marigold-deep: #7a6200;
-  --teal-deep: #14766c;
-  --lavender-deep: #4a5fa5;
-  --madder-deep: #b02412;
-  --section-accent: var(--marigold);
-  --section-accent-deep: var(--marigold-deep);
-  --saffron: var(--marigold);
-  --saffron-deep: var(--marigold-deep);
-  --terracotta: var(--madder);
-  --ice: var(--lavender);
-  --success: var(--teal-deep);
-  --warning: var(--marigold-deep);
-  --info: var(--lavender-deep);
-  --chart-1: var(--marigold);
-  --chart-2: var(--pink);
-  --chart-3: var(--teal);
-  --chart-4: var(--lavender);
-  --chart-5: var(--madder);
-  --sidebar: #f4f4f0;
-  --sidebar-foreground: #000000;
-  --sidebar-primary: var(--marigold);
-  --sidebar-primary-foreground: #000000;
-  --sidebar-accent: #e9e9e3;
-  --sidebar-accent-foreground: #000000;
-  --sidebar-border: #000000;
-  --sidebar-ring: #ff90e8;
+  --popover-foreground: #07070b;
+
+  /* Primary action is near-black, not a brand colour. */
+  --primary: #07070b;
+  --primary-foreground: #fbfbf8;
+  --secondary: #f5f4ef;
+  --secondary-foreground: #07070b;
+  --muted: #f5f4ef;
+  --muted-foreground: #5a5a63;
+  --accent: #f5f4ef;
+  --accent-foreground: #07070b;
+  --destructive: #e51300;
+
+  /* Hairlines carry all the structure. */
+  --border: #e4e3de;
+  --input: #e4e3de;
+  --ring: #ff5229;
+
+  --surface-3: #ebe9e0;
+  --hairline-strong: #c9c9c4;
+  /* 7.0:1 on the cream canvas. */
+  --flame-text: #b31000;
+
+  --chart-1: #ffaf01;
+  --chart-2: #ff8204;
+  --chart-3: #ff5229;
+  --chart-4: #0082e6;
+  --chart-5: #b9daff;
+
+  --sidebar: #fbfbf8;
+  --sidebar-foreground: #07070b;
+  --sidebar-primary: #07070b;
+  --sidebar-primary-foreground: #fbfbf8;
+  --sidebar-accent: #f5f4ef;
+  --sidebar-accent-foreground: #07070b;
+  --sidebar-border: #e4e3de;
+  --sidebar-ring: #ff5229;
 }
 
-/* ── True-black canvas (dark): warm neutral, no hue cast ────────────── */
+/* ── Dark: blue-black, same structure ───────────────────────────────── */
 .dark {
-  --background: #0d0d0c;
-  --foreground: #ece9e2;
-  --card: #161614;
-  --card-foreground: #ece9e2;
-  --popover: #1a1a18;
-  --popover-foreground: #ece9e2;
-  --primary: #ffc900;
-  --primary-foreground: #000000;
-  --secondary: #1d1d1a;
-  --secondary-foreground: #ece9e2;
-  --muted: #171715;
-  --muted-foreground: #a3a19a;
-  --accent: #22221f;
-  --accent-foreground: #ffffff;
-  --destructive: #ff6b52;
-  --border: rgb(236 233 226 / 0.25);
-  --input: rgb(236 233 226 / 0.25);
-  --ring: #ff90e8;
-  --pink-deep: #ff90e8;
-  --marigold-deep: #ffc900;
-  --teal-deep: #2fbfa9;
-  --lavender-deep: #a8bcf5;
-  --madder-deep: #ff6b52;
-  --sidebar: #0a0a09;
-  --sidebar-foreground: #ece9e2;
-  --sidebar-primary: var(--marigold);
-  --sidebar-primary-foreground: #000000;
-  --sidebar-accent: #1d1d1a;
-  --sidebar-accent-foreground: #ffffff;
-  --sidebar-border: rgb(236 233 226 / 0.15);
-  --sidebar-ring: #ff90e8;
-}
+  --background: #151524;
+  --foreground: #fbfbf8;
+  --card: #151524;
+  --card-foreground: #fbfbf8;
+  --popover: #1c1c2b;
+  --popover-foreground: #fbfbf8;
 
-/* ── Flat-black band: locally re-themes all children ────────────────── */
-.surface-ink {
-  --background: #000000;
-  --foreground: #f4f4f0;
-  --card: #000000;
-  --card-foreground: #f4f4f0;
-  --popover: #111110;
-  --popover-foreground: #f4f4f0;
-  --secondary: #1a1a19;
-  --secondary-foreground: #f4f4f0;
-  --muted: #1a1a19;
-  --muted-foreground: rgb(244 244 240 / 0.7);
-  --accent: #1a1a19;
-  --accent-foreground: #f4f4f0;
-  --border: rgb(255 255 255 / 0.35);
-  --input: rgb(255 255 255 / 0.35);
-  /* Raw hues are text-safe on black */
-  --pink-deep: #ff90e8;
-  --marigold-deep: #ffc900;
-  --teal-deep: #2fbfa9;
-  --lavender-deep: #a8bcf5;
-  --madder-deep: #ff6b52;
-  --saffron-deep: var(--marigold-deep);
-  --brut-color: var(--section-accent);
-  background-color: #000000;
-  color: #f4f4f0;
-}
+  --primary: #fbfbf8;
+  --primary-foreground: #151524;
+  --secondary: #1c1c2b;
+  --secondary-foreground: #fbfbf8;
+  --muted: #1c1c2b;
+  --muted-foreground: #a0a0ac;
+  --accent: #242435;
+  --accent-foreground: #fbfbf8;
+  --destructive: #ff5229;
 
-/* ── Section accent rotation ────────────────────────────────────────── */
-.accent-pink {
-  --section-accent: var(--pink);
-  --section-accent-deep: var(--pink-deep);
+  --border: #31313a;
+  --input: #31313a;
+  --ring: #ff8204;
+
+  --surface-3: #242435;
+  --hairline-strong: #3e3e4a;
+  /* #b31000 is only 2.57:1 here — step up the ramp for dark. */
+  --flame-text: #ff8204;
+
+  --sidebar: #12121f;
+  --sidebar-foreground: #fbfbf8;
+  --sidebar-primary: #fbfbf8;
+  --sidebar-primary-foreground: #151524;
+  --sidebar-accent: #1c1c2b;
+  --sidebar-accent-foreground: #fbfbf8;
+  --sidebar-border: #31313a;
+  --sidebar-ring: #ff8204;
 }
-.accent-marigold {
-  --section-accent: var(--marigold);
-  --section-accent-deep: var(--marigold-deep);
-}
-.accent-yellow {
-  --section-accent: var(--yellow);
-  --section-accent-deep: var(--marigold-deep);
-}
-.accent-teal {
-  --section-accent: var(--teal);
-  --section-accent-deep: var(--teal-deep);
-}
-.accent-lavender {
-  --section-accent: var(--lavender);
-  --section-accent-deep: var(--lavender-deep);
-}
-.accent-madder {
-  --section-accent: var(--madder);
-  --section-accent-deep: var(--madder-deep);
-}
-/* Inside ink bands, offset shadows pick up the local accent */
-.surface-ink .accent-pink { --brut-color: var(--pink); }
-.surface-ink .accent-marigold { --brut-color: var(--marigold); }
-.surface-ink .accent-yellow { --brut-color: var(--yellow); }
-.surface-ink .accent-teal { --brut-color: var(--teal); }
-.surface-ink .accent-lavender { --brut-color: var(--lavender); }
-.surface-ink .accent-madder { --brut-color: var(--madder); }
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
-  /* Hide the page scrollbar (scrolling still works) and prevent
-     decorative elements from creating sideways overflow. */
+
+  /* Hide the page scrollbar (scrolling still works) and stop full-bleed
+     mosaics from creating sideways overflow. */
   html {
     scrollbar-width: none;
     -ms-overflow-style: none;
@@ -249,30 +256,109 @@
     overflow-x: clip;
     overscroll-behavior-y: none;
   }
+
   body {
     @apply bg-background text-foreground font-sans;
-    letter-spacing: -0.011em;
+    letter-spacing: -0.01em;
   }
+
+  /* Must be @apply, not `font-family: var(--font-display)` — `@theme
+     inline` inlines its values into the generated utilities instead of
+     emitting :root custom properties, so the raw var() is empty here. */
   h1,
   h2,
   h3,
   h4 {
+    @apply font-display;
     font-weight: 500;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.01em;
   }
+
   ::selection {
-    background-color: var(--marigold);
-    color: #000000;
+    background-color: #ffaf01;
+    color: #07070b;
+  }
+}
+
+/* ── Ink band ────────────────────────────────────────────────────────
+   Full-bleed dark section. Re-themes its children so shadcn primitives
+   nested inside pick up the right hairline and muted values. Identical
+   in light and dark themes by design. */
+.surface-ink {
+  --background: #151524;
+  --foreground: #fbfbf8;
+  --card: #151524;
+  --card-foreground: #fbfbf8;
+  --popover: #1c1c2b;
+  --popover-foreground: #fbfbf8;
+  --primary: #fbfbf8;
+  --primary-foreground: #151524;
+  --secondary: #1c1c2b;
+  --secondary-foreground: #fbfbf8;
+  --muted: #1c1c2b;
+  --muted-foreground: #a0a0ac;
+  --accent: #242435;
+  --accent-foreground: #fbfbf8;
+  --border: #31313a;
+  --input: #31313a;
+  --surface-3: #242435;
+  --hairline-strong: #3e3e4a;
+  background-color: #151524;
+  color: #fbfbf8;
+}
+
+/* Hairlines inside a ruled grid are drawn by a 1px gap over the
+   container's border colour (see components/mistral/ruled-grid.tsx), so
+   cells need an opaque background to sit on top of it. */
+.ruled-cell {
+  background-color: var(--background);
+}
+
+/* ── Quiet link ──────────────────────────────────────────────────────
+   No underline at rest; the row tints on hover instead. */
+@utility link-quiet {
+  text-decoration-line: none;
+  transition: color 0.2s ease;
+  &:hover {
+    color: var(--foreground);
+  }
+}
+
+/* ── Pixel-arrow row ─────────────────────────────────────────────────
+   List and menu rows slide a pixel arrow in from the left while the
+   label shifts right, over 300ms with a 50ms delay. Used by the
+   mega-menu and every ruled link list. */
+@utility row-arrow {
+  & [data-arrow] {
+    transform: translateX(-2.5rem);
+    transition: transform 0.3s ease 0.05s;
+  }
+  & [data-arrow-label] {
+    transition: transform 0.3s ease 0.05s;
+  }
+  &:hover [data-arrow],
+  &:focus-visible [data-arrow] {
+    transform: translateX(0);
+  }
+  &:hover [data-arrow-label],
+  &:focus-visible [data-arrow-label] {
+    transform: translateX(1.75rem);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    & [data-arrow],
+    & [data-arrow-label] {
+      transition: none;
+    }
   }
 }
 
 /* ── Motion: scroll reveal (JS-gated so no-JS users always see content) ─ */
 html.js [data-reveal] {
   opacity: 0;
-  transform: translateY(10px);
+  transform: translateY(8px);
   transition:
-    opacity 0.45s cubic-bezier(0.22, 0.61, 0.36, 1),
-    transform 0.45s cubic-bezier(0.22, 0.61, 0.36, 1);
+    opacity 0.3s cubic-bezier(0.22, 0.61, 0.36, 1),
+    transform 0.3s cubic-bezier(0.22, 0.61, 0.36, 1);
   transition-delay: var(--reveal-delay, 0ms);
 }
 html.js [data-reveal][data-revealed="true"] {
@@ -290,7 +376,7 @@ html.js [data-reveal][data-revealed="true"] {
 @keyframes fade-slide {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(8px);
   }
   to {
     opacity: 1;
@@ -299,64 +385,5 @@ html.js [data-reveal][data-revealed="true"] {
 }
 
 .animate-fade-slide {
-  animation: fade-slide 0.4s ease-out forwards;
-}
-
-/* ── Marquee strips ─────────────────────────────────────────────────── */
-@keyframes marquee-scroll {
-  to {
-    transform: translateX(-50%);
-  }
-}
-.marquee {
-  overflow: hidden;
-}
-.marquee-track {
-  display: flex;
-  width: max-content;
-  animation: marquee-scroll var(--marquee-duration, 30s) linear infinite;
-}
-.marquee:hover .marquee-track {
-  animation-play-state: paused;
-}
-@media (prefers-reduced-motion: reduce) {
-  .marquee-track {
-    animation: none;
-  }
-}
-
-/* ── Brutalist interaction utilities ────────────────────────────────── */
-@utility hover-brut {
-  transition:
-    translate 0.15s ease,
-    box-shadow 0.15s ease;
-  &:hover {
-    translate: -4px -4px;
-    box-shadow: 0.25rem 0.25rem 0 0 var(--brut-color, var(--foreground));
-  }
-  &:active {
-    translate: 0 0;
-    box-shadow: none;
-  }
-  @media (prefers-reduced-motion: reduce) {
-    &:hover {
-      translate: 0 0;
-    }
-  }
-}
-
-@utility text-brut {
-  text-shadow: 0.05em 0.05em 0 var(--brut-color, var(--section-accent));
-}
-
-
-@utility link-ink {
-  text-decoration-line: none;
-  transition:
-    color 0.15s ease,
-    opacity 0.15s ease;
-  &:hover {
-    color: var(--section-accent-deep);
-    opacity: 0.85;
-  }
+  animation: fade-slide 0.3s ease-out forwards;
 }

@@ -1,20 +1,30 @@
 import {
-  Mukta,
+  Inter,
   Noto_Sans_Takri,
   Noto_Serif_Devanagari,
   Space_Grotesk,
+  Space_Mono,
 } from "next/font/google";
 
+/** Body copy. */
+export const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
+});
+
+/** Display sizes only — headings, wordmark, section titles. */
 export const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
   variable: "--font-grotesk",
   display: "swap",
 });
 
-export const mukta = Mukta({
-  weight: ["300", "400", "500", "600", "700"],
-  subsets: ["latin", "devanagari"],
-  variable: "--font-mukta",
+/** Uppercase eyebrows and field labels. */
+export const spaceMono = Space_Mono({
+  weight: ["400", "700"],
+  subsets: ["latin"],
+  variable: "--font-space-mono",
   display: "swap",
 });
 
@@ -34,8 +44,9 @@ export const notoSansTakri = Noto_Sans_Takri({
 });
 
 export const fontVariables = [
+  inter.variable,
   spaceGrotesk.variable,
-  mukta.variable,
+  spaceMono.variable,
   notoSerifDevanagari.variable,
   notoSansTakri.variable,
 ].join(" ");

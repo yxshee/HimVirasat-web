@@ -1,24 +1,22 @@
-import { LogoMark } from "@/components/decor/logo-mark";
-import { Ridgeline } from "@/components/decor/ridgeline";
+import { LogoMark } from "@/components/mistral/logo-mark";
 import { site } from "@/lib/site";
 
 export function AdminSplash() {
   return (
-    <div className="relative grid min-h-svh place-items-center overflow-hidden bg-background">
+    <div className="bg-background grid min-h-svh place-items-center">
       <div className="flex flex-col items-center">
         <LogoMark size={48} />
-        <p className="mt-3 font-display text-xl">HimVirasat</p>
+        <p className="font-display text-title mt-4">HimVirasat</p>
         <p
           aria-hidden
-          className="mt-0.5 font-takri text-xs leading-none text-marigold-deep"
+          className="font-takri text-muted-foreground mt-1 text-xs leading-none"
         >
           {site.takriName}
         </p>
-        <p className="mt-5 text-sm text-muted-foreground motion-safe:animate-pulse">
+        <p className="text-body-sm text-muted-foreground mt-5 motion-safe:animate-pulse">
           Verifying session…
         </p>
       </div>
-      <Ridgeline className="absolute bottom-0 inset-x-0 text-foreground opacity-15" />
     </div>
   );
 }

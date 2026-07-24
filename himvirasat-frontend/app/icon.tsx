@@ -3,6 +3,23 @@ import { ImageResponse } from "next/og";
 export const size = { width: 64, height: 64 };
 export const contentType = "image/png";
 
+/** Same ridgeline tiles as components/mistral/logo-mark.tsx. */
+const TILES: Array<[number, number, number]> = [
+  [2, 0, 0],
+  [1, 1, 0],
+  [2, 1, 1],
+  [0, 2, 1],
+  [1, 2, 2],
+  [2, 2, 2],
+  [3, 2, 3],
+  [0, 3, 2],
+  [1, 3, 3],
+  [2, 3, 3],
+  [3, 3, 4],
+];
+
+const FLAME = ["#ffaf01", "#ff8204", "#ff5229", "#e51300", "#b31000"];
+
 export default function Icon() {
   return new ImageResponse(
     (
@@ -11,22 +28,20 @@ export default function Icon() {
           width: "100%",
           height: "100%",
           display: "flex",
-          background: "#FFC900",
-          border: "4px solid #000000",
-          borderRadius: 14,
-          overflow: "hidden",
+          background: "#fbfbf8",
         }}
       >
-        <svg
-          width="64"
-          height="64"
-          viewBox="0 0 64 64"
-          style={{ position: "absolute", top: 0, left: 0 }}
-        >
-          <path
-            d="M0 46 L11 30 L22 46 L33 30 L44 46 L55 30 L64 43 V64 H0 Z"
-            fill="#000000"
-          />
+        <svg width="64" height="64" viewBox="0 0 32 32">
+          {TILES.map(([col, row, step]) => (
+            <rect
+              key={`${col}-${row}`}
+              x={col * 8}
+              y={row * 8}
+              width={8}
+              height={8}
+              fill={FLAME[step]}
+            />
+          ))}
         </svg>
       </div>
     ),

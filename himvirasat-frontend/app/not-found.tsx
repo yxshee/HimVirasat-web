@@ -1,47 +1,32 @@
 import Link from "next/link";
 
+import { Eyebrow } from "@/components/mistral/eyebrow";
+import { TakriMosaic } from "@/components/mistral/takri-mosaic";
 import { Button } from "@/components/ui/button";
-import { Coin } from "@/components/decor/coin";
 
 export default function NotFound() {
   return (
-    <section className="surface-ink accent-pink relative flex min-h-svh items-center justify-center overflow-hidden">
-      <Coin
-        glyph="𑚦"
-        script="takri"
-        fill="var(--pink)"
-        tilt={12}
-        size={90}
-        className="absolute right-[12%] top-[15%] hidden md:block"
-      />
-
-      <main className="relative z-10 mx-auto max-w-xl px-6 py-16 text-center">
-        <p
-          aria-hidden
-          className="text-brut font-takri text-[8rem] leading-none text-foreground md:text-[12rem]"
-        >
-          𑛄𑛀𑛄
-        </p>
-        <p className="mt-6 inline-flex rounded-full border border-border bg-section-accent px-3 py-1 text-xs font-medium tracking-[0.15em] text-black uppercase">
+    <div className="flex min-h-svh flex-col">
+      <main className="mx-auto flex w-full max-w-prose flex-1 flex-col justify-center px-6 py-24 text-center">
+        <Eyebrow size="lg" className="justify-center">
           Error 404
-        </p>
-        <h1 className="mt-3 font-display text-2xl md:text-3xl">
-          Lost in the clouds?
+        </Eyebrow>
+        <h1 className="text-display-md md:text-display-xl mt-6 text-balance">
+          This trail does not exist.
         </h1>
-        <p className="mx-auto mt-4 max-w-md leading-relaxed text-muted-foreground">
-          The trail you&apos;re looking for doesn&apos;t exist. It might have
-          been moved or renamed in our heritage archives.
+        <p className="text-body-lg text-muted-foreground mx-auto mt-6 max-w-md">
+          The page you are looking for may have been moved or renamed.
         </p>
-
         <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
-          <Button asChild>
-            <Link href="/">Return to basecamp</Link>
+          <Button asChild size="lg">
+            <Link href="/">Back to the homepage</Link>
           </Button>
-          <Button asChild variant="outline">
+          <Button asChild size="lg" variant="secondary">
             <Link href="/vocabulary">Search the vocabulary</Link>
           </Button>
         </div>
       </main>
-    </section>
+      <TakriMosaic variant="band" seed={404} />
+    </div>
   );
 }

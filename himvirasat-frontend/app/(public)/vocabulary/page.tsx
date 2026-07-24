@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { SectionHeading } from "@/components/decor/section-heading";
+import { PixelIcon } from "@/components/mistral/pixel-icon";
+import { RuledGrid } from "@/components/mistral/ruled-grid";
+import { SectionHeading } from "@/components/mistral/section-heading";
 import { dialectsConfig } from "@/lib/dialects/dialect-config";
 import { devToTankri } from "@/lib/transliteration/devToTankri";
 
@@ -12,63 +14,58 @@ export const metadata: Metadata = {
 
 export default function VocabularyPage() {
   return (
-    <main className="mx-auto max-w-5xl px-6 py-16 sm:px-10">
+    <main className="mx-auto w-full max-w-content px-6 py-20 md:py-28 lg:px-10">
       <SectionHeading
         as="h1"
+        align="left"
         eyebrow="Vocabulary"
         nativeEcho={devToTankri("शब्दकोश")}
         title="Living dictionaries"
-        description="Explore Himachali dialects, their vocabulary, expressions, and cultural meanings preserved from the hills."
+        description="Himachali dialects, their vocabulary, expressions, and the meanings they carry."
       />
 
-      <div className="mt-12 grid gap-6 lg:grid-cols-[2fr_1fr]">
+      <RuledGrid cols={2} className="mt-14">
         {dialectsConfig.map((dialect) => (
           <Link
             key={dialect.id}
             href={`/vocabulary/${dialect.id}`}
-            className="accent-marigold block rounded-lg"
+            className="ruled-cell hover:bg-secondary group flex flex-col p-8 transition-colors"
           >
-            <article className="hover-brut relative h-full overflow-hidden rounded-lg border border-border bg-card p-8">
-              <div
-                aria-hidden
-                className="absolute inset-x-0 top-0 h-2 border-b border-border bg-section-accent"
-              />
-              <div className="flex flex-wrap items-baseline gap-x-3">
-                <h2 className="font-display text-2xl tracking-tight">
-                  {dialect.title}
-                </h2>
-                {dialect.nativeName && (
-                  <span
-                    aria-hidden
-                    className="font-deva text-lg text-section-accent-deep"
-                  >
-                    {dialect.nativeName}
-                  </span>
-                )}
-              </div>
-              <p className="mt-2 text-muted-foreground">{dialect.subtitle}</p>
-              <span className="link-ink mt-8 inline-block text-sm font-medium text-section-accent-deep">
-                Search {dialect.title} <span aria-hidden>→</span>
-              </span>
-            </article>
+            <div className="flex flex-wrap items-baseline gap-x-3">
+              <h2 className="text-title">{dialect.title}</h2>
+              {dialect.nativeName && (
+                <span
+                  aria-hidden
+                  className="font-deva text-flame-text text-lg"
+                >
+                  {dialect.nativeName}
+                </span>
+              )}
+            </div>
+            <p className="text-body-sm text-muted-foreground mt-2 flex-1">
+              {dialect.subtitle}
+            </p>
+            <PixelIcon
+              name="chevron-right"
+              className="text-muted-foreground mt-8 size-4 transition-transform duration-300 group-hover:translate-x-1"
+            />
           </Link>
         ))}
 
-        <div className="accent-teal rounded-lg border-2 border-dashed border-border p-8">
-          <h2 className="font-display text-2xl tracking-tight">
-            Your dialect next
-          </h2>
-          <p className="mt-2 text-muted-foreground">
+        <Link
+          href="/contribute"
+          className="ruled-cell hover:bg-secondary group flex flex-col p-8 transition-colors"
+        >
+          <h2 className="text-title text-muted-foreground">Your dialect next</h2>
+          <p className="text-body-sm text-muted-foreground mt-2 flex-1">
             Contribute sentences to bring your dialect online.
           </p>
-          <Link
-            href="/contribute"
-            className="link-ink mt-8 inline-block text-sm font-medium text-section-accent-deep"
-          >
-            Contribute <span aria-hidden>→</span>
-          </Link>
-        </div>
-      </div>
+          <PixelIcon
+            name="chevron-right"
+            className="text-muted-foreground mt-8 size-4 transition-transform duration-300 group-hover:translate-x-1"
+          />
+        </Link>
+      </RuledGrid>
     </main>
   );
 }
