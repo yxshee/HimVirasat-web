@@ -39,16 +39,26 @@ function usePauseOffscreen(ref: RefObject<HTMLElement | null>) {
  * rotated diamonds. Everything is drawn on the same square unit as
  * `PixelIcon`, so the mark, the icons and the mosaic share one alphabet.
  *
- * Two invariants hold by construction rather than by checking afterwards:
+ * Every tile is a four-sided prism that turns a quarter at a time, and
+ * each face is dealt independently: its own colour, and its own content.
+ * A tile can carry a letter on one face, nothing on the next and a motif
+ * on the one after — which is where the appearing and disappearing icons
+ * come from. Only the turn is CSS; the deal is all here.
  *
- *   1. No colour appears more than twice in any frame. Tones are dealt
- *      from a bag containing exactly two copies of each, so a third use
- *      is not representable.
- *   2. A tile carrying a letter or motif never changes ink polarity. The
- *      palette spans light and dark fills, so a tile drifting across that
- *      boundary would render its glyph unreadable partway through the
- *      loop — and a contrast check sampling the rendered frame would
- *      still pass it.
+ * Three invariants hold by construction rather than by checking after:
+ *
+ *   1. No colour appears more than twice in any one frame. Tones are
+ *      dealt from a bag containing exactly two copies of each, so a third
+ *      use is not representable.
+ *   2. No letter and no motif appears twice in any one frame. Both are
+ *      drawn without replacement, per frame. Across the whole turn they
+ *      may recur — with 12 letters showing at once there are not four
+ *      disjoint sets in a 42-letter block, and there are only eight
+ *      motifs.
+ *   3. Ink always pairs with the fill it sits on, because both come from
+ *      the same tone on the same face. This used to need a per-tile
+ *      polarity lock, since a fixed mark had to stay legible across four
+ *      changing colours; content that turns with the colour doesn't.
  *
  * The pattern is generated from a fixed seed through a pure PRNG, so the
  * server and the client produce byte-identical markup. Never introduce
@@ -111,34 +121,54 @@ const GLYPHS = Array.from({ length: 0x116a9 - 0x11680 + 1 }, (_, i) =>
 );
 
 /** Himachali motifs, in the same pixel grammar as the icons. */
-const MOTIFS: PixelIconName[] = ["deodar", "pagoda", "kathkuni", "peak"];
+const MOTIFS: PixelIconName[] = [
+  "deodar",
+  "pagoda",
+  "kathkuni",
+  "peak",
+  "charkha",
+  "shawl",
+  "terrace",
+  "chulha",
+];
 
+/**
+ * Marks are accents on a mostly quiet grid, not the substance of it —
+ * roughly a third of the tiles carry anything. An earlier pass marked
+ * three fifths of them and the mosaic read as clutter.
+ *
+ * `tinted` is not a free knob. Whatever is not tinted is snow, and snow
+ * has 7 tones against a cap of two uses each — 14 slots. Dropping
+ * `tinted` to 0.45 here put 16 neutral tiles against those 14 slots, the
+ * bag ran dry, and the cap silently broke at four uses of one colour.
+ * Every variant must leave `tiles * (1 - tinted) <= 14`.
+ */
 const VARIANTS = {
   hero: {
     tiles: 30,
     cols: "grid-cols-6 sm:grid-cols-10",
     waveCols: 10,
-    tinted: 0.62,
-    glyphs: 12,
-    motifs: 4,
-    diamonds: 2,
+    tinted: 0.55, // 17 tinted / 13 snow
+    glyphs: 6,
+    motifs: 2,
+    diamonds: 1,
   },
   band: {
     tiles: 24,
     cols: "grid-cols-6 sm:grid-cols-12",
     waveCols: 12,
-    tinted: 0.5,
-    glyphs: 8,
-    motifs: 3,
+    tinted: 0.45, // 11 tinted / 13 snow
+    glyphs: 4,
+    motifs: 2,
     diamonds: 1,
   },
   panel: {
     tiles: 16,
     cols: "grid-cols-4",
     waveCols: 4,
-    tinted: 0.7,
-    glyphs: 6,
-    motifs: 2,
+    tinted: 0.5, // 8 tinted / 8 snow
+    glyphs: 3,
+    motifs: 1,
     diamonds: 1,
   },
 } as const;
@@ -172,81 +202,96 @@ export function TakriMosaic({
   usePauseOffscreen(ref);
   const rng = makeRng(seed);
 
-  // 1. Which tiles are tinted, and what each one carries.
-  const order = shuffle(
-    Array.from({ length: v.tiles }, (_, i) => i),
-    rng,
-  );
-  const tintedCount = Math.round(v.tiles * v.tinted);
-  const tintedSet = new Set(order.slice(0, tintedCount));
+  // Every face of every tile is dealt independently. One pass per phase,
+  // each pass a self-contained frame that has to satisfy the invariants on
+  // its own — which is exactly what "nothing repeats on screen" means when
+  // what is on screen changes four times a loop.
+  type Face = { fill: string; ink: string; kind: Kind; glyph: string | null; motif: PixelIconName | null };
+  const faces: Face[][] = [];
 
-  const tintedOrder = order.slice(0, tintedCount);
-  const kinds = new Map<number, Kind>();
-  let cursor = 0;
-  for (let n = 0; n < v.glyphs && cursor < tintedOrder.length; n++)
-    kinds.set(tintedOrder[cursor++], "glyph");
-  for (let n = 0; n < v.motifs && cursor < tintedOrder.length; n++)
-    kinds.set(tintedOrder[cursor++], "motif");
-  for (let n = 0; n < v.diamonds && cursor < tintedOrder.length; n++)
-    kinds.set(tintedOrder[cursor++], "diamond");
-
-  // 2. Letters, drawn without replacement so none repeats in a mosaic.
-  const letters = shuffle(GLYPHS, rng).slice(0, v.glyphs);
-  const motifPicks = shuffle(MOTIFS, rng);
-
-  // 3. Ink polarity is fixed per tile and holds for every phase. Every
-  //    tile that carries a mark needs this — diamonds included. Without
-  //    it a diamond falls through to the full tinted pool, resolves to
-  //    near-black, and can land on deep pine where it disappears.
-  const polarity = new Map<number, Tone[]>();
-  for (const i of tintedOrder) {
-    const k = kinds.get(i);
-    if (k === "glyph" || k === "motif" || k === "diamond") {
-      polarity.set(i, rng() < 0.5 ? DARK_INK : CREAM_INK);
-    }
-  }
-
-  // 4. Deal each phase from a bag holding two copies of every tone. A
-  //    tile takes the first tone in the bag its constraint allows, so a
-  //    third use of any colour is simply not available.
-  const phaseFills: string[][] = [];
   for (let p = 0; p < PHASES; p++) {
+    // Which tiles are tinted this frame, and what each of them carries.
+    const order = shuffle(
+      Array.from({ length: v.tiles }, (_, i) => i),
+      rng,
+    );
+    const tintedOrder = order.slice(0, Math.round(v.tiles * v.tinted));
+    const tintedSet = new Set(tintedOrder);
+
+    const kinds = new Map<number, Kind>();
+    let cursor = 0;
+    for (let n = 0; n < v.glyphs && cursor < tintedOrder.length; n++)
+      kinds.set(tintedOrder[cursor++], "glyph");
+    for (let n = 0; n < v.motifs && cursor < tintedOrder.length; n++)
+      kinds.set(tintedOrder[cursor++], "motif");
+    for (let n = 0; n < v.diamonds && cursor < tintedOrder.length; n++)
+      kinds.set(tintedOrder[cursor++], "diamond");
+
+    // Drawn without replacement, so neither a letter nor a motif can show
+    // up twice in the same frame. Counts are set per variant to stay well
+    // inside both pools: 42 letters against at most 12, 8 motifs against
+    // at most 4.
+    const letters = shuffle(GLYPHS, rng).slice(0, v.glyphs);
+    const motifs = shuffle(MOTIFS, rng).slice(0, v.motifs);
+
+    // A bag holding exactly two copies of every tone. A tile takes the
+    // first tone the bag offers that its pool allows, so a third use of
+    // any colour is not representable. Marked tiles draw from the full
+    // tinted range now — the old polarity lock existed only because a
+    // fixed mark had to survive four colour changes.
     const bag = shuffle(
       ALL_TONES.flatMap((t) => [t, t]),
       rng,
     );
-    const fills: string[] = [];
+    const row: Face[] = [];
+    const used = new Map<string, number>();
     for (let i = 0; i < v.tiles; i++) {
-      const allowed = !tintedSet.has(i) ? SNOW : (polarity.get(i) ?? TINTED);
+      const allowed = tintedSet.has(i) ? TINTED : SNOW;
       const at = bag.findIndex((t) => allowed.includes(t));
-      // Pools are sized so this cannot run dry: snow is 14 slots against
-      // at most 13 neutral tiles, the smaller ink group 16 against at
-      // most 12 marked tiles.
-      const tone = at >= 0 ? bag.splice(at, 1)[0] : allowed[0];
-      fills.push(tone.fill);
+      // The variants are sized so the bag never runs dry. If a future one
+      // is not, take the least-used tone rather than the first: the cap
+      // then degrades by one instead of landing every overflow on the
+      // same colour, which is how it broke at four uses of one snow tone.
+      const tone =
+        at >= 0
+          ? bag.splice(at, 1)[0]
+          : allowed.reduce((best, t) =>
+              (used.get(t.fill) ?? 0) < (used.get(best.fill) ?? 0) ? t : best,
+            );
+      used.set(tone.fill, (used.get(tone.fill) ?? 0) + 1);
+      const kind: Kind = kinds.get(i) ?? "plain";
+      row.push({
+        fill: tone.fill,
+        ink: tone.ink,
+        kind,
+        glyph: kind === "glyph" ? (letters.pop() ?? null) : null,
+        motif: kind === "motif" ? (motifs.pop() ?? null) : null,
+      });
     }
-    phaseFills.push(fills);
+    faces.push(row);
   }
 
-  let letterAt = 0;
-  let motifAt = 0;
+  // Turn slots: a shuffled queue of evenly spaced positions across one
+  // quarter-loop. Even spacing is what holds the count of simultaneous
+  // turns steady — drawing each offset at random instead would clump, and
+  // the mosaic would alternate between motionless and half of it moving.
+  // Shuffling keeps the order off the grid, so it reads as scattered
+  // rather than as a sweep.
+  const slotOrder = shuffle(
+    Array.from({ length: v.tiles }, (_, i) => i),
+    rng,
+  );
 
-  const cells = Array.from({ length: v.tiles }, (_, i) => {
-    const kind: Kind = kinds.get(i) ?? "plain";
-    const pool = !tintedSet.has(i) ? SNOW : (polarity.get(i) ?? TINTED);
-    const ink = pool === CREAM_INK ? INK_CREAM : INK_DARK;
-    return {
-      kind,
-      ink,
-      fill: phaseFills[0][i],
-      phases: phaseFills.map((f) => f[i]),
-      glyph: kind === "glyph" ? letters[letterAt++] : null,
-      motif: kind === "motif" ? motifPicks[motifAt++ % motifPicks.length] : null,
-      // Diagonal wave, so variants that animate an entrance land as one
-      // gesture rather than trickling across in DOM order.
-      wave: Math.floor(i / v.waveCols) + (i % v.waveCols),
-    };
-  });
+  const cells = Array.from({ length: v.tiles }, (_, i) => ({
+    faces: faces.map((row) => row[i]),
+    // Diagonal wave, so variants that animate an entrance land as one
+    // gesture rather than trickling across in DOM order.
+    wave: Math.floor(i / v.waveCols) + (i % v.waveCols),
+    turnSlot: slotOrder[i] / v.tiles,
+    // Left, right, up or down.
+    axis: rng() < 0.5 ? "x" : "y",
+    dir: rng() < 0.5 ? "reverse" : "normal",
+  }));
 
   return (
     <div
@@ -259,40 +304,69 @@ export function TakriMosaic({
       {cells.map((c, i) => (
         <div
           key={i}
-          data-kind={c.kind}
-          className="mosaic-tile grid aspect-square place-items-center"
+          data-kind={c.faces[0].kind}
+          className="mosaic-tile relative aspect-square"
           style={
             {
-              backgroundColor: c.fill,
+              // A face is exactly edge-on for an instant on each quarter
+              // turn, and a tile with no background of its own shows the
+              // page through that slit — a black crack across a light
+              // mosaic. Backing the tile means the turn reveals a tile
+              // edge in the palette instead of a hole.
+              backgroundColor: c.faces[0].fill,
               "--i": c.wave,
-              "--t0": c.phases[0],
-              "--t1": c.phases[1],
-              "--t2": c.phases[2],
-              "--t3": c.phases[3],
+              "--turn-slot": c.turnSlot,
             } as React.CSSProperties
           }
         >
-          {c.glyph && (
-            <span
-              className="font-takri text-[clamp(1rem,3.2vw,2.75rem)] leading-none select-none"
-              style={{ color: c.ink }}
-            >
-              {c.glyph}
-            </span>
-          )}
-          {c.motif && (
-            <PixelIcon
-              name={c.motif}
-              className="size-[58%]"
-              style={{ color: c.ink }}
-            />
-          )}
-          {c.kind === "diamond" && (
-            <span
-              className="mosaic-diamond block size-[52%] rotate-45"
-              style={{ backgroundColor: c.ink }}
-            />
-          )}
+          <div className="mosaic-cube" data-axis={c.axis} data-dir={c.dir}>
+            {c.faces.map((f, p) => (
+              <div
+                key={p}
+                data-face={p}
+                data-kind={f.kind}
+                className="mosaic-face"
+                style={{
+                  backgroundColor: f.fill,
+                  // Quarter turns around whichever axis this tile turns
+                  // on, each face pushed out to the prism's surface.
+                  //
+                  // The depth is not optional, even with no perspective.
+                  // A face at depth d rotated by θ projects to x = d·sinθ,
+                  // so at d = 0 all four faces share one hinge down the
+                  // middle of the tile and open outward from it instead of
+                  // riding round. Half the tile's width puts them on the
+                  // surface; `cqw` resolves against the tile itself.
+                  transform:
+                    c.axis === "x"
+                      ? `rotateX(${p * 90}deg) translateZ(50cqw)`
+                      : `rotateY(${p * 90}deg) translateZ(50cqw)`,
+                }}
+              >
+                {f.glyph && (
+                  <span
+                    className="font-takri text-[clamp(1rem,3.2vw,2.75rem)] leading-none select-none"
+                    style={{ color: f.ink }}
+                  >
+                    {f.glyph}
+                  </span>
+                )}
+                {f.motif && (
+                  <PixelIcon
+                    name={f.motif}
+                    className="size-[58%]"
+                    style={{ color: f.ink }}
+                  />
+                )}
+                {f.kind === "diamond" && (
+                  <span
+                    className="mosaic-diamond block size-[52%] rotate-45"
+                    style={{ backgroundColor: f.ink }}
+                  />
+                )}
+              </div>
+            ))}
+          </div>
         </div>
       ))}
     </div>

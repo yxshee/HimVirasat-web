@@ -450,31 +450,97 @@ html.js [data-reveal][data-revealed="true"] {
 }
 
 /* ── Mosaic ambient loop ─────────────────────────────────────────────
-   Each tile holds one of four phase colours and cross-fades between
-   them. Phases are aligned across every tile (no per-tile delay), so
-   neighbours that share a colour momentarily read as one merged block
-   and split again when they diverge. That is the whole merge/split
-   effect — no geometry animates, so nothing reflows. */
-@keyframes mosaic-drift {
+   Every tile is a four-sided prism. It turns a quarter at a time, and
+   each face carries its own colour *and* its own content — so a tile can
+   come back round with a different letter, a different motif, or nothing
+   at all.
+
+   No perspective, and therefore no translateZ on the faces. Under
+   orthographic projection a face rotated ±90° is edge-on and has zero
+   width whatever its depth, so the four faces need no Z offset to sit on
+   a prism. That removes the container-query units this would otherwise
+   need to know half a tile's width, and it guarantees the turn can never
+   overshoot its cell — which matters, because tiles butt together with
+   no gap.
+
+   This replaces a `background-color` keyframe. That animated a paint
+   property on every tile; this animates a transform on one element per
+   tile. Same count, compositor instead of paint. */
+/* A tile holds each face for almost a quarter of the loop and turns for
+   about 3% of it. That is what keeps the mosaic still: with the tiles'
+   start offsets spread evenly across a quarter-loop, turns fire one at a
+   time and only 4 x tiles x 0.03 of them overlap — about three or four in
+   the hero at any moment, the rest motionless.
+
+   Two axes and two directions, chosen per tile from the seed, so a turn
+   can go left, right, up or down. */
+@keyframes tile-turn-y {
   0%,
   22% {
-    background-color: var(--t0);
+    transform: rotateY(0deg);
   }
   25%,
   47% {
-    background-color: var(--t1);
+    transform: rotateY(-90deg);
   }
   50%,
   72% {
-    background-color: var(--t2);
+    transform: rotateY(-180deg);
   }
   75%,
   97% {
-    background-color: var(--t3);
+    transform: rotateY(-270deg);
   }
   100% {
-    background-color: var(--t0);
+    transform: rotateY(-360deg);
   }
+}
+
+@keyframes tile-turn-x {
+  0%,
+  22% {
+    transform: rotateX(0deg);
+  }
+  25%,
+  47% {
+    transform: rotateX(-90deg);
+  }
+  50%,
+  72% {
+    transform: rotateX(-180deg);
+  }
+  75%,
+  97% {
+    transform: rotateX(-270deg);
+  }
+  100% {
+    transform: rotateX(-360deg);
+  }
+}
+
+/* Size containment so a face can address the tile's own width in `cqw`,
+   which is how it finds the half-tile depth it has to sit at. Safe here:
+   the tile is sized by the grid and `aspect-square`, never by what is
+   inside it. The containment is on the tile rather than on the cube, so
+   it cannot flatten the cube's 3D context. */
+.mosaic-tile {
+  container-type: size;
+}
+
+.mosaic-cube {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+}
+
+.mosaic-face {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  /* The face 180° away is turned away from the viewer; without this you
+     see it mirrored through the one in front. */
+  backface-visibility: hidden;
 }
 
 @keyframes mosaic-diamond {
@@ -489,55 +555,62 @@ html.js [data-reveal][data-revealed="true"] {
   }
 }
 
-/* Default mosaic: tiles fall in, then drift.
+/* Default mosaic: tiles fall in, and the prism turns.
    `tile-fall` is the reference's block-entrance, scoped in their stylesheet
    to the bento and markitecture sections — NOT the hero. It is correct for
    the archive grid and wrong for the hero band, which is why the hero opts
    out below. */
 [data-mosaic][data-revealed="true"] .mosaic-tile {
-  animation-name: tile-fall, mosaic-drift;
-  animation-duration: 0.5s, var(--mosaic-loop, 18s);
-  animation-timing-function: ease-in, linear;
-  animation-iteration-count: 1, infinite;
-  animation-fill-mode: backwards, none;
-  /* Entrance staggers by diagonal wave; the drift starts for every tile
-     at the same moment so the phases stay in lockstep. */
-  animation-delay: calc(var(--i, 0) * 30ms), 1.2s;
+  animation: tile-fall 0.5s ease-in backwards;
+  animation-delay: calc(var(--i, 0) * 30ms);
 }
 
 [data-mosaic][data-revealed="true"] .mosaic-tile[data-kind="diamond"] {
-  animation-name: tile-scale-in, mosaic-drift;
+  animation-name: tile-scale-in;
 }
 
 /* Hero mosaic: no entrance on the tiles at all. The reference fades the
-   whole container in and the tile motion is a continuous loop, so the
-   drift is the only animation and it starts immediately. */
+   whole container in and the tile motion is a continuous loop. */
 [data-mosaic="hero"][data-revealed="true"] .mosaic-tile,
 [data-mosaic="hero"][data-revealed="true"] .mosaic-tile[data-kind="diamond"] {
-  animation-name: mosaic-drift;
-  animation-duration: var(--mosaic-loop, 18s);
-  animation-timing-function: linear;
-  animation-iteration-count: infinite;
-  animation-fill-mode: none;
-  animation-delay: 0s;
+  animation: none;
+}
+
+/* `--turn-slot` is the tile's position in a shuffled, evenly spaced queue,
+   as a fraction of one quarter-loop — a tile's own turns are a quarter
+   apart, so spreading offsets over a quarter covers the whole cycle
+   uniformly. The delay is negative, so every tile is already somewhere in
+   its cycle on the first frame rather than all starting together.
+
+   The easing applies per segment. Between two keyframes holding the same
+   angle it does nothing; across a turn it gives the ease-in-out. */
+[data-mosaic][data-revealed="true"] .mosaic-cube {
+  animation: tile-turn-y var(--mosaic-loop, 48s) ease-in-out infinite;
+  animation-delay: calc(var(--mosaic-loop, 48s) / -4 * var(--turn-slot, 0));
+}
+
+[data-mosaic][data-revealed="true"] .mosaic-cube[data-axis="x"] {
+  animation-name: tile-turn-x;
+}
+
+[data-mosaic][data-revealed="true"] .mosaic-cube[data-dir="reverse"] {
+  animation-direction: reverse;
 }
 
 [data-mosaic][data-revealed="true"] .mosaic-diamond {
-  animation: mosaic-diamond var(--mosaic-loop, 18s) ease-in-out infinite;
+  animation: mosaic-diamond var(--mosaic-loop, 48s) ease-in-out infinite;
 }
 
-/* Stop the drift once a mosaic leaves the viewport.
-   `mosaic-drift` animates `background-color`, which is a paint property —
-   it repaints its tile every frame for as long as it runs, and a CSS
-   animation runs whether or not anything can see it. With a mosaic in
-   several sections that was 30+ tiles repainting forever from the moment
-   the page loaded, and the page never went idle.
+/* Stop the loop once a mosaic leaves the viewport. A CSS animation runs
+   whether or not anything can see it, so without this every mosaic on the
+   page is turning from the moment it loads and the page never goes idle.
 
    The attribute is written straight to the node by an IntersectionObserver
    rather than through React state, so scrolling past a mosaic costs no
    re-render. Absent attribute means running, so a browser without
    IntersectionObserver — or markup before hydration — behaves as before. */
 [data-mosaic][data-in-view="false"] .mosaic-tile,
+[data-mosaic][data-in-view="false"] .mosaic-cube,
 [data-mosaic][data-in-view="false"] .mosaic-diamond {
   animation-play-state: paused;
 }
@@ -775,6 +848,7 @@ html.js [data-reveal][data-revealed="true"] {
     transform: none !important;
   }
   [data-mosaic] .mosaic-tile,
+  [data-mosaic] .mosaic-cube,
   [data-mosaic] .mosaic-diamond,
   .animate-unroll-in,
   .animate-pop-in,
