@@ -526,6 +526,22 @@ html.js [data-reveal][data-revealed="true"] {
   animation: mosaic-diamond var(--mosaic-loop, 18s) ease-in-out infinite;
 }
 
+/* Stop the drift once a mosaic leaves the viewport.
+   `mosaic-drift` animates `background-color`, which is a paint property —
+   it repaints its tile every frame for as long as it runs, and a CSS
+   animation runs whether or not anything can see it. With a mosaic in
+   several sections that was 30+ tiles repainting forever from the moment
+   the page loaded, and the page never went idle.
+
+   The attribute is written straight to the node by an IntersectionObserver
+   rather than through React state, so scrolling past a mosaic costs no
+   re-render. Absent attribute means running, so a browser without
+   IntersectionObserver — or markup before hydration — behaves as before. */
+[data-mosaic][data-in-view="false"] .mosaic-tile,
+[data-mosaic][data-in-view="false"] .mosaic-diamond {
+  animation-play-state: paused;
+}
+
 /* ── Headline character rise ─────────────────────────────────────────
    Characters slide up from behind a per-line mask, rather than fading.
    The reference splits the title into lines/words/chars, clips each line,

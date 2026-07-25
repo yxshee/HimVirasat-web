@@ -1,9 +1,37 @@
 "use client";
 
+import { useEffect, type RefObject } from "react";
+
 import { PixelIcon, type PixelIconName } from "@/components/mistral/pixel-icon";
 import { useReveal } from "@/hooks/use-reveal";
 import { makeRng } from "@/lib/seeded-rng";
 import { cn } from "@/lib/utils";
+
+/**
+ * Marks the node `data-in-view` so the drift loop can be paused while it is
+ * off-screen — see the rule in globals.css for why that matters.
+ *
+ * Writes the attribute directly instead of going through state: this fires
+ * on every scroll past every mosaic, and a re-render per crossing is the
+ * opposite of the point. `useReveal` is deliberately left alone; its latch
+ * is correct for content reveals, which must not un-reveal.
+ */
+function usePauseOffscreen(ref: RefObject<HTMLElement | null>) {
+  useEffect(() => {
+    const node = ref.current;
+    if (!node || typeof IntersectionObserver === "undefined") return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) =>
+        node.setAttribute("data-in-view", String(entry.isIntersecting)),
+      // A margin either side, so a mosaic is already running by the time it
+      // is scrolled into view rather than starting mid-phase.
+      { rootMargin: "200px 0px" },
+    );
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [ref]);
+}
 
 /**
  * The signature graphic: a grid of flat square tiles in the Deodar palette,
@@ -141,6 +169,7 @@ export function TakriMosaic({
 }) {
   const v = VARIANTS[variant];
   const { ref, revealed } = useReveal<HTMLDivElement>();
+  usePauseOffscreen(ref);
   const rng = makeRng(seed);
 
   // 1. Which tiles are tinted, and what each one carries.

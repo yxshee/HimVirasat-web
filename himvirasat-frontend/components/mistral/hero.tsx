@@ -64,7 +64,9 @@ export function Hero() {
   const sticky = useRef<HTMLDivElement>(null);
   const title = useRef<HTMLParagraphElement>(null);
   const leftTop = useRef<HTMLDivElement>(null);
+  const leftTopInner = useRef<HTMLDivElement>(null);
   const leftMiddle = useRef<HTMLDivElement>(null);
+  const leftMiddleInner = useRef<HTMLDivElement>(null);
   const rightTop = useRef<HTMLDivElement>(null);
   const rightInner = useRef<HTMLDivElement>(null);
   const rightContent = useRef<HTMLDivElement>(null);
@@ -125,6 +127,15 @@ export function Hero() {
             const rest = panel.getBoundingClientRect();
             const c0 = contentEl.getBoundingClientRect();
 
+            // The two collapsing columns, measured at rest. Their inner
+            // wrappers are frozen at these widths for the whole scrub so
+            // that animating the outer width to 0 clips rather than
+            // re-wraps. Read the content box, since the padding stays on
+            // the outer element.
+            const innerWidths = [leftTopInner.current, leftMiddleInner.current].map(
+              (el) => el?.getBoundingClientRect().width ?? 0,
+            );
+
             // Sample the end state, then put it back.
             gsap.set(panel, {
               width: s.width,
@@ -171,10 +182,21 @@ export function Hero() {
               endX: s.left + s.width / 2 - (c1.left + c1.width / 2),
               endY: s.top + s.height / 2 - (c1.top + c1.height / 2),
               sentenceX,
+              innerWidths,
             };
           };
 
+          const inners = [leftTopInner.current, leftMiddleInner.current];
+
           let m = measure();
+
+          // Freeze the collapsing columns' contents at their rest width.
+          // Not part of the timeline: it is a constant for the whole scrub,
+          // re-applied whenever the layout is remeasured.
+          const pinInners = () =>
+            inners.forEach((el, i) => gsap.set(el, { width: m.innerWidths[i] }));
+
+          pinInners();
 
           const animated = [
             title.current,
@@ -186,6 +208,7 @@ export function Hero() {
             background.current,
             arrow.current,
             cards.current,
+            ...inners,
             ...sentences,
             ...labels,
           ];
@@ -199,9 +222,12 @@ export function Hero() {
               invalidateOnRefresh: true,
               onRefreshInit: () => {
                 // Measure from untransformed layout, otherwise a second
-                // refresh measures the first refresh's own output.
+                // refresh measures the first refresh's own output. That
+                // clear also releases the pinned inner widths, so they have
+                // to be re-applied against the new measurement.
                 gsap.set(animated, { clearProps: "all" });
                 m = measure();
+                pinInners();
               },
             },
           });
@@ -292,46 +318,54 @@ export function Hero() {
             data-hero="left-top"
             className="flex shrink-0 flex-col justify-end overflow-hidden px-6 pt-16 pb-10 lg:w-[70%] lg:px-10 lg:pt-0"
           >
-            <Eyebrow
-              size="lg"
-              nativeEcho={devToTankri("हिमाचल की विरासत")}
-              className="mb-8"
-            >
-              Open language preservation
-            </Eyebrow>
+            {/* Everything that collapses lives inside a wrapper whose width
+                is pinned in pixels while the timeline runs. The column
+                animates to `width: 0` and clips; the wrapper never changes
+                size, so the headline cannot re-wrap. Without this the
+                paragraph reflowed to one character per line and grew from
+                176px to 3293px tall, re-laid-out on every scroll frame. */}
+            <div ref={leftTopInner} className="flex flex-col justify-end">
+              <Eyebrow
+                size="lg"
+                nativeEcho={devToTankri("हिमाचल की विरासत")}
+                className="mb-8"
+              >
+                Open language preservation
+              </Eyebrow>
 
-            {/* The real heading, for assistive tech and for search. The
-                animated copy is decorative: split to characters it would
-                be announced letter by letter. */}
-            <h1 className="sr-only">{HEADLINE}</h1>
-            <p
-              ref={title}
-              data-hero="title"
-              aria-hidden
-              className="font-display text-display-md md:text-display-xl max-w-4xl"
-            >
-              {lines.map(({ line, lineDelay, chars }, li) => (
-                <span
-                  key={line}
-                  className="hero-line hero-line-grow"
-                  style={
-                    { "--line-delay": `${lineDelay}ms` } as React.CSSProperties
-                  }
-                >
-                  {chars.map(({ ch, delay }, ci) => (
-                    <span
-                      key={`${li}-${ci}`}
-                      className="hero-char"
-                      style={
-                        { "--char-delay": `${delay}ms` } as React.CSSProperties
-                      }
-                    >
-                      {ch}
-                    </span>
-                  ))}
-                </span>
-              ))}
-            </p>
+              {/* The real heading, for assistive tech and for search. The
+                  animated copy is decorative: split to characters it would
+                  be announced letter by letter. */}
+              <h1 className="sr-only">{HEADLINE}</h1>
+              <p
+                ref={title}
+                data-hero="title"
+                aria-hidden
+                className="font-display text-display-md md:text-display-xl max-w-4xl"
+              >
+                {lines.map(({ line, lineDelay, chars }, li) => (
+                  <span
+                    key={line}
+                    className="hero-line hero-line-grow"
+                    style={
+                      { "--line-delay": `${lineDelay}ms` } as React.CSSProperties
+                    }
+                  >
+                    {chars.map(({ ch, delay }, ci) => (
+                      <span
+                        key={`${li}-${ci}`}
+                        className="hero-char"
+                        style={
+                          { "--char-delay": `${delay}ms` } as React.CSSProperties
+                        }
+                      >
+                        {ch}
+                      </span>
+                    ))}
+                  </span>
+                ))}
+              </p>
+            </div>
           </div>
 
           {/* Taken out of the flex flow on desktop. As a flex sibling its
@@ -377,18 +411,24 @@ export function Hero() {
             data-hero="left-middle"
             className="hero-fade-in relative shrink-0 overflow-hidden lg:w-[70%]"
           >
-            <TakriMosaic variant="hero" seed={7} />
+            {/* Pinned for the same reason as the headline: collapsing this
+                column would otherwise re-lay the mosaic's 30-cell grid on
+                every frame. `relative` so the corner labels still position
+                against the mosaic rather than the column. */}
+            <div ref={leftMiddleInner} className="relative">
+              <TakriMosaic variant="hero" seed={7} />
 
-            {/* On the reference these labels are painted inside the Lottie
-                artwork. Ours are real text on a solid chip, the only way to
-                stay legible over a mosaic containing both near-white and
-                deep pine. */}
-            <Eyebrow className="js-hero-label bg-background pointer-events-none absolute bottom-3 left-3 px-2 py-0.5">
-              Open language preservation
-            </Eyebrow>
-            <Eyebrow className="js-hero-label bg-background pointer-events-none absolute right-3 bottom-3 px-2 py-0.5">
-              Himachal
-            </Eyebrow>
+              {/* On the reference these labels are painted inside the Lottie
+                  artwork. Ours are real text on a solid chip, the only way to
+                  stay legible over a mosaic containing both near-white and
+                  deep pine. */}
+              <Eyebrow className="js-hero-label bg-background pointer-events-none absolute bottom-3 left-3 px-2 py-0.5">
+                Open language preservation
+              </Eyebrow>
+              <Eyebrow className="js-hero-label bg-background pointer-events-none absolute right-3 bottom-3 px-2 py-0.5">
+                Himachal
+              </Eyebrow>
+            </div>
           </div>
 
           <div className="border-border flex flex-col justify-between overflow-hidden border-t lg:w-[30%] lg:border-t-0 lg:border-l">

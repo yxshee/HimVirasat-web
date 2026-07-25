@@ -30,8 +30,17 @@ export function DialectMarquee({ className }: { className?: string }) {
   const row = (hidden: boolean) => (
     <div aria-hidden={hidden || undefined} className="flex shrink-0">
       {/* Repeated so the sequence always overflows the widest viewport;
-          otherwise a short list leaves a gap before the wrap. */}
-      {Array.from({ length: 3 }).map((_, rep) =>
+          otherwise a short list leaves a gap before the wrap.
+
+          Two, not three. The track is one transform-animated element, so
+          its full width has to be rasterised: at three repeats it measured
+          10119 CSS px, which is 20238 device px on a 2× display — past
+          Chrome's 16384 px texture limit, where a layer falls off the
+          compositor fast path and is re-rastered instead. Two repeats put
+          one copy at ~3372 px, still wider than any real viewport, and the
+          track at ~13488 device px. Do not raise this without measuring
+          `track.getBoundingClientRect().width * devicePixelRatio`. */}
+      {Array.from({ length: 2 }).map((_, rep) =>
         DIALECTS.map((name) => (
           <Fragment key={`${rep}-${name}`}>
             <span className="text-title px-6 whitespace-nowrap">{name}</span>
