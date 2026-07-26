@@ -18,7 +18,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-import { primaryButtonStyles } from "@/lib/constants";
 import { UserService } from "@/lib/services/admin/user-service";
 import { DataLookupService } from "@/lib/services/admin/datalookup-service";
 
@@ -104,7 +103,7 @@ export function CreateHeadDialog({
       <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <ShieldCheck className="size-5 text-indigo-500" />
+            <ShieldCheck className="size-5 text-glacier-500" />
             Create Language Head
           </DialogTitle>
           <DialogDescription>
@@ -207,13 +206,13 @@ export function CreateHeadDialog({
                         onClick={() => handleToggleDialect(dialect)}
                         className={`flex items-center justify-between px-2.5 py-1.5 text-xs font-medium rounded border transition-all cursor-pointer ${
                           isChecked
-                            ? "bg-indigo-500/10 text-indigo-600 border-indigo-500/30 dark:text-indigo-400"
+                            ? "bg-glacier-500/10 text-verdant border-glacier-500/30 dark:text-glacier-300"
                             : "hover:bg-muted/40 text-muted-foreground border-transparent"
                         }`}
                       >
                         <span>{dialect}</span>
                         {isChecked && (
-                          <Check className="size-3 text-indigo-600 dark:text-indigo-400" />
+                          <Check className="size-3 text-verdant" />
                         )}
                       </button>
                     );
@@ -235,7 +234,6 @@ export function CreateHeadDialog({
             <Button
               type="submit"
               disabled={isSubmitting || isLoadingDialects}
-              className={primaryButtonStyles}
             >
               {isSubmitting ? "Creating..." : "Create Head"}
             </Button>

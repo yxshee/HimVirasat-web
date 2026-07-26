@@ -1,13 +1,19 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { usePathname } from "next/navigation";
 
-import { LayoutDashboard, Users, Check, Send, Settings } from "lucide-react";
+import {
+  LayoutDashboard,
+  Users,
+  UserCog,
+  Check,
+  Send,
+  Settings,
+} from "lucide-react";
 
-import { cn } from "@/lib/utils";
-import { Badge } from "@/components/ui/badge";
+import { RoleBadge } from "@/components/admin/role-badge";
+import { LogoMark } from "@/components/mistral/logo-mark";
 
 import {
   Sidebar,
@@ -16,6 +22,7 @@ import {
   SidebarHeader,
   SidebarGroup,
   SidebarGroupContent,
+  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -50,7 +57,7 @@ const SUPER_ADMIN_ITEMS = [
   {
     title: "Language Heads",
     url: "/admin/dashboard/heads",
-    icon: Users,
+    icon: UserCog,
   },
   {
     title: "Review Queue",
@@ -59,7 +66,7 @@ const SUPER_ADMIN_ITEMS = [
   },
   {
     title: "Submissions",
-    url: "/admin/dashboard/submissions/",
+    url: "/admin/dashboard/submissions",
     icon: Send,
   },
   {
@@ -87,7 +94,7 @@ const LANGUAGE_HEAD_ITEMS = [
   },
   {
     title: "Submissions",
-    url: "/admin/dashboard/submissions/",
+    url: "/admin/dashboard/submissions",
     icon: Send,
   },
   {
@@ -110,7 +117,7 @@ const LANGUAGE_EXPERT_ITEMS = [
   },
   {
     title: "Submissions",
-    url: "/admin/dashboard/submissions/",
+    url: "/admin/dashboard/submissions",
     icon: Send,
   },
   {
@@ -125,69 +132,47 @@ const SIDEBAR_ITEMS = {
   language_expert: LANGUAGE_EXPERT_ITEMS,
 } as const;
 
-const ROLE_LABELS = {
-  super_admin: "Super Admin",
-  language_head: "Language Head",
-  language_expert: "Language Expert",
-} as const;
-
-const ROLE_BADGE_STYLES = {
-  super_admin:
-    "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400",
-
-  language_head:
-    "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400",
-
-  language_expert:
-    "bg-sky-100 text-sky-700 dark:bg-sky-900/30 dark:text-sky-400",
-} as const;
-
 export function AdminSidebar({ user }: AdminSidebarProps) {
   const pathname = usePathname();
   const items = SIDEBAR_ITEMS[user.role];
   return (
     <Sidebar collapsible="icon" variant="sidebar">
       {/* Header */}
-      <SidebarHeader className="border-b">
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton size="lg">
-              <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-primary">
-                <Image
-                  src="/virasat.png"
-                  alt="HimVirasat"
-                  width={28}
-                  height={28}
-                  className="rounded-md"
-                />
-              </div>
+      <SidebarHeader className="border-b border-sidebar-border">
+        <div className="flex items-center gap-2 px-1 py-1.5">
+          <LogoMark size={32} className="shrink-0" />
 
-              <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-semibold">HimVirasat</span>
+          <div className="grid flex-1 text-left leading-tight group-data-[collapsible=icon]:hidden">
+            <span className="truncate font-display text-sm font-semibold">
+              HimVirasat
+            </span>
 
-                <span className="truncate text-xs text-muted-foreground">
-                  Admin Console
-                </span>
-              </div>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
+            <span className="truncate text-[11px] text-muted-foreground">
+              Admin Console
+            </span>
+          </div>
+        </div>
       </SidebarHeader>
 
       {/* Navigation */}
       <SidebarContent>
         <SidebarGroup>
+          <SidebarGroupLabel>Moderation</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => {
                 const Icon = item.icon;
+                const isActive =
+                  pathname === item.url ||
+                  (item.url !== "/admin/dashboard" &&
+                    pathname.startsWith(item.url + "/"));
 
                 return (
                   <SidebarMenuItem key={item.url}>
                     <SidebarMenuButton
                       asChild
                       tooltip={item.title}
-                      isActive={pathname === item.url}
+                      isActive={isActive}
                     >
                       <Link href={item.url}>
                         <Icon />
@@ -203,11 +188,11 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
       </SidebarContent>
 
       {/* Footer */}
-      <SidebarFooter className="border-t">
+      <SidebarFooter className="border-t border-sidebar-border">
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" tooltip={user.full_name}>
-              <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-primary text-xs font-semibold text-primary-foreground">
+              <div className="flex aspect-square size-8 shrink-0 items-center justify-center rounded-full border border-border bg-pine-100 text-xs font-semibold text-[#07070b]">
                 {getInitials(user.full_name)}
               </div>
 
@@ -219,15 +204,7 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
                 </span>
               </div>
 
-              <Badge
-                variant="secondary"
-                className={cn(
-                  "shrink-0 text-[10px]",
-                  ROLE_BADGE_STYLES[user.role]
-                )}
-              >
-                {ROLE_LABELS[user.role]}
-              </Badge>
+              <RoleBadge role={user.role} className="shrink-0" />
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>

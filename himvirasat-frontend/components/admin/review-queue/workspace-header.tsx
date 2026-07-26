@@ -64,7 +64,7 @@ export default function WorkspaceHeader({
                 className={cn(
                   "h-12 px-3 flex items-center gap-1.5 border-b-2 font-medium transition-all",
                   workspaceTab === tab.id
-                    ? "border-indigo-600 text-foreground font-bold"
+                    ? "border-glacier-500 text-foreground font-bold"
                     : "border-transparent text-muted-foreground hover:text-foreground"
                 )}
               >
@@ -107,7 +107,7 @@ export default function WorkspaceHeader({
                 size="sm"
                 onClick={saveInlineEdits}
                 disabled={isSaving}
-                className="h-7.5 text-xs bg-emerald-600 hover:bg-emerald-700 text-white min-w-20"
+                className="h-7.5 min-w-20 text-xs"
               >
                 {isSaving ? (
                   <Loader2 className="size-3.5 mr-1 animate-spin" />

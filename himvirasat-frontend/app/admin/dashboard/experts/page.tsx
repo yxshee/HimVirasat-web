@@ -1,17 +1,16 @@
 "use client";
 
-import { CreateExpertDialog } from "@/components/admin/experts/create-expert-dialog";
+import { EmptyState } from "@/components/admin/empty-state";
 import { ExpertTable } from "@/components/admin/experts/expert-table";
 import { ExpertsToolbar } from "@/components/admin/experts/experts-header-toolbar";
+import { PageHeader } from "@/components/admin/page-header";
 import { UserService } from "@/lib/services/admin/user-service";
-import { LanguageExpert } from "@/types/admin/user";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState, useCallback } from "react";
+import { Users } from "lucide-react";
+import { useState } from "react";
 import { toast } from "sonner";
 
 export default function ExpertsPage() {
-  const [open, setOpen] = useState(false);
-
   const {
     data: experts = [],
     isLoading,
@@ -42,17 +41,11 @@ export default function ExpertsPage() {
 
   return (
     <div className="space-y-6 p-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold">Language Experts</h1>
+      <PageHeader
+        title="Language Experts"
+        description="Manage expert accounts and dialect assignments."
+      />
 
-          <p className="text-muted-foreground">
-            Manage language experts and dialect assignments.
-          </p>
-        </div>
-      </div>
-
-      <CreateExpertDialog open={open} onOpenChange={setOpen} />
       <ExpertsToolbar
         refreshing={isFetching}
         onRefresh={refetch}
@@ -65,6 +58,14 @@ export default function ExpertsPage() {
         deletingId={deletingId}
         onRemove={handleRemove}
         globalFilter={search}
+        isLoading={isLoading}
+        emptyState={
+          <EmptyState
+            icon={Users}
+            title="No language experts yet"
+            description="Create the first expert account to start building the moderation team."
+          />
+        }
       />
     </div>
   );

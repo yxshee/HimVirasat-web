@@ -261,7 +261,7 @@ export default function ContributionSubmissionPage() {
             <div className="flex items-center gap-3">
               <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-muted">
                 <div
-                  className="h-full rounded-full bg-emerald-500 transition-all duration-300"
+                  className="h-full rounded-full bg-pine-500 transition-all duration-300"
                   style={{ width: `${completion}%` }}
                 />
               </div>
@@ -282,7 +282,7 @@ export default function ContributionSubmissionPage() {
                   <div className="space-y-6">
                     <div className="flex items-center gap-3">
                       <div className="flex size-10 items-center justify-center rounded-md border bg-background">
-                        <BookMarked className="size-4 text-indigo-600 dark:text-indigo-400" />
+                        <BookMarked className="size-4 text-verdant" />
                       </div>
                       <div>
                         <p className="text-sm font-bold text-foreground">
@@ -298,13 +298,13 @@ export default function ContributionSubmissionPage() {
 
                     <div className="space-y-3 text-xs text-muted-foreground">
                       <div className="flex items-start gap-2">
-                        <CheckCircle2 className="mt-0.5 size-3.5 shrink-0 text-emerald-600" />
+                        <CheckCircle2 className="mt-0.5 size-3.5 shrink-0 text-verdant" />
                         <p>
                           Mandatory parameters initialize dictionary entries.
                         </p>
                       </div>
                       <div className="flex items-start gap-2">
-                        <CheckCircle2 className="mt-0.5 size-3.5 shrink-0 text-emerald-600" />
+                        <CheckCircle2 className="mt-0.5 size-3.5 shrink-0 text-verdant" />
                         <p>
                           Language Experts and Language Heads will review
                           submitted entries.

@@ -12,6 +12,7 @@ import {
 import { useState } from "react";
 import { ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
 
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
   TableBody,
@@ -25,12 +26,18 @@ interface DataTableProps<TData> {
   columns: ColumnDef<TData>[];
   data: TData[];
   globalFilter: string;
+  /** Renders skeleton rows instead of an empty table while fetching. */
+  isLoading?: boolean;
+  /** Shown when there is nothing to list; falls back to a plain message. */
+  emptyState?: React.ReactNode;
 }
 
 export function DataTable<TData>({
   columns,
   data,
   globalFilter,
+  isLoading,
+  emptyState,
 }: DataTableProps<TData>) {
   const [sorting, setSorting] = useState<SortingState>([]);
 
@@ -97,7 +104,20 @@ export function DataTable<TData>({
         </TableHeader>
 
         <TableBody>
-          {table.getRowModel().rows.length ? (
+          {isLoading ? (
+            // Skeleton rows rather than an empty table: the toolbar and
+            // header above stay put, so the page does not reflow when the
+            // data lands.
+            Array.from({ length: 5 }, (_, rowIndex) => (
+              <TableRow key={rowIndex}>
+                {columns.map((_column, colIndex) => (
+                  <TableCell key={colIndex} className="py-3">
+                    <Skeleton className="h-4 w-full max-w-32" />
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))
+          ) : table.getRowModel().rows.length ? (
             table.getRowModel().rows.map((row) => (
               <TableRow
                 key={row.id}
@@ -116,7 +136,7 @@ export function DataTable<TData>({
                 colSpan={columns.length}
                 className="h-36 text-center text-sm text-muted-foreground"
               >
-                No matching records found.
+                {emptyState ?? "No matching records found."}
               </TableCell>
             </TableRow>
           )}

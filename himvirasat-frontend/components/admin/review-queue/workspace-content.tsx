@@ -83,9 +83,9 @@ const fieldOptions = [
 ];
 
 const statusStyles: Record<CommentStatus, string> = {
-  open: "bg-blue-500/10 text-blue-600 border-blue-500/20 dark:text-blue-400",
+  open: "bg-clay-400/10 text-clay-600 border-clay-400/20",
   resolved:
-    "bg-emerald-500/10 text-emerald-600 border-emerald-500/20 dark:text-emerald-400",
+    "bg-pine-500/10 text-verdant border-pine-500/20 text-verdant",
   rejected: "bg-red-500/10 text-red-600 border-red-500/20 dark:text-red-400",
   accepted:
     "bg-teal-500/10 text-teal-600 border-teal-500/20 dark:text-teal-400",
@@ -395,7 +395,7 @@ export default function WorkspaceContent({
                     <div className="flex justify-end">
                       <Button
                         size="sm"
-                        className="h-8 text-xs bg-indigo-600 hover:bg-indigo-700 text-white min-w-30"
+                        className="h-8 text-xs  min-w-30"
                         disabled={
                           !commentMessage.trim() || addCommentMutation.isPending
                         }
@@ -588,7 +588,7 @@ export default function WorkspaceContent({
       <div className="shrink-0 border-t border-border bg-card/90 dark:bg-background/95 backdrop-blur px-6 py-3 shadow-[0_-4px_12px_-4px_rgba(0,0,0,0.08)] relative z-10">
         <div className="max-w-3xl mx-auto flex items-center justify-between gap-4 flex-wrap">
           <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground bg-muted/80 dark:bg-muted/40 px-2.5 py-1 rounded-md border border-border/60">
-            <Clock className="size-3 text-indigo-500" />
+            <Clock className="size-3 text-glacier-500" />
             <span>
               Role:{" "}
               <span className="font-bold text-foreground capitalize">
@@ -662,13 +662,13 @@ export default function WorkspaceContent({
                     <Button
                       variant="outline"
                       size="sm"
-                      className="h-8 text-xs font-semibold border-amber-500/30 text-amber-600 bg-background hover:bg-amber-500/5 px-3 rounded-lg"
+                      className="h-8 text-xs font-semibold border-clay-600/30 text-clay-600 bg-background hover:bg-clay-400/10 px-3 rounded-lg"
                     >
                       <Flag className="size-3.5 mr-1.5" /> Flag
                     </Button>
                   }
                   actionLabel="Flag Entry"
-                  actionClassName="bg-amber-600 hover:bg-amber-700 text-white"
+                  actionClassName="bg-clay-600 text-background hover:bg-clay-600/90"
                   onConfirm={() =>
                     handleStatusTransition("flagged", flagReason.trim())
                   }
@@ -680,7 +680,7 @@ export default function WorkspaceContent({
                 size="sm"
                 onClick={() => handleStatusTransition("approved")}
                 disabled={statusMutation.isPending}
-                className="h-8 text-xs font-semibold bg-indigo-600 hover:bg-indigo-700 text-white px-4 rounded-lg shadow-sm min-w-30"
+                className="h-8 text-xs font-semibold  px-4 rounded-lg shadow-sm min-w-30"
               >
                 {statusMutation.isPending ? (
                   <Loader2 className="size-3.5 mr-1.5 animate-spin" />
