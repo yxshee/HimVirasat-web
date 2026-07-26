@@ -272,74 +272,83 @@ export default function QueueSidebar({
 // Helpers & Configurations (unchanged)
 // ------------------------------------------------------------------
 
+/**
+ * One fill for every chip, with the state carried by the ink. The tinted
+ * fills these used to have (blue-100, red-100 and friends) are outside the
+ * Deodar palette and read as a second accent system next to the badges in
+ * `status-badge.tsx`, which this now matches.
+ */
 const statusBadgeConfig: Record<
   ContributionStatus,
   { label: string; className: string }
 > = {
   under_review: {
     label: "Under Review",
-    className:
-      "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300",
+    className: "bg-secondary text-verdant",
   },
   approved: {
     label: "Approved",
-    className:
-      "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300",
+    className: "bg-secondary text-verdant",
   },
   flagged: {
     label: "Flagged",
-    className:
-      "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300",
+    className: "bg-secondary text-clay-600",
   },
   rejected: {
     label: "Rejected",
-    className: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300",
+    className: "bg-secondary text-destructive",
   },
 };
 
-const stageColorMap: Record<QueueFilter, string> = {
-  my_submissions: "indigo",
-  under_review: "blue",
-  approved: "emerald",
-  flagged: "amber",
-  rejected: "red",
+/**
+ * The pipeline nodes step through the palette rather than through five
+ * unrelated Tailwind hues. Order matters visually: the stages read cool to
+ * warm as work moves from "mine" to "needs attention", with rejection
+ * keeping destructive red because that one is semantic.
+ *
+ * Written out in full rather than composed from a tone name. Tailwind scans
+ * source for complete class strings, so a template literal like
+ * `bg-${tone}` compiles to nothing at all.
+ */
+const STAGE_CLASSES: Record<
+  QueueFilter,
+  { node: string; connector: string; text: string }
+> = {
+  my_submissions: {
+    node: "bg-glacier-300 border-glacier-300 ring-2 ring-glacier-300/20",
+    connector: "bg-glacier-300",
+    text: "text-verdant",
+  },
+  under_review: {
+    node: "bg-glacier-500 border-glacier-500 ring-2 ring-glacier-500/20",
+    connector: "bg-glacier-500",
+    text: "text-verdant",
+  },
+  approved: {
+    node: "bg-pine-500 border-pine-500 ring-2 ring-pine-500/20",
+    connector: "bg-pine-500",
+    text: "text-verdant",
+  },
+  flagged: {
+    node: "bg-clay-600 border-clay-600 ring-2 ring-clay-600/20",
+    connector: "bg-clay-600",
+    text: "text-clay-600",
+  },
+  rejected: {
+    node: "bg-destructive border-destructive ring-2 ring-destructive/20",
+    connector: "bg-destructive",
+    text: "text-destructive",
+  },
 };
 
 function getNodeActiveClasses(filter: QueueFilter) {
-  const color = stageColorMap[filter];
-  const map: Record<string, string> = {
-    indigo:
-      "bg-indigo-500 border-indigo-500 ring-2 ring-indigo-500/20 shadow-md shadow-indigo-500/20",
-    blue: "bg-blue-500 border-blue-500 ring-2 ring-blue-500/20 shadow-md shadow-blue-500/20",
-    emerald:
-      "bg-emerald-500 border-emerald-500 ring-2 ring-emerald-500/20 shadow-md shadow-emerald-500/20",
-    amber:
-      "bg-amber-500 border-amber-500 ring-2 ring-amber-500/20 shadow-md shadow-amber-500/20",
-    red: "bg-red-500 border-red-500 ring-2 ring-red-500/20 shadow-md shadow-red-500/20",
-  };
-  return map[color] || map.indigo;
+  return STAGE_CLASSES[filter].node;
 }
 
 function getTextActiveClasses(filter: QueueFilter) {
-  const color = stageColorMap[filter];
-  const map: Record<string, string> = {
-    indigo: "text-indigo-600 dark:text-indigo-400",
-    blue: "text-blue-600 dark:text-blue-400",
-    emerald: "text-emerald-600 dark:text-emerald-400",
-    amber: "text-amber-600 dark:text-amber-400",
-    red: "text-red-600 dark:text-red-400",
-  };
-  return map[color] || map.indigo;
+  return STAGE_CLASSES[filter].text;
 }
 
 function getConnectorActiveColor(filter: QueueFilter) {
-  const color = stageColorMap[filter];
-  const map: Record<string, string> = {
-    indigo: "bg-indigo-500",
-    blue: "bg-blue-500",
-    emerald: "bg-emerald-500",
-    amber: "bg-amber-500",
-    red: "bg-red-500",
-  };
-  return map[color] || map.indigo;
+  return STAGE_CLASSES[filter].connector;
 }

@@ -28,13 +28,13 @@ export function getExpertColumns(
 
         return (
           <div className="flex items-center gap-3">
-            <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-emerald-500/10 text-xs font-bold text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+            <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-pine-500/10 text-xs font-bold text-verdant border border-pine-500/20">
               {initials}
             </div>
             <div className="flex flex-col">
               <span className="font-semibold text-foreground flex items-center gap-1.5">
                 {item.full_name}
-                <UserCheck className="size-3.5 text-emerald-500" />
+                <UserCheck className="size-3.5 text-verdant" />
               </span>
               <span className="text-xs text-muted-foreground">
                 @{item.username}
@@ -83,7 +83,7 @@ export function getExpertColumns(
             variant={isActive ? "default" : "secondary"}
             className={
               isActive
-                ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/20"
+                ? "bg-pine-500/10 text-verdant border border-pine-500/20 hover:bg-pine-500/20"
                 : "bg-muted text-muted-foreground"
             }
           >

@@ -18,7 +18,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-import { primaryButtonStyles } from "@/lib/constants";
 import { UserService } from "@/lib/services/admin/user-service";
 import { DataLookupService } from "@/lib/services/admin/datalookup-service";
 
@@ -104,7 +103,7 @@ export function CreateExpertDialog({
       <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <UserPlus className="size-5 text-emerald-500" />
+            <UserPlus className="size-5 text-verdant" />
             Create Language Expert
           </DialogTitle>
           <DialogDescription>
@@ -207,13 +206,13 @@ export function CreateExpertDialog({
                         onClick={() => handleToggleDialect(dialect)}
                         className={`flex items-center justify-between px-2.5 py-1.5 text-xs font-medium rounded border transition-all cursor-pointer ${
                           isChecked
-                            ? "bg-emerald-500/10 text-emerald-600 border-emerald-500/30 dark:text-emerald-400"
+                            ? "bg-pine-500/10 text-verdant border-pine-500/30 text-verdant"
                             : "hover:bg-muted/40 text-muted-foreground border-transparent"
                         }`}
                       >
                         <span>{dialect}</span>
                         {isChecked && (
-                          <Check className="size-3 text-emerald-600 dark:text-emerald-400" />
+                          <Check className="size-3 text-verdant" />
                         )}
                       </button>
                     );
@@ -235,7 +234,6 @@ export function CreateExpertDialog({
             <Button
               type="submit"
               disabled={isSubmitting || isLoadingDialects}
-              className={primaryButtonStyles}
             >
               {isSubmitting ? "Creating..." : "Create Expert"}
             </Button>

@@ -120,10 +120,10 @@ export default function WorkspaceViewContent({
     <div className="space-y-6">
       {(currentItem.status === "flagged" ||
         currentItem.status === "rejected") && (
-        <div className="rounded-xl border border-amber-500/30 bg-amber-500/5 p-4 flex items-start gap-3 text-xs">
-          <AlertTriangle className="size-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+        <div className="rounded-xl border border-clay-600/30 bg-clay-400/10 p-4 flex items-start gap-3 text-xs">
+          <AlertTriangle className="size-4 text-clay-600 shrink-0 mt-0.5" />
           <div className="space-y-1">
-            <span className="font-bold uppercase tracking-wider text-[10px] text-amber-600 dark:text-amber-400">
+            <span className="font-bold uppercase tracking-wider text-[10px] text-clay-600">
               {currentItem.status === "flagged"
                 ? "Active Flag"
                 : "Rejected Entry"}
@@ -192,7 +192,7 @@ export default function WorkspaceViewContent({
           <label className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider block">
             International Phonetic Alphabet (IPA)
           </label>
-          <span className="inline-flex items-center font-mono text-xs tracking-wide text-indigo-600 dark:text-indigo-400 font-semibold bg-indigo-500/5 dark:bg-indigo-500/10 px-2.5 py-1 rounded border border-indigo-500/20 select-all">
+          <span className="inline-flex items-center font-mono text-xs tracking-wide text-verdant font-semibold bg-glacier-500/5 dark:bg-glacier-500/10 px-2.5 py-1 rounded border border-glacier-500/20 select-all">
             /{currentItem.ipa || "Not Documented"}/
           </span>
         </div>
@@ -234,18 +234,18 @@ export default function WorkspaceViewContent({
         <h4 className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
           Usage Validation Context Sentences
         </h4>
-        <div className="relative overflow-hidden rounded-xl bg-indigo-500/2 p-4.5 border border-indigo-500/20 dark:border-indigo-500/10">
-          <div className="absolute left-0 top-0 bottom-0 w-1 bg-indigo-500/60" />
+        <div className="relative overflow-hidden rounded-xl bg-glacier-500/5 p-4.5 border border-glacier-500/20 dark:border-glacier-500/10">
+          <div className="absolute left-0 top-0 bottom-0 w-1 bg-glacier-500/60" />
           <div className="space-y-3.5 pl-1">
             <div className="space-y-1">
-              <span className="text-[10px] font-bold tracking-wider text-indigo-600 dark:text-indigo-400 uppercase block">
+              <span className="text-[10px] font-bold tracking-wider text-verdant uppercase block">
                 Dialect Execution
               </span>
               <p className="text-base font-bold text-foreground select-all">
                 &quot;{currentItem.example_sentence}&quot;
               </p>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2.5 border-t border-indigo-500/20 dark:border-indigo-500/10">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2.5 border-t border-glacier-500/20 dark:border-glacier-500/10">
               <DisplayField
                 label="Latinized Sentence"
                 value={currentItem.example_sentence_latin}

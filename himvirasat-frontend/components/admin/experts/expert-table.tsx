@@ -9,6 +9,8 @@ interface ExpertTableProps {
   deletingId: string | null;
   globalFilter: string;
   onRemove: (expertId: string) => void;
+  isLoading?: boolean;
+  emptyState?: React.ReactNode;
 }
 
 export function ExpertTable({
@@ -16,10 +18,18 @@ export function ExpertTable({
   deletingId,
   globalFilter,
   onRemove,
+  isLoading,
+  emptyState,
 }: ExpertTableProps) {
   const columns = getExpertColumns(onRemove, deletingId);
 
   return (
-    <DataTable columns={columns} data={experts} globalFilter={globalFilter} />
+    <DataTable
+      columns={columns}
+      data={experts}
+      globalFilter={globalFilter}
+      isLoading={isLoading}
+      emptyState={emptyState}
+    />
   );
 }

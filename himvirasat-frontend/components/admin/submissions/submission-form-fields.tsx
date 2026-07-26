@@ -295,7 +295,7 @@ export function SubmissionFormFields({
               size="sm"
               onClick={handleGenerateWithGrok}
               disabled={isGenerating}
-              className="gap-1.5 border-indigo-500/30 bg-indigo-50/50 dark:bg-indigo-950/20 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-950/40 text-xs font-semibold"
+              className="gap-1.5 border-glacier-500/30 bg-glacier-500/5 dark:bg-glacier-500/10 text-verdant hover:bg-glacier-500/10 dark:hover:bg-glacier-500/15 text-xs font-semibold"
             >
               {isGenerating ? (
                 <>
@@ -512,7 +512,7 @@ function ReadinessItem({
         className={cn(
           "size-2 rounded-full transition-colors",
           complete
-            ? "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]"
+            ? "bg-pine-500"
             : "bg-muted-foreground/30"
         )}
       />

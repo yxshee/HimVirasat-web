@@ -11,11 +11,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { AdminAuthService } from "@/lib/services/admin/admin-auth-service";
 import {
-  staticPrimaryButtonStyles,
-  staticSecondaryButtonStyles,
-  subtlePrimaryButtonStyles,
-} from "@/lib/constants";
-import {
   Card,
   CardContent,
   CardDescription,
@@ -186,7 +181,7 @@ export default function SettingsPage() {
               type="submit"
               disabled={isResetting}
               size="lg"
-              className={subtlePrimaryButtonStyles + " min-w-40 mt-4"}
+              className="mt-4 min-w-40"
             >
               {isResetting ? (
                 <>
