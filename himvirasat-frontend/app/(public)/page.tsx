@@ -10,6 +10,7 @@ import { RuledCell, RuledGrid } from "@/components/mistral/ruled-grid";
 import { SectionHeading } from "@/components/mistral/section-heading";
 import { StickyRailSection } from "@/components/mistral/sticky-rail-section";
 import { TakriMosaic } from "@/components/mistral/takri-mosaic";
+import { StaggerIn } from "@/components/motion/stagger-in";
 import { Button } from "@/components/ui/button";
 import { dialectsConfig } from "@/lib/dialects/dialect-config";
 import { site } from "@/lib/site";
@@ -167,7 +168,7 @@ export default function Home() {
               over the container colour, so any cell short of a full row
               would render as a solid grey block. Cell count here is
               dialectsConfig.length + 1. */}
-          <div className="bg-border grid gap-px sm:grid-cols-2">
+          <StaggerIn className="bg-border grid gap-px sm:grid-cols-2">
             {dialectsConfig.map((dialect) => (
               <Link
                 key={dialect.id}
@@ -200,7 +201,7 @@ export default function Home() {
                 contributions.
               </span>
             </Link>
-          </div>
+          </StaggerIn>
         </div>
       </section>
 
@@ -211,6 +212,7 @@ export default function Home() {
           title="Devanagari today, Takri kept alive."
           description="Takri was the working script of the western Himalaya before Devanagari displaced it. Every entry in the archive carries both."
         />
+        <StaggerIn>
         <RuledGrid cols="2-3" className="mt-14">
           {SCRIPT_SAMPLES.map((sample) => (
             <RuledCell key={sample.deva} className="p-8">
@@ -230,6 +232,7 @@ export default function Home() {
             </RuledCell>
           ))}
         </RuledGrid>
+        </StaggerIn>
         <div className="mt-10 flex justify-center">
           <Button asChild variant="secondary">
             <Link href="/tools/transliterator">Open the transliterator</Link>
@@ -243,6 +246,7 @@ export default function Home() {
           eyebrow="The archive"
           title="Everything in one place."
         />
+        <StaggerIn>
         <RuledGrid cols="2-3" className="mt-14">
           {ARCHIVE.map((item) => (
             <Link
@@ -262,6 +266,7 @@ export default function Home() {
             </Link>
           ))}
         </RuledGrid>
+        </StaggerIn>
       </section>
 
       {/* ── Deep dives ───────────────────────────────────────────────── */}
