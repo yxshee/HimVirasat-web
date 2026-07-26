@@ -6,20 +6,22 @@ import { ArrowRow } from "@/components/mistral/arrow-row";
 import { Eyebrow } from "@/components/mistral/eyebrow";
 import { ScrollCue } from "@/components/mistral/scroll-cue";
 import { TakriMosaic } from "@/components/mistral/takri-mosaic";
+import { gsap, useGSAP } from "@/lib/gsap";
 import { makeRng, seedFromString } from "@/lib/seeded-rng";
 import { devToTankri } from "@/lib/transliteration/devToTankri";
 
 /**
- * The landing composition: a headline and the mission statement across the
- * top, the Takri mosaic and a featured item beneath.
+ * Two viewports tall, with the first one pinned and every property
+ * scrubbed by scroll position rather than by time.
  *
- * The `data-hero` attributes and the refs are hooks for the scroll-driven
- * timeline that arrives in a follow-up. They are deliberately left in place
- * so that change is additive rather than a rewrite of this markup.
+ * Scrolling collapses the left column carrying the headline and the
+ * mosaic, while the right sidebar expands to fill the viewport and its
+ * copy settles into the centre. Nothing here plays on a timer: the
+ * timeline's playhead *is* the scroll position, which is why earlier
+ * CSS-keyframe versions could never match it however they were tuned.
  *
- * The headline itself animates on load in pure CSS — see `char-rise` in
- * globals.css — with its per-character delays seeded so the server and the
- * client agree.
+ * Below `lg`, and whenever reduced motion is requested, no timeline is
+ * built at all and the hero is simply two stacked blocks.
  */
 
 const HEADLINE = "Himachal speaks in many tongues. We are writing them down.";
@@ -72,13 +74,243 @@ export function Hero() {
   const arrow = useRef<HTMLDivElement>(null);
   const cards = useRef<HTMLDivElement>(null);
 
+  useGSAP(
+    () => {
+      const mm = gsap.matchMedia();
+
+      // Both conditions in one query: the scrub is desktop-only, and it is
+      // never built when reduced motion is requested — so there is nothing
+      // to tear down or reset in that case.
+      mm.add(
+        "(min-width: 1024px) and (prefers-reduced-motion: no-preference)",
+        () => {
+          const stickyEl = sticky.current;
+          const contentEl = rightContent.current;
+          if (!stickyEl || !contentEl || !root.current) return;
+
+          const sentences = gsap.utils.toArray<HTMLElement>(
+            ".js-hero-sentence",
+            contentEl,
+          );
+          // Corner labels on the mosaic. They are positioned from the two
+          // edges of a column that collapses, so they converge and clip
+          // mid-word; fading them out early is cheaper than repositioning
+          // them and matches how the reference's artwork labels leave.
+          const labels = gsap.utils.toArray<HTMLElement>(
+            ".js-hero-label",
+            root.current,
+          );
+
+          /**
+           * Measured, not hard-coded. The reference recomputes the same
+           * values in `calcScrollEndPosition` and rebinds on resize;
+           * deriving them from live rects rather than copying its
+           * arithmetic keeps them correct for our own box model.
+           *
+           * The end targets are sampled with the panel *already at its end
+           * size*, then reverted. Measuring them against the rest layout is
+           * the mistake that put the mission copy at x = -1695 — off-screen
+           * left — because the panel grows leftward from its right anchor
+           * and downward, so the content's layout position at progress 1 is
+           * nowhere near where it starts.
+           *
+           * The copy is `w-max whitespace-nowrap`, so its own box is the
+           * same size in both samples and only its position moves.
+           */
+          const measure = () => {
+            const panel = rightInner.current!;
+            const style = getComputedStyle(panel);
+            const padX = parseFloat(style.paddingLeft);
+            const padB = parseFloat(style.paddingBottom);
+
+            const s = stickyEl.getBoundingClientRect();
+            const rest = panel.getBoundingClientRect();
+            const c0 = contentEl.getBoundingClientRect();
+
+            // The two collapsing columns, measured at rest. Their inner
+            // wrappers are frozen at these widths for the whole scrub so
+            // that animating the outer width to 0 clips rather than
+            // re-wraps. Read the content box, since the padding stays on
+            // the outer element.
+            const innerWidths = [leftTopInner.current, leftMiddleInner.current].map(
+              (el) => el?.getBoundingClientRect().width ?? 0,
+            );
+
+            // Sample the end state, then put it back.
+            gsap.set(panel, {
+              width: s.width,
+              height: s.height,
+              borderLeftWidth: 0,
+              borderBottomWidth: 0,
+            });
+            const c1 = contentEl.getBoundingClientRect();
+            const sentenceX = sentences.map((n) => {
+              const r = n.getBoundingClientRect();
+              return (c1.width - r.width) / 2 - (r.left - c1.left);
+            });
+            gsap.set(panel, {
+              clearProps: "width,height,borderLeftWidth,borderBottomWidth",
+            });
+
+            // Copy is authored at display size and shrunk to fit the rail,
+            // so scrolling grows it into a full-screen statement rather than
+            // sliding body text around. Capped at 1 so a narrow desktop
+            // fits the line instead of overflowing it.
+            const startScale = (rest.width - padX * 2) / c0.width;
+            const endScale = Math.min(1, (s.width - padX * 2) / c1.width);
+
+            // Transform origin is the centre, so the visual centre is the
+            // layout centre plus (x, y) whatever the scale — which is what
+            // makes these two deltas independent of each other.
+            return {
+              width: s.width,
+              height: s.height,
+              startScale,
+              endScale,
+              // Rest: bottom-left of the rail, where the copy already sits.
+              startX:
+                rest.left +
+                padX +
+                (c0.width * startScale) / 2 -
+                (c0.left + c0.width / 2),
+              startY:
+                rest.bottom -
+                padB -
+                (c0.height * startScale) / 2 -
+                (c0.top + c0.height / 2),
+              // End: dead centre of the pinned area.
+              endX: s.left + s.width / 2 - (c1.left + c1.width / 2),
+              endY: s.top + s.height / 2 - (c1.top + c1.height / 2),
+              sentenceX,
+              innerWidths,
+            };
+          };
+
+          const inners = [leftTopInner.current, leftMiddleInner.current];
+
+          let m = measure();
+
+          // Freeze the collapsing columns' contents at their rest width.
+          // Not part of the timeline: it is a constant for the whole scrub,
+          // re-applied whenever the layout is remeasured.
+          const pinInners = () =>
+            inners.forEach((el, i) => gsap.set(el, { width: m.innerWidths[i] }));
+
+          pinInners();
+
+          const animated = [
+            title.current,
+            leftTop.current,
+            leftMiddle.current,
+            rightInner.current,
+            rightTop.current,
+            contentEl,
+            background.current,
+            arrow.current,
+            cards.current,
+            ...inners,
+            ...sentences,
+            ...labels,
+          ];
+
+          const tl = gsap.timeline({
+            scrollTrigger: {
+              trigger: root.current,
+              start: "top top",
+              end: "bottom bottom",
+              scrub: true,
+              invalidateOnRefresh: true,
+              onRefreshInit: () => {
+                // Measure from untransformed layout, otherwise a second
+                // refresh measures the first refresh's own output. That
+                // clear also releases the pinned inner widths, so they have
+                // to be re-applied against the new measurement.
+                gsap.set(animated, { clearProps: "all" });
+                m = measure();
+                pinInners();
+              },
+            },
+          });
+
+          tl.to(title.current, { y: () => -m.height * 0.5, duration: 1 }, 0)
+            .to(
+              [leftTop.current, leftMiddle.current],
+              { width: 0, y: () => -m.height * 0.5, duration: 1 },
+              0,
+            )
+            .to(
+              rightInner.current,
+              {
+                borderLeftWidth: 0,
+                borderBottomWidth: 0,
+                width: () => m.width,
+                height: () => m.height,
+                duration: 1,
+              },
+              0,
+            )
+            .to(rightTop.current, { borderBottomWidth: 0, duration: 1 }, 0)
+            .fromTo(
+              contentEl,
+              {
+                x: () => m.startX,
+                y: () => m.startY,
+                scale: () => m.startScale,
+                transformOrigin: "center center",
+              },
+              {
+                x: () => m.endX,
+                y: () => m.endY,
+                scale: () => m.endScale,
+                duration: 1,
+              },
+              0,
+            )
+            .fromTo(
+              background.current,
+              { opacity: 1 },
+              { opacity: 0, duration: 1 },
+              0,
+            )
+            .to(
+              sentences,
+              { x: (i: number) => m.sentenceX[i] ?? 0, duration: 1 },
+              0,
+            )
+            .fromTo(
+              arrow.current,
+              { yPercent: 0 },
+              { yPercent: -100, duration: 1 },
+              0,
+            )
+            .fromTo(
+              cards.current,
+              { yPercent: 0 },
+              { yPercent: 100, duration: 1 },
+              0,
+            )
+            // Gone by the time the column is narrow enough to clip them.
+            .fromTo(labels, { opacity: 1 }, { opacity: 0, duration: 0.2 }, 0);
+
+          return () => tl.kill();
+        },
+      );
+
+      return () => mm.revert();
+    },
+    { scope: root },
+  );
+
   return (
     <section
       ref={root}
       data-hero="root"
-      className="border-border relative border-b"
+      className="border-border relative border-b lg:h-[200dvh]"
     >
-      <div ref={sticky} className="lg:h-dvh lg:overflow-hidden">
+      <div
+        ref={sticky}
+        className="lg:sticky lg:top-0 lg:h-dvh lg:overflow-hidden"
+      >
         {/* Row 1 — headline and mission */}
         <div className="border-border flex flex-col border-b lg:relative lg:h-[60dvh] lg:flex-row">
           <div

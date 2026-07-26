@@ -666,6 +666,47 @@ html.js [data-reveal][data-revealed="true"] {
   animation-delay: var(--line-delay, 0ms);
 }
 
+/* ── Rail progress ───────────────────────────────────────────────────
+   Nothing drives this bar when reduced motion is requested, so it would
+   otherwise sit at a permanent 0% — a control that looks broken rather
+   than switched off. Hidden by default, revealed only where its
+   ScrollTrigger is actually created. The element stays in the DOM either
+   way so the component keeps its ref. */
+.rail-progress {
+  display: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .rail-progress {
+    display: block;
+  }
+}
+
+/* ── Hero mission copy ───────────────────────────────────────────────
+   Scrolling grows this from a caption in the rail into a full-screen
+   statement. The growth is a GSAP scale, so the copy has to be authored
+   at display size and shrunk to fit — which only holds while the scrubbed
+   timeline is actually running.
+
+   This media query is deliberately the same condition as the
+   `gsap.matchMedia()` gate in hero.tsx. Outside it no timeline is built,
+   nothing sets a scale, and display-size nowrap copy would overflow the
+   rail — so outside it the copy stays ordinary wrapping body text. */
+@media (min-width: 64rem) and (prefers-reduced-motion: no-preference) {
+  .hero-mission {
+    width: max-content;
+  }
+  .hero-mission-line {
+    width: max-content;
+    white-space: nowrap;
+    font-size: var(--text-display-md);
+    line-height: var(--text-display-md--line-height);
+    letter-spacing: var(--text-display-md--letter-spacing);
+    font-weight: var(--text-display-md--font-weight);
+    color: var(--foreground);
+  }
+}
+
 /* The hero used to pin its first screen with a `.hero-pin` sticky rule
    while a second screen scrolled over it. The hero is now a scrubbed GSAP
    timeline that owns its own sticky container, so that rule is gone. */
@@ -727,6 +768,26 @@ html.js [data-reveal][data-revealed="true"] {
 
 .animate-arrow-cue {
   animation: arrow-cue 2s linear infinite;
+}
+
+/* ── Page entrance ───────────────────────────────────────────────────
+   Replayed per route by app/(public)/template.tsx. No fill-mode on
+   purpose: the element must return to having no transform at all when the
+   animation ends, because a lingering transform creates a containing
+   block and changes how descendants position themselves. */
+@keyframes page-in {
+  from {
+    opacity: 0;
+    transform: translateY(50px) scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.animate-page-in {
+  animation: page-in 0.5s ease-out;
 }
 
 /* ── Marquee ─────────────────────────────────────────────────────────
@@ -793,6 +854,7 @@ html.js [data-reveal][data-revealed="true"] {
   .animate-pop-in,
   .animate-arrow-cue,
   .animate-fade-slide,
+  .animate-page-in,
   .marquee-track,
   .hero-char,
   .hero-line-grow,
