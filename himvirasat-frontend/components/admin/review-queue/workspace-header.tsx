@@ -8,6 +8,7 @@ import {
   History,
   MessageSquare,
   X,
+  Loader2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -17,7 +18,7 @@ import {
   ContributionStatus,
   SystemRole,
   WORKFLOW_RULES,
-} from "@/types/admin/FSM/contribution-rules";
+} from "@/types/admin/contribution-types";
 
 interface WorkspaceHeaderProps {
   currentItem: Contribution;
@@ -28,6 +29,7 @@ interface WorkspaceHeaderProps {
   setIsEditMode: (mode: boolean) => void;
   startEditing: () => void;
   saveInlineEdits: () => void;
+  isSaving?: boolean;
   statusCounts: Record<ContributionStatus, number>;
 }
 
@@ -46,6 +48,7 @@ export default function WorkspaceHeader({
   setIsEditMode,
   startEditing,
   saveInlineEdits,
+  isSaving = false,
   statusCounts,
 }: WorkspaceHeaderProps) {
   return (
@@ -61,7 +64,7 @@ export default function WorkspaceHeader({
                 className={cn(
                   "h-12 px-3 flex items-center gap-1.5 border-b-2 font-medium transition-all",
                   workspaceTab === tab.id
-                    ? "border-pine-500 text-foreground font-bold"
+                    ? "border-glacier-500 text-foreground font-bold"
                     : "border-transparent text-muted-foreground hover:text-foreground"
                 )}
               >
@@ -71,29 +74,20 @@ export default function WorkspaceHeader({
           })}
         </div>
         <div className="hidden xl:flex items-center gap-1.5">
-          <Badge
-            variant="outline"
-            className="text-[10px] font-mono bg-info/10 text-info border-info/25"
-          >
-            Under Review {statusCounts.under_review}
+          <Badge variant="outline" className="text-[10px] font-mono">
+            Under Review {statusCounts.under_review || 0}
           </Badge>
-          <Badge
-            variant="outline"
-            className="text-[10px] font-mono bg-success/10 text-success border-success/25"
-          >
-            Approved {statusCounts.approved}
+          <Badge variant="outline" className="text-[10px] font-mono">
+            Approved {statusCounts.approved || 0}
           </Badge>
-          <Badge
-            variant="outline"
-            className="text-[10px] font-mono bg-warning/10 text-warning border-warning/25"
-          >
-            Flagged {statusCounts.flagged}
+          <Badge variant="outline" className="text-[10px] font-mono">
+            Flagged {statusCounts.flagged || 0}
           </Badge>
         </div>
       </div>
 
       <div className="flex items-center gap-2">
-        {WORKFLOW_RULES[currentItem.status].canEdit(
+        {WORKFLOW_RULES[currentItem.status]?.canEdit(
           activeUser.id,
           currentItem,
           activeUser.role
@@ -112,14 +106,21 @@ export default function WorkspaceHeader({
               <Button
                 size="sm"
                 onClick={saveInlineEdits}
-                className="h-7.5 text-xs"
+                disabled={isSaving}
+                className="h-7.5 min-w-20 text-xs"
               >
-                <Check className="size-3.5 mr-1" /> Save
+                {isSaving ? (
+                  <Loader2 className="size-3.5 mr-1 animate-spin" />
+                ) : (
+                  <Check className="size-3.5 mr-1" />
+                )}
+                {isSaving ? "Saving..." : "Save"}
               </Button>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => setIsEditMode(false)}
+                disabled={isSaving}
                 className="h-7.5 text-xs text-muted-foreground"
               >
                 <X className="size-3.5" /> Cancel

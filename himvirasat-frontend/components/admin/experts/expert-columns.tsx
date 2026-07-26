@@ -1,24 +1,11 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import dayjs from "dayjs";
-import { Trash2 } from "lucide-react";
-
-import { StatusBadge } from "@/components/admin/status-badge";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-
+import { Trash2, UserCheck } from "lucide-react";
 import type { LanguageExpert } from "@/types/admin/user";
+import { EditableDialectsCell } from "../data-table//editable-dialects-cell";
 
 export function getExpertColumns(
   onRemove: (expertId: string) => void,
@@ -27,109 +14,121 @@ export function getExpertColumns(
   return [
     {
       accessorKey: "full_name",
-      header: "Full Name",
-    },
+      header: "Language Expert",
+      cell: ({ row }) => {
+        const item = row.original;
+        const initials = item.full_name
+          ? item.full_name
+              .split(" ")
+              .map((n) => n[0])
+              .join("")
+              .toUpperCase()
+              .slice(0, 2)
+          : "LE";
 
-    {
-      accessorKey: "username",
-      header: "Username",
+        return (
+          <div className="flex items-center gap-3">
+            <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-pine-500/10 text-xs font-bold text-verdant border border-pine-500/20">
+              {initials}
+            </div>
+            <div className="flex flex-col">
+              <span className="font-semibold text-foreground flex items-center gap-1.5">
+                {item.full_name}
+                <UserCheck className="size-3.5 text-verdant" />
+              </span>
+              <span className="text-xs text-muted-foreground">
+                @{item.username}
+              </span>
+            </div>
+          </div>
+        );
+      },
     },
-
     {
       accessorKey: "email",
       header: "Email",
-
-      cell: ({ row }) =>
-        row.original.email ?? <span className="text-muted-foreground">·</span>,
+      cell: ({ row }) => (
+        <span className="font-mono text-xs text-muted-foreground">
+          {row.original.email}
+        </span>
+      ),
     },
-
     {
       accessorKey: "dialects",
       header: "Dialects",
-
-      cell: ({ row }) =>
-        row.original.dialects.length > 0 ? (
-          <div className="flex flex-wrap gap-1">
-            {row.original.dialects.map((dialect) => (
-              <span
-                key={dialect}
-                className="rounded-full border border-border px-2 py-0.5 text-xs"
-              >
-                {dialect}
-              </span>
-            ))}
-          </div>
-        ) : (
-          <span className="text-muted-foreground">·</span>
-        ),
-    },
-
-    {
-      accessorKey: "points",
-      header: () => <div className="w-full text-right">Points</div>,
-
       cell: ({ row }) => (
-        <div className="text-right tabular-nums">{row.original.points}</div>
+        <EditableDialectsCell
+          userId={row.original.id}
+          currentDialects={row.original.dialects}
+          type="expert"
+        />
       ),
     },
-
+    {
+      accessorKey: "points",
+      header: "Points",
+      cell: ({ row }) => (
+        <span className="font-mono text-xs font-medium">
+          {row.original.points ?? 0}
+        </span>
+      ),
+    },
     {
       accessorKey: "is_active",
       header: "Status",
-
-      cell: ({ row }) => (
-        <StatusBadge status={row.original.is_active ? "active" : "inactive"} />
-      ),
+      cell: ({ row }) => {
+        const isActive = row.original.is_active ?? true;
+        return (
+          <Badge
+            variant={isActive ? "default" : "secondary"}
+            className={
+              isActive
+                ? "bg-pine-500/10 text-verdant border border-pine-500/20 hover:bg-pine-500/20"
+                : "bg-muted text-muted-foreground"
+            }
+          >
+            {isActive ? "Active" : "Inactive"}
+          </Badge>
+        );
+      },
     },
-
     {
       accessorKey: "created_at",
       header: "Created",
-
-      cell: ({ row }) => dayjs(row.original.created_at).format("DD MMM YYYY"),
+      cell: ({ row }) =>
+        row.original.created_at
+          ? new Date(row.original.created_at).toLocaleDateString()
+          : "-",
     },
     {
       id: "actions",
       header: "Actions",
       enableSorting: false,
+      cell: ({ row }) => {
+        const item = row.original;
+        const isAlreadyDeleted =
+          item.is_active === false || item.username?.startsWith("deleted_");
 
-      cell: ({ row }) => (
-        <AlertDialog>
-          <AlertDialogTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="text-destructive"
-              disabled={deletingId === row.original.id}
-              aria-label={`Remove ${row.original.username}`}
-            >
-              <Trash2 aria-hidden className="size-4" />
-            </Button>
-          </AlertDialogTrigger>
+        const isDeleting = deletingId === item.id;
+        const isDisabled = isDeleting || isAlreadyDeleted;
 
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>
-                Remove @{row.original.username}?
-              </AlertDialogTitle>
-              <AlertDialogDescription>
-                This permanently removes the expert account. This cannot be
-                undone.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-
-            <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction
-                variant="destructive"
-                onClick={() => onRemove(row.original.id)}
-              >
-                Remove
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-      ),
+        return (
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-8 text-destructive hover:bg-destructive/10 hover:text-destructive cursor-pointer disabled:opacity-50"
+            disabled={isDisabled}
+            onClick={() => onRemove(item.id)}
+          >
+            <Trash2 className="mr-1.5 size-3.5" />
+            {isAlreadyDeleted
+              ? "Deleted"
+              : isDeleting
+                ? "Removing..."
+                : "Remove"}
+          </Button>
+        );
+      },
     },
   ];
 }

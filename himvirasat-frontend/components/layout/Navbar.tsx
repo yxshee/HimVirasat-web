@@ -151,6 +151,19 @@ export default function Navbar() {
         <MegaMenu panels={panels} />
 
         <div className="ml-auto flex items-stretch">
+          {/* Upstream added this as an icon button using
+              `@icons-pack/react-simple-icons`. Kept as a feature, dropped
+              as a dependency: a whole icon package for one glyph, in a
+              system whose icons are all drawn on the same pixel lattice.
+              A text link also sits better in an editorial nav. */}
+          <Link
+            href={site.links.github}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="border-border text-nav text-muted-foreground hover:bg-secondary hover:text-foreground hidden items-center border-l px-4 transition-colors md:flex"
+          >
+            GitHub
+          </Link>
           <div className="border-border flex items-center border-l px-2">
             <ThemeToggle />
           </div>

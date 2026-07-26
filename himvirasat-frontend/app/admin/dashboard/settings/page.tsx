@@ -1,129 +1,240 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
-
-import { Loader2 } from "lucide-react";
-import { useTheme } from "next-themes";
 import { toast } from "sonner";
+import { Loader2, KeyRound, LogOut } from "lucide-react";
+import { useQueryClient } from "@tanstack/react-query";
 
-import { PageHeader } from "@/components/admin/page-header";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { AdminAuthService } from "@/lib/services/admin/admin-auth-service";
-import { cn } from "@/lib/utils";
-
-const themeOptions = [
-  { value: "light", label: "Light" },
-  { value: "dark", label: "Dark" },
-  { value: "system", label: "System" },
-] as const;
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 export default function SettingsPage() {
   const router = useRouter();
-  const { theme, setTheme } = useTheme();
+  const queryClient = useQueryClient();
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
-  const [mounted, setMounted] = useState(false);
-  const [loggingOut, setLoggingOut] = useState(false);
+  // Password reset states
+  const [oldPassword, setOldPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [isResetting, setIsResetting] = useState(false);
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
+  // --- Logout handler ---
   async function handleLogout() {
-    setLoggingOut(true);
-
+    setIsLoggingOut(true);
     try {
       const response = await AdminAuthService.logout();
 
       if (!response.success) {
-        toast.error(response.message ?? "Logout failed");
-
+        toast.error(response.message ?? "Logout failed", {
+          description: "Please try again or contact support.",
+        });
         return;
       }
 
-      toast.success("Successfully logged out");
+      queryClient.setQueryData(["currentUser"], null);
+      queryClient.clear();
 
+      toast.success("Logged out successfully", {
+        description: "You have been signed out of your account.",
+      });
       router.replace("/admin");
     } catch (error) {
       console.error(error);
-
-      toast.error("Failed to logout");
+      toast.error("An unexpected error occurred", {
+        description: "We could not complete your logout request.",
+      });
     } finally {
-      setLoggingOut(false);
+      setIsLoggingOut(false);
+    }
+  }
+
+  // --- Password reset handler ---
+  async function handleResetPassword(e: React.FormEvent) {
+    e.preventDefault();
+
+    // Basic validation
+    if (!oldPassword || !newPassword || !confirmPassword) {
+      toast.error("All fields are required", {
+        description: "Please fill in your current and new passwords.",
+      });
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      toast.error("Passwords do not match", {
+        description: "Your new password and confirmation must be identical.",
+      });
+      return;
+    }
+
+    if (newPassword.length < 6) {
+      toast.error("Password too short", {
+        description: "New password must be at least 6 characters long.",
+      });
+      return;
+    }
+
+    setIsResetting(true);
+    try {
+      const response = await AdminAuthService.resetPassword(
+        oldPassword,
+        newPassword
+      );
+
+      if (response.success) {
+        toast.success("Password updated successfully", {
+          description:
+            "Your password has been changed. Please use it next time you log in.",
+        });
+        // Clear form
+        setOldPassword("");
+        setNewPassword("");
+        setConfirmPassword("");
+      } else {
+        toast.error(response.message ?? "Failed to reset password", {
+          description: "Please verify your current password and try again.",
+        });
+      }
+    } catch (error: any) {
+      toast.error(error.message ?? "An error occurred", {
+        description: "We could not update your password at this time.",
+      });
+    } finally {
+      setIsResetting(false);
     }
   }
 
   return (
-    <div className="space-y-8 p-6">
-      <PageHeader
-        title="Settings"
-        description="Manage your account and platform preferences."
-      />
+    <div className="container mx-auto max-w-5xl p-6 space-y-8">
+      {/* Page Header */}
+      <div>
+        <h1 className="text-3xl font-bold tracking-tight">Settings</h1>
+        <p className="text-muted-foreground mt-1">
+          Manage your account security and session preferences.
+        </p>
+      </div>
 
-      <div className="max-w-2xl space-y-6">
-        <section className="rounded-lg border border-border bg-card p-6">
-          <h2 className="text-sm font-medium">Appearance</h2>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Choose how the dashboard looks on this device.
-          </p>
-
-          {mounted ? (
-            <div
-              role="group"
-              aria-label="Theme"
-              className="mt-4 inline-flex rounded-lg bg-muted p-1"
-            >
-              {themeOptions.map((option) => (
-                <Button
-                  key={option.value}
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  aria-pressed={theme === option.value}
-                  onClick={() => setTheme(option.value)}
-                  className={cn(
-                    "rounded-md",
-                    theme === option.value &&
-                      "bg-background border border-border hover:bg-background"
-                  )}
-                >
-                  {option.label}
-                </Button>
-              ))}
+      {/* Password Reset Card */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-xl">
+            <KeyRound className="size-5 text-primary" aria-hidden="true" />
+            Reset Password
+          </CardTitle>
+          <CardDescription>
+            Update your password to keep your account secure.
+          </CardDescription>
+        </CardHeader>
+        <form onSubmit={handleResetPassword}>
+          <CardContent className="space-y-4 max-w-xl">
+            <div className="space-y-2">
+              <Label htmlFor="oldPassword">Current Password</Label>
+              <Input
+                id="oldPassword"
+                type="password"
+                value={oldPassword}
+                onChange={(e) => setOldPassword(e.target.value)}
+                placeholder="Enter your current password"
+                disabled={isResetting}
+                autoComplete="current-password"
+              />
             </div>
-          ) : (
-            <Skeleton className="mt-4 h-10 w-56 rounded-lg" />
-          )}
-        </section>
+            <div className="space-y-2">
+              <Label htmlFor="newPassword">New Password</Label>
+              <Input
+                id="newPassword"
+                type="password"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                placeholder="At least 6 characters"
+                disabled={isResetting}
+                autoComplete="new-password"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="confirmPassword">Confirm New Password</Label>
+              <Input
+                id="confirmPassword"
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                placeholder="Re‑enter your new password"
+                disabled={isResetting}
+                autoComplete="new-password"
+              />
+            </div>
+          </CardContent>
+          <CardFooter>
+            <Button
+              type="submit"
+              disabled={isResetting}
+              size="lg"
+              className="mt-4 min-w-40"
+            >
+              {isResetting ? (
+                <>
+                  <Loader2
+                    className="mr-2 h-4 w-4 animate-spin"
+                    aria-hidden="true"
+                  />
+                  Updating…
+                </>
+              ) : (
+                "Update Password"
+              )}
+            </Button>
+          </CardFooter>
+        </form>
+      </Card>
 
-        <section className="rounded-lg border border-border bg-card p-6">
-          <h2 className="text-sm font-medium">Session</h2>
-          <p className="mt-1 text-sm text-muted-foreground">
-            You are signed in via a secure session cookie issued by the
-            HimVirasat API.
-          </p>
-        </section>
-
-        <section className="rounded-lg border border-destructive/40 bg-card p-6">
-          <h2 className="text-sm font-medium text-destructive">Danger zone</h2>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Actions that affect your current session.
-          </p>
-
+      {/* Danger Zone Card */}
+      <Card className="border-destructive/50">
+        <CardHeader>
+          <CardTitle className="text-destructive">Danger Zone</CardTitle>
+          <CardDescription>
+            Irreversible actions that affect your current session.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
           <Button
             variant="destructive"
-            className="mt-4 w-full sm:w-auto"
+            size="lg"
             onClick={handleLogout}
-            disabled={loggingOut}
+            disabled={isLoggingOut}
+            className="w-full sm:w-auto hover:bg-red-500"
           >
-            {loggingOut ? (
-              <Loader2 aria-hidden className="size-4 animate-spin" />
-            ) : null}
-            Logout
+            {isLoggingOut ? (
+              <>
+                <Loader2
+                  className="mr-2 h-4 w-4 animate-spin"
+                  aria-hidden="true"
+                />
+                Logging out…
+              </>
+            ) : (
+              <>
+                <LogOut className="mr-2 h-4 w-4" aria-hidden="true" />
+                Logout
+              </>
+            )}
           </Button>
-        </section>
-      </div>
+          <p className="text-sm text-muted-foreground">
+            You will be redirected to the login page after logging out.
+          </p>
+        </CardContent>
+      </Card>
     </div>
   );
 }

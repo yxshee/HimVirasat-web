@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 
-import type { SystemRole } from "@/types/admin/FSM/contribution-rules";
+import type { SystemRole } from "@/types/admin/contribution-types";
 
 /**
  * Colour rides in the dot, never in the fill: the label keeps full

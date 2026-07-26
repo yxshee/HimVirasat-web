@@ -9,10 +9,8 @@ import {
   SortingState,
   useReactTable,
 } from "@tanstack/react-table";
-
 import { useState } from "react";
-
-import { ArrowDown, ArrowUp, ArrowUpDown } from "lucide-react";
+import { ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
 
 import { Skeleton } from "@/components/ui/skeleton";
 import {
@@ -28,7 +26,9 @@ interface DataTableProps<TData> {
   columns: ColumnDef<TData>[];
   data: TData[];
   globalFilter: string;
+  /** Renders skeleton rows instead of an empty table while fetching. */
   isLoading?: boolean;
+  /** Shown when there is nothing to list; falls back to a plain message. */
   emptyState?: React.ReactNode;
 }
 
@@ -40,64 +40,78 @@ export function DataTable<TData>({
   emptyState,
 }: DataTableProps<TData>) {
   const [sorting, setSorting] = useState<SortingState>([]);
+
   const table = useReactTable({
     data,
     columns,
-
     state: {
       globalFilter,
       sorting,
     },
-
     onSortingChange: setSorting,
-
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getSortedRowModel: getSortedRowModel(),
   });
-  return (
-    <div className="overflow-hidden rounded-lg border border-border bg-card">
-      <Table>
-        <TableHeader>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id} className="bg-muted/40">
-              {headerGroup.headers.map((header) => (
-                <TableHead
-                  key={header.id}
-                  className="cursor-pointer select-none text-xs uppercase tracking-wide text-muted-foreground"
-                  onClick={header.column.getToggleSortingHandler()}
-                >
-                  <div className="flex items-center gap-2">
-                    {flexRender(
-                      header.column.columnDef.header,
-                      header.getContext()
-                    )}
 
-                    {header.column.getCanSort() ? (
-                      header.column.getIsSorted() === "asc" ? (
-                        <ArrowUp aria-hidden className="size-3.5" />
-                      ) : header.column.getIsSorted() === "desc" ? (
-                        <ArrowDown aria-hidden className="size-3.5" />
-                      ) : (
-                        <ArrowUpDown
-                          aria-hidden
-                          className="size-3.5 opacity-40"
-                        />
-                      )
-                    ) : null}
-                  </div>
-                </TableHead>
-              ))}
+  return (
+    <div className="overflow-hidden rounded-xl border border-border/60 bg-card shadow-sm">
+      <Table>
+        <TableHeader className="bg-muted/40">
+          {table.getHeaderGroups().map((headerGroup) => (
+            <TableRow key={headerGroup.id} className="hover:bg-transparent">
+              {headerGroup.headers.map((header) => {
+                const canSort = header.column.getCanSort();
+                const isSorted = header.column.getIsSorted();
+
+                return (
+                  <TableHead
+                    key={header.id}
+                    className={`h-11 text-xs font-semibold tracking-wider text-muted-foreground uppercase ${
+                      canSort
+                        ? "cursor-pointer select-none hover:text-foreground"
+                        : ""
+                    }`}
+                    onClick={
+                      canSort
+                        ? header.column.getToggleSortingHandler()
+                        : undefined
+                    }
+                  >
+                    <div className="flex items-center gap-1.5">
+                      {flexRender(
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
+
+                      {canSort && (
+                        <span className="shrink-0 text-muted-foreground/70">
+                          {isSorted === "asc" ? (
+                            <ArrowUp className="size-3.5 text-foreground" />
+                          ) : isSorted === "desc" ? (
+                            <ArrowDown className="size-3.5 text-foreground" />
+                          ) : (
+                            <ArrowUpDown className="size-3.5 opacity-0 group-hover:opacity-100" />
+                          )}
+                        </span>
+                      )}
+                    </div>
+                  </TableHead>
+                );
+              })}
             </TableRow>
           ))}
         </TableHeader>
 
         <TableBody>
           {isLoading ? (
+            // Skeleton rows rather than an empty table: the toolbar and
+            // header above stay put, so the page does not reflow when the
+            // data lands.
             Array.from({ length: 5 }, (_, rowIndex) => (
               <TableRow key={rowIndex}>
                 {columns.map((_column, colIndex) => (
-                  <TableCell key={colIndex} className="py-2.5">
+                  <TableCell key={colIndex} className="py-3">
                     <Skeleton className="h-4 w-full max-w-32" />
                   </TableCell>
                 ))}
@@ -107,10 +121,10 @@ export function DataTable<TData>({
             table.getRowModel().rows.map((row) => (
               <TableRow
                 key={row.id}
-                className="transition-colors hover:bg-muted/40"
+                className="transition-colors hover:bg-muted/30 border-b border-border/40 last:border-0"
               >
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id} className="py-2.5">
+                  <TableCell key={cell.id} className="py-3 text-sm">
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}
@@ -120,9 +134,9 @@ export function DataTable<TData>({
             <TableRow>
               <TableCell
                 colSpan={columns.length}
-                className="h-32 text-center text-muted-foreground"
+                className="h-36 text-center text-sm text-muted-foreground"
               >
-                {emptyState ?? "No data found."}
+                {emptyState ?? "No matching records found."}
               </TableCell>
             </TableRow>
           )}

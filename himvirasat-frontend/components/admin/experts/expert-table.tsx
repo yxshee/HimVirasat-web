@@ -1,9 +1,7 @@
 "use client";
 
 import { DataTable } from "@/components/admin/data-table/data-table";
-
 import { getExpertColumns } from "./expert-columns";
-
 import type { LanguageExpert } from "@/types/admin/user";
 
 interface ExpertTableProps {
@@ -14,6 +12,7 @@ interface ExpertTableProps {
   isLoading?: boolean;
   emptyState?: React.ReactNode;
 }
+
 export function ExpertTable({
   experts,
   deletingId,

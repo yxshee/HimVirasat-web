@@ -2,12 +2,12 @@ import { cn } from "@/lib/utils";
 
 import type {
   ContributionStatus,
-  ReviewCommentStatus,
-} from "@/types/admin/FSM/contribution-rules";
+  CommentStatus,
+} from "@/types/admin/contribution-types";
 
 type BadgeStatus =
   | ContributionStatus
-  | ReviewCommentStatus
+  | CommentStatus
   | "active"
   | "inactive";
 
@@ -23,6 +23,10 @@ const STATUS_CONFIG: Record<BadgeStatus, { label: string; dot: string }> = {
   flagged: { label: "Flagged", dot: "bg-clay-600" },
   rejected: { label: "Rejected", dot: "bg-destructive" },
   open: { label: "Open", dot: "bg-clay-400" },
+  // A comment that has been taken on board but whose change is not landed
+  // yet — settled enough to leave the earth tones, not finished, so it
+  // takes pine rather than the solid foreground that `resolved` gets.
+  accepted: { label: "Accepted", dot: "bg-pine-500" },
   resolved: { label: "Resolved", dot: "bg-foreground" },
   active: { label: "Active", dot: "bg-foreground" },
   inactive: { label: "Inactive", dot: "bg-muted-foreground" },

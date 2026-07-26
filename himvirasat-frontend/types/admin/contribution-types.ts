@@ -1,29 +1,14 @@
+// src/types/admin/contribution-types.ts
+
+// --- Enums & Status Unions ---
+
 export type SystemRole = "language_expert" | "language_head" | "super_admin";
 
 export type ContributionStatus =
-  // | "draft"
-  "under_review" | "approved" | "flagged" | "rejected";
+  "under_review" | "flagged" | "approved" | "rejected";
 
-export type ReviewCommentStatus = "open" | "resolved" | "rejected";
-// types/admin/FSM/contribution-rules.ts
+export type CommentStatus = "open" | "accepted" | "resolved" | "rejected";
 
-export type SubmissionFormValues = {
-  // Core Fields
-  dialect: string;
-  word_devanagari: string;
-  meaning_hindi: string;
-  example_sentence: string; // Sentence using that word in Pahadi (written in Devanagari)
-  example_sentence_hindi_meaning: string; // Sentence meaning in Hindi
-  region: string;
-  category: string;
-  part_of_speech: string;
-
-  // Advanced Fields
-  word_latin: string;
-  example_sentence_latin: string;
-  word_takri: string;
-  example_sentence_takri: string;
-};
 export type HistoryEventType =
   | "submitted"
   | "edited"
@@ -36,54 +21,110 @@ export type HistoryEventType =
   | "approved"
   | "rejected";
 
+// --- Form Values (UI Helper) ---
+
+export interface SubmissionFormValues {
+  id?: string;
+  contributor_id?: string;
+  dialect_id: number;
+  category_id?: number;
+  part_of_speech_id?: number;
+  word_devanagari: string;
+  word_latin?: string;
+  word_takri?: string;
+  ipa?: string;
+  meaning: string;
+  meaning_hindi?: string;
+  meaning_english?: string;
+  example_sentence?: string;
+  example_sentence_hindi?: string;
+  example_sentence_english?: string;
+  example_sentence_latin?: string;
+  example_sentence_takri?: string;
+  region?: string;
+  status?: "draft" | "under_review" | "approved" | "rejected" | "flagged";
+}
+
+// --- Database-Aligned Interfaces ---
+
+export interface Contribution {
+  // DB Columns
+  id: string;
+  contributor_id: string;
+  dialect_id: number;
+  category_id?: number | null;
+  part_of_speech_id?: number | null;
+  word_devanagari: string;
+  word_latin?: string | null;
+  word_takri?: string | null;
+  ipa?: string | null;
+  meaning: string;
+  meaning_hindi?: string | null;
+  meaning_english?: string | null;
+  example_sentence?: string | null;
+  example_sentence_hindi?: string | null;
+  example_sentence_english?: string | null;
+  example_sentence_latin?: string | null;
+  example_sentence_takri?: string | null;
+  region?: string | null;
+  status: ContributionStatus;
+  flag_reason?: string | null;
+  flagged_by?: string | null;
+  flagged_at?: string | null;
+  rejected_reason?: string | null;
+  rejected_by?: string | null;
+  approved_by?: string | null;
+  approved_at?: string | null;
+  created_at: string;
+  updated_at: string;
+
+  // UI/Convenience Fields
+  contributor_name?: string;
+  dialect_name?: string;
+  category_name?: string;
+  part_of_speech_name?: string;
+
+  // Relations
+  users?: { username: string; full_name?: string };
+  dialects?: { name: string };
+  categories?: { name: string };
+  parts_of_speech?: { name: string };
+  review_comments?: ReviewComment[];
+  history?: ContributionHistoryEvent[];
+}
+
 export interface ReviewComment {
   id: string;
+  contribution_id: string;
   author_id: string;
-  author_name: string;
   field_name: string | null;
   message: string;
-  status: ReviewCommentStatus;
+  status: CommentStatus;
   created_at: string;
-  resolved_at: string | null;
-  resolved_by: string | null;
+  resolved_at?: string | null;
+  resolved_by?: string | null;
+
+  // Relations
+  users?: { username: string };
 }
 
 export interface ContributionHistoryEvent {
   id: string;
-  type: HistoryEventType;
+  contribution_id: string;
   actor_id: string;
-  actor_name: string;
+  type: HistoryEventType;
   message: string;
   created_at: string;
+
+  // Relations
+  users?: { username: string };
 }
 
-export interface Contribution {
-  id: string;
-  contributor_id: string;
-  contributor_name: string;
-  dialect: string;
-  word_devanagari: string;
-  meaning: string;
-  example_sentence: string;
-  region: string | null;
-  category: string | null;
-  word_latin: string | null;
-  ipa: string | null;
-  meaning_hindi: string | null;
-  meaning_english: string | null;
-  example_sentence_english: string | null;
-  example_sentence_hindi: string | null;
-  status: ContributionStatus;
-  review_comments: ReviewComment[];
-  history: ContributionHistoryEvent[];
-  flag_reason: string | null;
-  flagged_by: string | null;
-  rejected_reason: string | null;
-  rejected_by: string | null;
-  approved_by: string | null;
-  approved_at: string | null;
-  created_at: string;
-  updated_at: string;
+// --- API Helpers ---
+
+export interface ContributionFilters {
+  status?: ContributionStatus;
+  dialect_id?: number;
 }
 
 export interface StateRule {
@@ -113,24 +154,29 @@ export interface StateRule {
   canReject: (userRole: SystemRole) => boolean;
 }
 
+// --- Helper Functions ---
+
 export const isAuthorityRole = (role: SystemRole) =>
   role === "language_head" || role === "super_admin";
 
 export const hasOpenReviewComments = (entry: Contribution) =>
-  entry.review_comments.some((comment) => comment.status === "open");
+  (entry.review_comments ?? []).some((comment) => comment.status === "open");
 
 export const getOpenReviewCommentCount = (entry: Contribution) =>
-  entry.review_comments.filter((comment) => comment.status === "open").length;
+  (entry.review_comments ?? []).filter((comment) => comment.status === "open")
+    .length;
 
 const canReview = (userId: string, entry: Contribution, role: SystemRole) =>
   entry.status === "under_review" &&
   userId !== entry.contributor_id &&
   ["language_expert", "language_head", "super_admin"].includes(role);
+
+// --- Workflow Rules Matrix ---
+
 export const WORKFLOW_RULES: Record<ContributionStatus, StateRule> = {
   under_review: {
     label: "Under Review",
     description: "Open for peer review and moderation.",
-    // LHs and SAs can edit any entry; regular contributors/LEs can only edit their own submissions
     canEdit: (userId, entry, userRole) =>
       isAuthorityRole(userRole) || userId === entry.contributor_id,
     canComment: canReview,
@@ -154,7 +200,6 @@ export const WORKFLOW_RULES: Record<ContributionStatus, StateRule> = {
   flagged: {
     label: "Flagged",
     description: "Needs Language Head or Super Admin intervention.",
-    // LHs and SAs can edit any entry; regular contributors/LEs can only edit their own submissions
     canEdit: (userId, entry, userRole) =>
       isAuthorityRole(userRole) || userId === entry.contributor_id,
     canComment: (_userId, _entry, role) => isAuthorityRole(role),

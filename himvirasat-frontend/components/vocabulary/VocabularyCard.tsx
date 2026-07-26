@@ -5,6 +5,7 @@ import { toast } from "sonner";
 
 import { Eyebrow } from "@/components/mistral/eyebrow";
 import { Button } from "@/components/ui/button";
+import { cleanText } from "@/lib/vocabulary/search-vocabulary";
 import type { VocabularyEntry } from "@/types/vocabulary/vocabulary-types";
 
 function escapeRegExp(s: string) {
@@ -88,7 +89,7 @@ export default memo(function VocabularyCard({
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => onSearch(entry.word_native)}
+            onClick={() => onSearch(cleanText(entry.word_native))}
           >
             Find similar
           </Button>
