@@ -12,6 +12,7 @@ import {
   FileText,
   Sparkles,
   Loader2,
+  Info,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -25,12 +26,18 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
-import { SubmissionFormValues } from "@/types/admin/contribution-types";
+import {
+  CreateSubmissionSchema, // Value (for validation)
+  type CreateSubmissionDto, // Type (for TypeScript types)
+} from "@himvirasat/shared";
+
+// Alias or use it as your form values type
+export type SubmissionFormValues = CreateSubmissionDto;
 import { DataLookupService } from "@/lib/services/admin/datalookup-service"; // Adjust import path if needed
 
 // Explicit array of mandatory field keys used for Checklist & Progress tracking
 export const MANDATORY_FIELDS: Array<keyof SubmissionFormValues> = [
-  "dialect_id",
+  "dialect_name",
   "word_devanagari",
   "category_id",
   "part_of_speech_id" as keyof SubmissionFormValues,
@@ -41,13 +48,14 @@ export const MANDATORY_FIELDS: Array<keyof SubmissionFormValues> = [
   "example_sentence_hindi",
 ];
 
-type OptionItem = string | { id: number; name: string };
+type OptionItem = string | { id: number | string; name: string };
 
 interface FormFieldsProps {
   values: SubmissionFormValues;
   dialects: OptionItem[];
   categories: OptionItem[];
   partsOfSpeech: OptionItem[];
+  regions?: OptionItem[]; // Added regions option prop
   onChange: <K extends keyof SubmissionFormValues>(
     field: K,
     value: SubmissionFormValues[K]
@@ -65,6 +73,7 @@ export function SubmissionFormFields({
   dialects = [],
   categories = [],
   partsOfSpeech = [],
+  regions = [], // Destructured regions prop
   onChange,
 }: FormFieldsProps) {
   const [isGenerating, setIsGenerating] = useState(false);
@@ -95,11 +104,10 @@ export function SubmissionFormFields({
 
       const data = await DataLookupService.generateMetadata({
         word_devanagari: values.word_devanagari,
-        meaning_hindi: values.meaning_hindi || values.meaning,
-        meaning_english: values.meaning_english,
-        example_sentence: values.example_sentence,
+        meaning_hindi: (values.meaning_hindi ?? values.meaning) || undefined,
+        meaning_english: values.meaning_english ?? undefined,
+        example_sentence: values.example_sentence ?? undefined,
       });
-
       // Automatically update fields in parent state
       if (data.word_latin) onChange("word_latin", data.word_latin);
       if (data.word_takri) onChange("word_takri" as any, data.word_takri);
@@ -114,7 +122,7 @@ export function SubmissionFormFields({
     } catch (err: any) {
       setGrokError(
         err.message ||
-          "An error occurred while calling the metadata generation service."
+        "An error occurred while calling the metadata generation service."
       );
     } finally {
       setIsGenerating(false);
@@ -134,24 +142,28 @@ export function SubmissionFormFields({
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <Field label="Dialect" required icon={Languages}>
               <Select
-                value={values.dialect_id ? String(values.dialect_id) : ""}
-                onValueChange={(val) => onChange("dialect_id", Number(val))}
+                value={values.dialect_name || ""}
+                onValueChange={(val) => onChange("dialect_name", val)}
               >
                 <SelectTrigger className={cn(inputClass, "w-full")}>
                   <SelectValue placeholder="Choose dialect" />
                 </SelectTrigger>
                 <SelectContent>
-                  {dialects.map((item, index) => {
-                    const id = typeof item === "object" ? item.id : index + 1;
+                  {dialects.map((item) => {
                     const name = typeof item === "object" ? item.name : item;
+                    const id = typeof item === "object" ? item.id : name;
                     return (
-                      <SelectItem key={id} value={String(id)}>
+                      <SelectItem key={id} value={name}>
                         {name}
                       </SelectItem>
                     );
                   })}
                 </SelectContent>
               </Select>
+              <div className="mt-1.5 flex items-center gap-1.5 rounded-md bg-muted/50 px-2.5 py-1 text-[11px] text-muted-foreground border border-border/50">
+                <Info className="size-3.5 shrink-0 text-indigo-500 dark:text-indigo-400" />
+                <span>Reach out to a Language Head to modify your dialects.</span>
+              </div>
             </Field>
 
             <Field label="Word in Devanagari" required icon={Type}>
@@ -222,14 +234,31 @@ export function SubmissionFormFields({
             </Field>
           </div>
 
-          {/* Region */}
+          {/* Region Dropdown Field */}
           <Field label="Region" required icon={MapPin}>
-            <Input
-              className={inputClass}
-              placeholder="e.g., Palampur, Karsog, Bharmour"
+            <Select
               value={values.region || ""}
-              onChange={(e) => onChange("region", e.target.value)}
-            />
+              onValueChange={(val) => onChange("region", val)}
+            >
+              <SelectTrigger className={cn(inputClass, "w-full")}>
+                <SelectValue placeholder="Choose region" />
+              </SelectTrigger>
+              <SelectContent>
+                {regions.map((item) => {
+                  const name = typeof item === "object" ? item.name : item;
+                  const id = typeof item === "object" ? item.id : name;
+                  return (
+                    <SelectItem key={id} value={name}>
+                      {name}
+                    </SelectItem>
+                  );
+                })}
+              </SelectContent>
+            </Select>
+            <div className="mt-1.5 flex items-center gap-1.5 rounded-md bg-muted/50 px-2.5 py-1 text-[11px] text-muted-foreground border border-border/50">
+              <Info className="size-3.5 shrink-0 text-indigo-500 dark:text-indigo-400" />
+              <span>Reach out to a Language Head to modify the regions.</span>
+            </div>
           </Field>
 
           {/* Meanings: Hindi & English */}
@@ -401,7 +430,7 @@ export function SubmissionFormFields({
           <div className="space-y-1.5 text-xs">
             <ReadinessItem
               label="Dialect Choice"
-              complete={isFieldComplete("dialect_id")}
+              complete={isFieldComplete("dialect_name")}
             />
             <ReadinessItem
               label="Word (Devanagari)"

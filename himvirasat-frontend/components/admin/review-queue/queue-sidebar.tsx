@@ -20,7 +20,7 @@ import {
   Contribution,
   ContributionStatus,
   getOpenReviewCommentCount,
-} from "@/types/admin/contribution-types";
+} from "@himvirasat/shared";
 
 export type QueueFilter =
   "my_submissions" | "under_review" | "approved" | "flagged" | "rejected";
@@ -174,8 +174,18 @@ export default function QueueSidebar({
               const openComments = getOpenReviewCommentCount(item);
               const totalComments = item.review_comments?.length || 0;
               const isMine = item.contributor_id === activeUserId;
-              const badgeConfig = statusBadgeConfig[item.status];
-              const shortId = item.id.slice(-6).toUpperCase();
+
+              // Safely handle status normalization and provide fallback
+              const normalizedStatus = (item.status?.toLowerCase() ??
+                "") as ContributionStatus;
+
+              const badgeConfig = statusBadgeConfig[normalizedStatus] ?? {
+                label: item.status || "Unknown",
+                className:
+                  "bg-muted text-muted-foreground border-muted-foreground/20",
+              };
+
+              const shortId = item.id ? item.id.slice(-6).toUpperCase() : "N/A";
 
               // Contributor name (fallback)
               const contributorName =
@@ -229,7 +239,7 @@ export default function QueueSidebar({
                   <div className="flex items-center justify-between pt-1">
                     <div className="flex items-center gap-2 min-w-0 flex-wrap">
                       <span className="text-[10px] font-medium bg-muted/60 px-2 py-0.5 rounded-full truncate">
-                        {item.dialects?.name || "Standard"}
+                        {item.dialect_name}
                       </span>
                       {queueFilter === "my_submissions" && (
                         <span className="text-[10px] text-muted-foreground/70 truncate">
@@ -269,7 +279,7 @@ export default function QueueSidebar({
 }
 
 // ------------------------------------------------------------------
-// Helpers & Configurations (unchanged)
+// Helpers & Configurations
 // ------------------------------------------------------------------
 
 const statusBadgeConfig: Record<

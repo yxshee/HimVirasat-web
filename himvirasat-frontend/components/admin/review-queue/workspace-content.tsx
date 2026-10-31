@@ -47,7 +47,7 @@ import {
   getOpenReviewCommentCount,
   isAuthorityRole,
   ContributionStatus,
-} from "@/types/admin/contribution-types";
+} from "@himvirasat/shared";
 
 import {
   useTransitionStatus,
@@ -203,13 +203,12 @@ export default function WorkspaceContent({
 
   // useMemo must be called unconditionally as well
   const latestHistory = useMemo(() => {
-    if (!currentItem) return [];
-    return (currentItem.history || []).sort(
-      (a, b) =>
+    if (!currentItem || !Array.isArray(currentItem.history)) return [];
+    return [...currentItem.history].sort(
+      (a: any, b: any) =>
         new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
     );
   }, [currentItem]);
-
   // ---- Early returns after all hooks ----
   if (!showContent) {
     return (
@@ -253,7 +252,6 @@ export default function WorkspaceContent({
 
   // ---- Now we have a valid currentItem, compute remaining variables ----
   const rules = WORKFLOW_RULES[currentItem.status] || {
-    label: "Draft",
     canComment: () => true,
     canApprove: () => false,
     canReject: () => true,
@@ -554,29 +552,46 @@ export default function WorkspaceContent({
                   History
                 </h3>
                 <div className="rounded-xl border border-border/40 bg-card/40 divide-y divide-border/40">
-                  {latestHistory.map((event) => (
-                    <div
-                      key={event.id}
-                      className="p-3 flex items-start gap-3 text-xs"
-                    >
-                      <Clock className="size-3.5 text-muted-foreground mt-0.5" />
-                      <div className="min-w-0 flex-1">
-                        <p className="font-medium text-foreground">
-                          {event.message}
-                        </p>
-                        <p className="text-[11px] text-muted-foreground mt-0.5">
-                          {event.users?.username || event.actor_id} ·{" "}
-                          {new Date(event.created_at).toLocaleString()}
-                        </p>
-                      </div>
-                      <Badge
-                        variant="outline"
-                        className="text-[10px] capitalize"
+                  {latestHistory.map((event: any) => {
+                    // Fallback formatting if event.message is empty
+                    const actionText =
+                      event.message ||
+                      event.action ||
+                      (event.type
+                        ? event.type.replace("_", " ")
+                        : "Action logged");
+
+                    return (
+                      <div
+                        key={event.id}
+                        className="p-3 flex items-start gap-3 text-xs"
                       >
-                        {event.type.replace("_", " ")}
-                      </Badge>
-                    </div>
-                  ))}
+                        <div className="font-medium text-foreground">
+                          {event.users?.full_name ||
+                            event.users?.username ||
+                            event.performed_by ||
+                            "System User"}
+                        </div>
+                        <div className="text-muted-foreground">
+                          {actionText}
+                          {event.details ? ` - ${event.details}` : ""}
+                        </div>
+                        <span className="ml-auto shrink-0 text-muted-foreground/60 text-[10px]">
+                          {event.created_at
+                            ? new Date(event.created_at).toLocaleDateString(
+                                "en-US",
+                                {
+                                  month: "short",
+                                  day: "numeric",
+                                  hour: "2-digit",
+                                  minute: "2-digit",
+                                }
+                              )
+                            : ""}
+                        </span>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             </div>

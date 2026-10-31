@@ -3,7 +3,7 @@ import type {
   DeleteLanguageExpertResponse,
   LanguageExpert,
   LanguageHead,
-} from "@/types/admin/user";
+} from "@himvirasat/shared";
 
 export interface CreateLanguageExpertRequest {
   fullName: string;

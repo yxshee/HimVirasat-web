@@ -12,7 +12,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { DataLookupService } from "@/lib/services/admin/datalookup-service";
-import { Contribution } from "@/types/admin/contribution-types";
+import { Contribution } from "@himvirasat/shared";
 
 interface WorkspaceEditContentProps {
   editForm: Partial<Contribution>;
@@ -102,11 +102,7 @@ export default function WorkspaceEditContent({
             Dialect Variant
           </label>
           <Select
-            value={
-              editForm.dialect_name ||
-              editForm.dialect_id?.toString() ||
-              undefined
-            }
+            value={editForm.dialect_name || undefined}
             onValueChange={(val) =>
               setEditForm((prev) => ({
                 ...prev,
